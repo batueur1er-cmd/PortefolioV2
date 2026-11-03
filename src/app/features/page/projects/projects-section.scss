@@ -1,0 +1,29 @@
+:host {
+  display: block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 2.2cqi, 30px);
+}
+
+.grid > .featured {
+  grid-column: span 2;
+}
+
+@container page (max-width: 1020px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container page (max-width: 680px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid > .featured {
+    grid-column: auto;
+  }
+}

@@ -1,0 +1,157 @@
+:host {
+  display: block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.6fr);
+  gap: clamp(32px, 6cqi, 96px);
+  align-items: start;
+}
+
+.card {
+  padding: 22px 22px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  background: var(--paper-2);
+  rotate: -1.2deg;
+  transition: rotate 0.6s cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+
+.card:hover {
+  rotate: 0deg;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--line);
+}
+
+dl {
+  margin: 0;
+}
+
+dl div {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+dt {
+  font: 500 10px/1.6 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+dd {
+  margin: 0;
+  font: 500 14px/1.4 var(--sans);
+}
+
+.signature {
+  margin: 16px 0 0;
+  text-align: right;
+  font: italic 400 30px/1 var(--serif);
+  color: var(--accent);
+}
+
+.big {
+  margin: 0 0 32px;
+  font: 400 clamp(26px, 2.9cqi, 42px) / 1.22 var(--serif);
+  letter-spacing: -0.01em;
+}
+
+.text {
+  max-width: 60ch;
+  margin: 0 0 18px;
+  font: 400 17px/1.65 var(--sans);
+  color: var(--muted);
+}
+
+/* Place réservée au résumé LinkedIn, révélé par la loupe. */
+.slot {
+  position: relative;
+  min-height: 150px;
+}
+
+.summary {
+  left: 0;
+  top: 18px;
+  max-width: 440px;
+  white-space: normal;
+}
+
+.summary s {
+  display: block;
+  margin: 6px 0;
+  color: color-mix(in srgb, var(--xl) 70%, transparent);
+}
+
+.outcome {
+  color: var(--xn);
+}
+
+.facts-wrap {
+  position: relative;
+  margin-top: clamp(40px, 6cqi, 80px);
+  padding-bottom: 64px;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.facts li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 18px 0 0;
+}
+
+.facts li + li {
+  padding-left: 18px;
+  border-left: 1px solid var(--line);
+}
+
+.num {
+  font: 400 clamp(56px, 7cqi, 104px) / 0.9 var(--serif);
+  letter-spacing: -0.03em;
+}
+
+.facts span {
+  font: 500 11px/1.4 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.facts-note {
+  left: 18px;
+  bottom: 6px;
+}
+
+@container page (max-width: 860px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .facts li:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}

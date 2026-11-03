@@ -1,0 +1,139 @@
+:host {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: block;
+}
+
+/* Copie dans une autre fenêtre : rien ne défile, on replace la barre là où elle colle. */
+:host-context(.remote) {
+  position: relative;
+  transform: translateY(calc(var(--sy, 0) * 1px));
+}
+
+.nav {
+  position: relative;
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--line);
+}
+
+.bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 64px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  font: 400 20px/1 var(--serif);
+}
+
+.monogram {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.08em;
+  transition:
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.1, 1),
+    background 0.3s,
+    color 0.3s;
+}
+
+.brand:hover .monogram {
+  transform: rotate(-360deg);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.links {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.links a {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 9px 12px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition:
+    color 0.25s,
+    background 0.25s;
+}
+
+.links a:hover {
+  color: var(--ink);
+}
+
+.links a.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.num {
+  font-size: 9px;
+  color: var(--accent);
+}
+
+.links a.active .num {
+  color: inherit;
+  opacity: 0.6;
+}
+
+.version {
+  left: 46px;
+  top: calc(100% + 8px);
+}
+
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+@container page (max-width: 860px) {
+  .links .num {
+    display: none;
+  }
+}
+
+@container page (max-width: 720px) {
+  .brand-name {
+    display: none;
+  }
+
+  .links a {
+    padding: 8px 9px;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .links li:nth-child(4) {
+    display: none;
+  }
+}

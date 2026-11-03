@@ -1,0 +1,102 @@
+<section
+  class="wrap sec"
+  data-section="coulisses"
+  data-label="Sous le capot"
+  [attr.id]="page.anchor('coulisses')"
+  [attr.aria-labelledby]="page.anchor('coulisses-titre')"
+>
+  <app-section-header
+    index="06"
+    name="Sous le capot"
+    [title]="headline.title"
+    [intro]="headline.intro ?? null"
+    [titleId]="page.anchor('coulisses-titre')"
+  />
+
+  <div class="grid">
+    <div class="text" appReveal>
+      <p>
+        La page que vous lisez existe en deux exemplaires : une version de surface, et une version « rayons X »
+        qui ne se montre qu'à travers une loupe. Les deux sont rendues par le même composant ; la seconde ne change
+        que des couleurs et des contours, jamais la mise en page.
+      </p>
+      <p>
+        Chaque fenêtre ouverte sur le site annonce sa position, sa taille et son défilement soixante fois par seconde.
+        Une fenêtre qui passe sous {{ lensSize }} et qui recouvre une autre fenêtre du site comprend qu'elle est une
+        loupe : elle affiche alors, au pixel près, ce qui se trouve dessous.
+      </p>
+    </div>
+    <ul class="specs">
+      @for (spec of specs; track spec.label) {
+        <li [appReveal]="$index * 90">
+          <app-count-up class="num" [value]="spec.value" />
+          <span>{{ spec.label }}</span>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <div class="howto" appReveal data-x="mode d'emploi · aucun bouton">
+    <app-window-gesture class="howto-art" />
+    <ol class="steps">
+      <li>
+        <b>Ouvrez une seconde fenêtre</b>
+        <span>
+          Glissez cet onglet hors du navigateur, ou
+          <button type="button" class="inline" (click)="openTwin()">ouvrez-en une ici</button>.
+          @if (blocked()) {
+            <em class="warn">Le navigateur a bloqué la fenêtre : autorisez les fenêtres surgissantes pour ce site.</em>
+          }
+        </span>
+      </li>
+      <li>
+        <b>Rétrécissez-la</b>
+        <span>Sous {{ lensSize }}, elle bascule d'elle-même en loupe.</span>
+      </li>
+      <li>
+        <b>Posez-la par-dessus</b>
+        <span>Elle voit à travers celle-ci. Molette pour faire défiler, Maj + molette pour zoomer.</span>
+      </li>
+    </ol>
+    <p class="pocket">Une seule fenêtre, ou un écran tactile ? La <b>loupe de poche</b> du dock fait le même travail.</p>
+  </div>
+
+  <div class="vault" data-x="zone confidentielle">
+    <p class="vault-label surface-only"><span class="lock" aria-hidden="true"></span>Zone confidentielle — loupe requise</p>
+
+    <figure class="diagram" appSecret="hood-diagram">
+      <svg class="wire" viewBox="0 0 640 250" aria-hidden="true">
+        <rect x="10" y="30" width="240" height="170" rx="8" />
+        <line x1="10" y1="54" x2="250" y2="54" />
+        <text x="22" y="47">PORTFOLIO · grande fenêtre</text>
+        <text x="22" y="84">app-portfolio-page</text>
+        <text x="22" y="100">mode = "surface"</text>
+        <rect class="d" x="22" y="118" width="120" height="60" rx="4" />
+        <text x="30" y="152">secrets cachés</text>
+        <rect class="hot" x="400" y="56" width="220" height="160" rx="8" />
+        <line class="hot" x1="400" y1="80" x2="620" y2="80" />
+        <text x="412" y="73">LOUPE · fenêtre rétrécie</text>
+        <text x="412" y="110">app-portfolio-page</text>
+        <text x="412" y="126">mode = "xray"</text>
+        <circle class="d" cx="560" cy="172" r="30" />
+        <path d="M250 104 C 310 104, 340 124, 400 124" />
+        <path class="d" d="M400 160 C 340 160, 310 140, 250 140" />
+        <text x="266" y="96">position · défilement</text>
+        <text x="266" y="168">molette · secrets</text>
+        <text x="250" y="238">BroadcastChannel « pv2 » · ~60 Hz · même origine</text>
+      </svg>
+    </figure>
+
+    <pre class="code formula" appSecret="hood-code">// la loupe décale la page
+// de l'écart entre les deux fenêtres
+translate(
+  portfolio.x − loupe.x − scrollX,
+  portfolio.y − loupe.y − scrollY
+) scale(zoom)</pre>
+
+    <p class="panel live" appSecret="hood-live">
+      <span class="panel-title">En direct</span><br />
+      {{ mains() }} fenêtre(s) portfolio · {{ lenses() }} loupe(s) connectée(s)
+    </p>
+  </div>
+</section>

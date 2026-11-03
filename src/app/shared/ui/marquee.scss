@@ -1,0 +1,44 @@
+:host {
+  display: block;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: marquee linear infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.run {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+li::after {
+  content: '✦';
+  margin-inline: 0.9em;
+  font-size: 0.55em;
+  color: var(--accent);
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}

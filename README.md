@@ -10,54 +10,91 @@ npm install
 npm start
 ```
 
-Ouvre <http://localhost:4200>, puis clique sur **« ◎ Ouvrir la loupe »** : une petite fenêtre
-s'ouvre. Pose-la par-dessus le portfolio, elle montre exactement ce qui se trouve dessous, aux
-rayons X.
+Ouvre <http://localhost:4200>.
 
 ```bash
-npm test        # tests unitaires (Vitest)
-npm run build   # build de production dans dist/portfolio-v2/browser
+npm test             # règles d'architecture + tests unitaires (Vitest)
+npm run lint:archi   # règles d'architecture seules
+npm run build        # build de production dans dist/portfolio-v2/browser
 ```
 
-## Les trois façons de percer la page
+## La loupe : aucun bouton
 
-| Mode | Comment | Les secrets comptent ? |
-| --- | --- | --- |
-| Loupe fenêtre | bouton « Ouvrir la loupe », puis glisser la fenêtre sur le portfolio | oui |
-| Loupe intégrée | bouton « Loupe intégrée » : un cercle qui suit la souris (ou le doigt) | oui |
-| Rayons X | bouton « Rayons X » : toute la page d'un coup | non |
+1. Ouvre le site dans **une seconde fenêtre** (glisse l'onglet hors du navigateur, ou utilise le
+   lien « ouvrez-en une ici » de la section *Sous le capot*).
+2. **Rétrécis-la** sous 680 × 620 px : elle comprend toute seule qu'elle est une loupe.
+3. **Pose-la** par-dessus le portfolio : elle montre exactement ce qui se trouve dessous, aux rayons X.
 
-Dans la fenêtre loupe : molette pour faire défiler le portfolio d'en dessous, Maj + molette
-(ou `+` / `-` / `0`) pour zoomer, `M` pour le compteur Geiger sonore. Un secret est trouvé
-quand il reste un court instant sous la loupe. Tous trouvés, la **singularité** se débloque
-(l'Effet 1 : chaque fenêtre devient un trou noir et elles s'échangent de la lumière). Le code
-Konami l'ouvre directement.
+Agrandis-la de nouveau et elle redevient un portfolio. Dans la loupe : molette pour faire défiler
+le portfolio d'en dessous, Maj + molette (ou `+` / `-` / `0`) pour zoomer, `M` pour le compteur
+Geiger sonore. Un secret est trouvé quand il reste un court instant sous le réticule.
+
+Le dock propose aussi la **loupe de poche** (un cercle qui suit la souris ou le doigt, pour une seule
+fenêtre ou un écran tactile) et la **vue rayons X** (toute la page d'un coup, les secrets ne comptent
+pas). Tous les secrets trouvés, la **singularité** se débloque (chaque fenêtre devient un trou noir).
+Le code Konami l'ouvre directement. `?loupe` ou `?portfolio` dans l'URL imposent un rôle.
+
+## Architecture
+
+Le code est découpé en couches ; chaque couche ne dépend que de celles du dessous. La règle est
+vérifiée par `scripts/check-architecture.mjs`, lancé avant chaque `npm test`.
+
+```
+src/app/
+├── core/       infrastructure : géométrie, DOM, horloge, thème, synchronisation des fenêtres
+├── domain/     le profil et ses calculs (parcours, carte, frise, graphe de compétences)
+├── shared/     briques d'interface et de mouvement, sans métier
+├── features/   une fonctionnalité par dossier
+│   ├── page/         la page portfolio et ses sections (hero, profil, parcours…)
+│   ├── secrets/      catalogue, progression, directive appSecret, carnet, notification
+│   ├── lens/         rôle de la fenêtre, vue loupe, HUD, loupe de poche, halos
+│   └── singularity/  l'écran final
+└── shell/      assemble le tout : bascule portfolio ↔ loupe, dock, curseur
+```
+
+| Couche | Peut importer |
+| --- | --- |
+| `core` | `core` |
+| `domain` | `core`, `domain` |
+| `shared` | `core`, `shared` |
+| `features/x` | `core`, `domain`, `shared`, `x`, et les fonctionnalités listées dans `FEATURE_DEPS` |
+| `shell` | tout |
+
+Les fonctionnalités ne se connaissent que dans un sens : `lens → page → secrets`. Quand une couche
+basse a besoin de quelque chose d'une couche haute, elle déclare un contrat et la couche haute le
+fournit : `SecretHost` (secrets) et `ScrollStage` (shared) sont implémentés par `PortfolioPage`.
+Les imports entre couches passent par les alias `@core`, `@domain`, `@shared`, `@features`.
 
 ## Comment ça marche
 
 - **Deux exemplaires de la même page.** `PortfolioPage` est rendue en surface dans la fenêtre
-  principale et en rayons X dans la loupe. Le mode rayons X ne change que des couleurs, des
-  contours et des opacités, jamais la mise en page : les deux exemplaires restent identiques au
-  pixel près. Les tailles s'appuient sur des container queries (`cqi`) et sur `--vh`, la hauteur
-  de la fenêtre portfolio, pour ne jamais dépendre de la taille de la loupe.
-- **Synchronisation entre fenêtres.** Chaque fenêtre publie sa position écran, sa largeur et son
-  défilement sur un `BroadcastChannel` (`core/presence-channel.ts`, `core/window-bus.ts`), à chaque
-  image tant que quelque chose change. La loupe se cale sur la largeur du portfolio et se décale
-  de l'écart entre les deux fenêtres (`lensTransform` dans `core/geometry.ts`).
+  portfolio et en rayons X dans la loupe. Le mode rayons X ne change que des couleurs, des contours
+  et des opacités, jamais la mise en page : les deux exemplaires restent identiques au pixel près.
+  Les tailles s'appuient sur des container queries (`cqi`) et sur `--vh`, la hauteur de la fenêtre
+  portfolio, pour ne jamais dépendre de la taille de la loupe.
+- **Le rôle de chaque fenêtre.** Chaque fenêtre annonce sur un `BroadcastChannel` sa position, sa
+  taille, son défilement et si elle est « petite » (`core/sync`). Une fenêtre petite, alors qu'une
+  grande fenêtre du site est ouverte, devient une loupe (`features/lens/data/window-role.store.ts`).
+  Une marge de sortie et un court délai évitent les bascules en plein redimensionnement.
+- **Des animations identiques partout.** Les animations liées au défilement (apparitions, frise qui
+  se remplit, mots qui s'allument, navigation) lisent le défilement de la *scène* (`ScrollStage`)
+  et non celui de `window` : la loupe reçoit celui du portfolio et calcule la même chose. Les
+  animations en boucle sont calées sur l'horloge de la machine (`clockDelay`) : deux fenêtres
+  ouvertes à des moments différents les montrent au même instant de leur cycle.
 - **Secrets.** La directive `appSecret` enregistre chaque élément caché ; la loupe mesure leur
-  recouvrement (`coverage`, `circleCoverage`) et `ScanEngine` impose un temps d'analyse. Les
-  secrets trouvés sont partagés entre fenêtres (localStorage + bus).
+  recouvrement et `ScanEngine` impose un temps d'analyse. Les secrets trouvés sont partagés entre
+  fenêtres (localStorage + bus).
 - **Zoneless.** Pas de zone.js : l'état passe par des signaux, et la boucle d'animation unique
-  (`core/frame-loop.ts`) écrit directement dans le DOM sans relancer la détection de changements.
-- **Chargement à la demande.** Les deux fenêtres sont des routes chargées paresseusement, et la
-  singularité un bloc `@defer`.
+  (`core/dom/frame-loop.ts`) écrit directement dans le DOM.
+- **Chargement à la demande.** Le shell est une route chargée paresseusement ; la vue loupe et la
+  singularité sont des blocs `@defer`.
 
 ## Modifier le contenu
 
-Tout le texte est dans [`src/app/core/profile.data.ts`](src/app/core/profile.data.ts) : parcours,
-réalisations, compétences, formation, contact, et les coulisses révélées par la loupe. Les
-compteurs (mois en entreprise, jours d'alternance, distances sur la carte, graphe des
-compétences) sont recalculés à partir de ces données.
+Tout le texte est dans [`src/app/domain/profile/profile.data.ts`](src/app/domain/profile/profile.data.ts) :
+titres des sections, parcours, réalisations, compétences, formation, contact, et les coulisses
+révélées par la loupe. Les compteurs (mois en entreprise, jours d'alternance, distances, frise,
+graphe des compétences) sont recalculés à partir de ces données dans `domain/career`.
 
 ## Changer le style
 
@@ -69,24 +106,24 @@ transparences sont calculées avec `color-mix()` à partir des couleurs de base.
   variable y est commentée (fond, encre, accent, palette des rayons X, illustrations…).
 - **Ajouter un thème** : copie `_nuit.scss` sous un autre nom, change le sélecteur
   `:root[data-theme='…']`, ajoute-le dans `index.scss` et dans
-  [`core/themes.ts`](src/app/core/themes.ts). Il apparaît alors dans le bouton de thème du dock.
+  [`core/theme/themes.ts`](src/app/core/theme/themes.ts). Il apparaît alors dans le bouton de thème du dock.
 - **Tester un thème** : `http://localhost:4200/?theme=nuit` force un thème sans l'enregistrer.
 - **Changer de police** : installe-la avec Fontsource, ajoute son CSS dans `angular.json`
   (`styles`), puis modifie `--serif`, `--sans`, `--mono` ou `--hand`.
 
-Le thème choisi est enregistré et partagé avec la fenêtre loupe, qui doit afficher la même palette.
-Après avoir modifié `angular.json`, relance `npm start`.
+Les styles globaux (reset, primitives de mise en page, mouvement, mécanique rayons X) sont dans
+`src/styles/base/`. Le thème choisi est partagé avec la fenêtre loupe.
 
 ## Ajouter un secret
 
-Pour ajouter un secret : déclare-le dans `src/app/core/secrets.catalog.ts`, puis pose
-`appSecret="son-id"` sur un élément du gabarit, positionné en absolu dans un espace libre.
-Le test `portfolio-page.spec.ts` vérifie que catalogue et gabarits restent synchronisés.
+Déclare-le dans `src/app/features/secrets/data/secrets.catalog.ts`, puis pose `appSecret="son-id"`
+sur un élément du gabarit, positionné en absolu dans un espace libre. Le test
+`portfolio-page.spec.ts` vérifie que catalogue et gabarits restent synchronisés.
 
 ## Déploiement
 
-Le build est statique : n'importe quel hébergement de fichiers convient. La loupe est la même
-page ouverte avec `?loupe`, aucune réécriture d'URL n'est nécessaire.
+Le build est statique : n'importe quel hébergement de fichiers convient. Toutes les fenêtres
+chargent la même page, aucune réécriture d'URL n'est nécessaire.
 
 ## Limites
 

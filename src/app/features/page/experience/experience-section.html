@@ -1,0 +1,72 @@
+<section
+  class="wrap sec"
+  data-section="parcours"
+  data-label="Parcours"
+  [attr.id]="page.anchor('parcours')"
+  [attr.aria-labelledby]="page.anchor('parcours-titre')"
+>
+  <app-section-header
+    index="02"
+    name="Parcours"
+    [title]="headline.title"
+    [intro]="headline.intro ?? null"
+    [count]="items.length"
+    [titleId]="page.anchor('parcours-titre')"
+  />
+
+  <div class="layout">
+    <ol class="timeline">
+      <li class="spine" aria-hidden="true"><span class="fill" [style.transform]="'scaleY(' + progress() + ')'"></span></li>
+      @for (item of items; track item.exp.id) {
+        <li
+          class="entry"
+          appReveal
+          [class.current]="item.current"
+          [class.passed]="$index < passed()"
+          [attr.data-x]="'expérience · ' + item.duration"
+        >
+          <span class="node" aria-hidden="true"></span>
+          <div class="when">
+            <span class="period">{{ item.period }}</span>
+            <span class="label">{{ item.exp.contract }} · {{ item.duration }}</span>
+            <span class="xv bar" [style.width.%]="item.barWidth * 100"></span>
+          </div>
+          <div class="what">
+            <p class="where label">
+              <span aria-hidden="true">⌖</span> {{ item.exp.place.city }}
+              @if (item.current) {
+                <span class="now">En poste</span>
+              }
+            </p>
+            <h3 class="company">{{ item.exp.company }}</h3>
+            <p class="role">{{ item.exp.role }}</p>
+            <p class="summary">{{ item.exp.summary }}</p>
+            @if (item.skills.length) {
+              <app-tag-list [tags]="item.skills" label="Compétences mobilisées" />
+            }
+          </div>
+          <span class="chip entry-secret" [appSecret]="item.secretId">{{ item.secretText }}</span>
+        </li>
+      }
+    </ol>
+
+    <aside class="thread" appReveal="150" aria-label="Fil rouge du parcours">
+      <p class="label">Le fil rouge</p>
+      <p class="thread-big">{{ totals.span }}</p>
+      <dl class="stats">
+        <div><dt>{{ totals.totalMonths }}</dt><dd>mois en entreprise</dd></div>
+        <div><dt>{{ totals.cityCount }}</dt><dd>villes</dd></div>
+      </dl>
+      <p class="thread-text">L'infrastructure d'abord, le développement ensuite : un fil qui relie la machine à l'interface.</p>
+      <div class="map-slot">
+        <svg class="thread-art surface-only" viewBox="0 0 300 200" aria-hidden="true">
+          <path d="M14 170 C 70 170, 60 40, 140 60 S 230 170, 286 30" pathLength="100" />
+          <circle cx="14" cy="170" r="5" />
+          <circle cx="140" cy="60" r="5" />
+          <circle class="now" cx="286" cy="30" r="7" />
+        </svg>
+        <app-career-map class="panel map-panel" appSecret="exp-map" [map]="map" />
+      </div>
+    </aside>
+  </div>
+</section>

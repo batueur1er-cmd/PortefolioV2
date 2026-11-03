@@ -1,0 +1,249 @@
+:host {
+  display: block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(32px, 6cqi, 96px);
+}
+
+.text p {
+  max-width: 60ch;
+  margin: 0 0 18px;
+  font: 400 17px/1.65 var(--sans);
+  color: var(--muted);
+}
+
+.specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  background: var(--line);
+}
+
+.specs li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  background: var(--paper);
+}
+
+.num {
+  font: 400 clamp(44px, 5cqi, 68px) / 0.9 var(--serif);
+}
+
+.specs span {
+  font: 500 10.5px/1.4 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Le mode d'emploi de la loupe : trois gestes, aucun bouton. */
+.howto {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.6fr) minmax(0, 1.4fr);
+  gap: clamp(24px, 4cqi, 56px);
+  align-items: center;
+  margin-top: clamp(48px, 6cqi, 80px);
+  padding: clamp(22px, 3cqi, 36px);
+  border-radius: 18px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+:host-context(.xray) .howto {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink);
+}
+
+.howto-art {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  --ink: color-mix(in srgb, #fff 82%, transparent);
+  --paper: transparent;
+  --paper-2: color-mix(in srgb, #fff 10%, transparent);
+}
+
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding: 14px 0 14px 54px;
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 14px;
+  font: italic 400 30px/1 var(--serif);
+  color: color-mix(in srgb, var(--accent) 45%, #fff);
+}
+
+:host-context(.xray) .steps li::before {
+  color: var(--accent);
+}
+
+.steps b {
+  font: 400 22px/1.2 var(--serif);
+}
+
+.steps span {
+  font: 400 14.5px/1.5 var(--sans);
+  opacity: 0.78;
+}
+
+.inline {
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.inline:hover {
+  opacity: 1;
+  color: color-mix(in srgb, var(--accent) 45%, #fff);
+}
+
+.warn {
+  display: block;
+  margin-top: 6px;
+  font-style: normal;
+  color: color-mix(in srgb, var(--xn) 85%, #fff);
+}
+
+.pocket {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px dashed color-mix(in srgb, currentColor 25%, transparent);
+  font: 400 14px/1.5 var(--sans);
+  opacity: 0.7;
+}
+
+.vault {
+  position: relative;
+  min-height: 330px;
+  margin-top: clamp(40px, 5cqi, 64px);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-l);
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 14px,
+    color-mix(in srgb, var(--ink) 2.5%, transparent) 14px 28px
+  );
+}
+
+.vault-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.lock {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--muted);
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--accent) 0 8%, transparent 8% 100%);
+  animation: dial 8s cubic-bezier(0.7, 0, 0.3, 1) infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.lock::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  border: 1px dashed var(--muted);
+}
+
+@keyframes dial {
+  0% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(120deg);
+  }
+  50% {
+    transform: rotate(40deg);
+  }
+  75% {
+    transform: rotate(250deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.diagram {
+  left: 2%;
+  top: 22px;
+  width: 58%;
+  margin: 0;
+}
+
+.diagram .wire {
+  width: 100%;
+  height: auto;
+}
+
+.formula {
+  right: 3%;
+  top: 34px;
+}
+
+.live {
+  right: 3%;
+  bottom: 30px;
+  white-space: nowrap;
+}
+
+@container page (max-width: 860px) {
+  .grid,
+  .howto {
+    grid-template-columns: 1fr;
+  }
+
+  .howto-art {
+    max-width: 240px;
+  }
+
+  .vault-label {
+    white-space: normal;
+    width: 80%;
+  }
+}

@@ -1,0 +1,175 @@
+:host {
+  display: block;
+}
+
+.stage {
+  position: relative;
+}
+
+.graph {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  z-index: 0;
+}
+
+.graph path {
+  fill: none;
+  stroke: var(--xl);
+  opacity: 0.55;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+
+:host-context(.xray) .graph path {
+  animation: draw-edge 2.4s ease forwards;
+}
+
+@keyframes draw-edge {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.graph circle {
+  fill: var(--xp);
+}
+
+.groups {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 3cqi, 44px);
+}
+
+.group {
+  padding-top: 18px;
+  border-top: 1px solid var(--ink);
+}
+
+.group-index {
+  margin: 0 0 18px;
+  font: 500 11px/1 var(--mono);
+  color: var(--accent);
+}
+
+.group-title {
+  margin: 0 0 6px;
+  font: 400 clamp(24px, 2.2cqi, 32px) / 1.05 var(--serif);
+}
+
+.group .label {
+  display: block;
+  min-height: 3.2em;
+  margin-bottom: 18px;
+}
+
+.tags {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* L'écart réserve la place des annotations rayons X sous chaque étiquette. */
+  gap: 26px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  position: relative;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  font: 500 13px/1.2 var(--sans);
+  cursor: default;
+  transition:
+    background 0.25s,
+    color 0.25s,
+    border-color 0.25s,
+    opacity 0.25s,
+    box-shadow 0.25s;
+}
+
+.tag:focus-visible {
+  outline-offset: 2px;
+}
+
+.tag.lit {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.tag.near {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.tag.dim {
+  opacity: 0.35;
+}
+
+:host-context(.xray) .tag {
+  background: var(--xbg);
+}
+
+.source {
+  left: 14px;
+  top: calc(100% + 5px);
+  font: 400 10px/1 var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--xn);
+  white-space: nowrap;
+}
+
+.extras {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.6fr);
+  gap: 24px;
+  align-items: start;
+  margin-top: clamp(48px, 6cqi, 80px);
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.extras-text {
+  max-width: 44ch;
+  margin: 0;
+  font: italic 400 20px/1.4 var(--serif);
+  color: var(--muted);
+}
+
+.slot {
+  position: relative;
+  min-height: 120px;
+}
+
+.top3 {
+  left: 0;
+  top: 0;
+}
+
+.pix {
+  left: 10px;
+  top: 10px;
+  --r: -8deg;
+}
+
+@container page (max-width: 1020px) {
+  .groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container page (max-width: 640px) {
+  .groups,
+  .extras {
+    grid-template-columns: 1fr;
+  }
+}

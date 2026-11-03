@@ -1,0 +1,126 @@
+:host {
+  position: relative;
+  display: block;
+}
+
+.big,
+.small {
+  position: absolute;
+  border-radius: 5px;
+}
+
+.big {
+  inset: 0 14% 10% 0;
+  border: 1.5px solid var(--ink);
+  border-top-width: 6px;
+  background: var(--paper);
+}
+
+.big i {
+  position: absolute;
+  left: 12%;
+  height: 3px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.big i:nth-child(1) {
+  top: 22%;
+  width: 56%;
+}
+
+.big i:nth-child(2) {
+  top: 44%;
+  width: 70%;
+}
+
+.big i:nth-child(3) {
+  top: 66%;
+  width: 40%;
+}
+
+/* La petite fenêtre : grande au départ, elle rapetisse, se pose, puis devient loupe. */
+.small {
+  overflow: hidden;
+  border: 1.5px solid var(--ink);
+  border-top-width: 5px;
+  background: var(--paper-2);
+  animation: gesture 6s cubic-bezier(0.6, 0, 0.3, 1) infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background-color: var(--xbg);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--xl) 40%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--xl) 40%, transparent) 1px, transparent 1px);
+  background-size: 6px 6px;
+  opacity: 0;
+  animation: see-through 6s ease infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+@keyframes gesture {
+  0%,
+  8% {
+    left: 30%;
+    top: 20%;
+    width: 70%;
+    height: 80%;
+  }
+  38% {
+    left: 58%;
+    top: 46%;
+    width: 38%;
+    height: 50%;
+  }
+  62%,
+  92% {
+    left: 24%;
+    top: 18%;
+    width: 38%;
+    height: 50%;
+    border-color: var(--xl);
+  }
+  100% {
+    left: 30%;
+    top: 20%;
+    width: 70%;
+    height: 80%;
+  }
+}
+
+@keyframes see-through {
+  0%,
+  52% {
+    opacity: 0;
+  }
+  64%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .small,
+  .grid {
+    animation: none;
+  }
+
+  .small {
+    left: 24%;
+    top: 18%;
+    width: 38%;
+    height: 50%;
+    border-color: var(--xl);
+  }
+
+  .grid {
+    opacity: 1;
+  }
+}

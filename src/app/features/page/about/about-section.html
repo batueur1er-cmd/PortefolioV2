@@ -1,0 +1,51 @@
+<section
+  class="wrap sec"
+  data-section="profil"
+  data-label="Profil"
+  [attr.id]="page.anchor('profil')"
+  [attr.aria-labelledby]="page.anchor('profil-titre')"
+>
+  <app-section-header index="01" name="Profil" [title]="headline.title" [titleId]="page.anchor('profil-titre')" />
+
+  <div class="grid">
+    <aside class="card" appReveal data-x="fiche · données du profil" aria-label="Fiche d'identité">
+      <p class="card-head"><span class="label">Fiche</span><span class="label">BN-2026</span></p>
+      <dl>
+        @if (current) {
+          <div><dt>Poste</dt><dd>{{ current.role }}</dd></div>
+          <div><dt>Entreprise</dt><dd>{{ current.company }}</dd></div>
+        }
+        <div><dt>École</dt><dd>{{ school.school }} · {{ school.acronym }}</dd></div>
+        <div><dt>Basé à</dt><dd>{{ city }} · {{ totals.region }}</dd></div>
+        <div><dt>Parcours</dt><dd>{{ totals.span }}</dd></div>
+      </dl>
+      <p class="signature" aria-hidden="true">Baptiste N.</p>
+    </aside>
+
+    <div class="body">
+      <p class="big"><app-scroll-words [text]="about.paragraphs[0]" /></p>
+      @for (paragraph of about.paragraphs.slice(1); track $index) {
+        <p class="text" [appReveal]="$index * 120">{{ paragraph }}</p>
+      }
+      <div class="slot">
+        <div class="panel summary" appSecret="about-summary">
+          <span class="panel-title">Résumé LinkedIn d'origine</span>
+          <s>« {{ about.linkedinSummary }} »</s>
+          <span class="outcome">→ {{ about.linkedinSummaryOutcome }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="facts-wrap">
+    <ul class="facts">
+      @for (fact of facts; track fact.label) {
+        <li [appReveal]="$index * 90">
+          <app-count-up class="num" [value]="fact.value" />
+          <span>{{ fact.label }}</span>
+        </li>
+      }
+    </ul>
+    <p class="note facts-note" appSecret="about-facts">{{ totals.breakdown }} · recalculé chaque jour</p>
+  </div>
+</section>

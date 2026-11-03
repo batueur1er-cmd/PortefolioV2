@@ -1,0 +1,54 @@
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
+import { Project } from '@domain/profile/profile.model';
+import { TiltDirective } from '@shared/motion/tilt.directive';
+import { TagList } from '@shared/ui/tag-list';
+
+import { ProjectArt } from './project-art';
+
+export interface ProjectView extends Project {
+  readonly secretId: string;
+  readonly skillLabels: readonly string[];
+}
+
+/** Une réalisation : illustration animée, contexte, points marquants, technologies. */
+@Component({
+  selector: 'app-project-card',
+  imports: [ProjectArt, TagList, TiltDirective],
+  template: `
+    <article class="card" appTilt="4" [attr.data-x]="'article · visuel ' + project().visual">
+      <div class="frame">
+        <app-project-art [visual]="project().visual" [secretId]="project().secretId" [secret]="project().secret" />
+        <span class="num" aria-hidden="true">{{ number() < 10 ? '0' + number() : number() }}</span>
+      </div>
+      <div class="body">
+        <p class="meta">
+          <span>{{ project().context }}</span>
+          <span>{{ project().year }}</span>
+        </p>
+        <h3 class="title">{{ project().title }}</h3>
+        <p class="summary">{{ project().summary }}</p>
+        <ul class="highlights">
+          @for (line of project().highlights; track line) {
+            <li>{{ line }}</li>
+          }
+        </ul>
+        <div class="foot">
+          <app-tag-list [tags]="project().skillLabels" />
+          @if (project().repo; as repo) {
+            <a class="repo" [href]="repo" target="_blank" rel="noopener">
+              Voir le dépôt <span aria-hidden="true">↗</span>
+              <span class="sr-only">(GitHub, nouvel onglet)</span>
+            </a>
+          }
+        </div>
+      </div>
+    </article>
+  `,
+  styleUrl: './project-card.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ProjectCard {
+  readonly project = input.required<ProjectView>();
+  readonly number = input(1);
+}

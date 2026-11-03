@@ -1,0 +1,95 @@
+:host {
+  display: block;
+}
+
+.boot {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  margin: 0;
+  background: var(--xbg);
+  color: var(--xl);
+  font: 400 34px/1 var(--serif);
+  text-align: center;
+}
+
+.boot span {
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  animation: blink 1.2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+/* La transition entre les deux rôles : un iris qui se ferme sur la nouvelle vue. */
+.morph {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  animation: iris 0.9s cubic-bezier(0.7, 0, 0.2, 1) forwards;
+}
+
+.morph span {
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  animation: label 0.9s ease forwards;
+}
+
+.to-lens {
+  background:
+    linear-gradient(color-mix(in srgb, var(--xl) 18%, transparent) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, color-mix(in srgb, var(--xl) 18%, transparent) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--xbg);
+  color: var(--xl);
+}
+
+.to-main {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+@keyframes iris {
+  0% {
+    clip-path: circle(0% at 50% 50%);
+  }
+  45% {
+    clip-path: circle(75% at 50% 50%);
+  }
+  100% {
+    clip-path: circle(75% at 50% 50%);
+    opacity: 0;
+  }
+}
+
+@keyframes label {
+  0%,
+  20% {
+    opacity: 0;
+    letter-spacing: 0.6em;
+  }
+  50% {
+    opacity: 1;
+    letter-spacing: 0.3em;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .morph {
+    display: none;
+  }
+}

@@ -1,0 +1,257 @@
+:host {
+  display: block;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(250px, 1fr);
+  gap: clamp(32px, 6cqi, 96px);
+  align-items: start;
+}
+
+.timeline {
+  position: relative;
+  margin: 0;
+  padding: 0 0 0 46px;
+  list-style: none;
+}
+
+/* La colonne vertébrale de la frise, remplie au fil du défilement. */
+.spine {
+  position: absolute;
+  left: 9px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: var(--line);
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform-origin: top;
+  transform: scaleY(0);
+}
+
+.entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(150px, 0.55fr) minmax(0, 1.45fr);
+  gap: 24px;
+  padding: 0 0 clamp(56px, 7cqi, 92px);
+}
+
+.node {
+  position: absolute;
+  left: -46px;
+  top: 6px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  transition:
+    border-color 0.4s,
+    background 0.4s,
+    transform 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.entry.passed .node {
+  border-color: var(--accent);
+  background: var(--accent);
+  transform: scale(1.15);
+  box-shadow: 0 0 0 5px var(--paper);
+}
+
+.entry.current .node::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  animation: halo 2s ease-out infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+@keyframes halo {
+  from {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+.when {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: start;
+}
+
+.period {
+  font: 500 13px/1.3 var(--mono);
+  letter-spacing: 0.04em;
+}
+
+.bar {
+  left: 0;
+  top: calc(100% + 10px);
+  height: 3px;
+  background: var(--xn);
+  box-shadow: 0 0 10px var(--xn);
+}
+
+.where {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.now {
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--ok) 16%, transparent);
+  color: var(--ok);
+  font-size: 9.5px;
+}
+
+.company {
+  margin: 0;
+  font: 400 clamp(30px, 3.4cqi, 46px) / 1.02 var(--serif);
+  letter-spacing: -0.015em;
+}
+
+.role {
+  margin: 8px 0 0;
+  font: 600 15px/1.4 var(--sans);
+}
+
+.summary {
+  max-width: 54ch;
+  margin: 10px 0 16px;
+  font: 400 16px/1.6 var(--sans);
+  color: var(--muted);
+}
+
+.entry-secret {
+  left: 0;
+  bottom: clamp(18px, 3cqi, 40px);
+}
+
+.thread {
+  position: relative;
+  padding: 26px;
+  border-radius: var(--radius-l);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+:host-context(.xray) .thread {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink);
+}
+
+.thread .label {
+  color: inherit;
+  opacity: 0.6;
+}
+
+.thread-big {
+  margin: 10px 0 18px;
+  font: italic 400 clamp(32px, 3.4cqi, 46px) / 1 var(--serif);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0 0 18px;
+}
+
+.stats dt {
+  font: 400 44px/1 var(--serif);
+}
+
+.stats dd {
+  margin: 4px 0 0;
+  font: 500 10px/1.4 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.thread-text {
+  margin: 0;
+  font: 400 15px/1.55 var(--sans);
+  opacity: 0.8;
+}
+
+/* Place réservée à la carte, révélée par la loupe. */
+.map-slot {
+  position: relative;
+  min-height: 330px;
+}
+
+.thread-art {
+  position: absolute;
+  inset: 34px 0 0;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.thread-art path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-dasharray: 2 3;
+  opacity: 0.55;
+  animation: march 6s linear infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.thread-art circle {
+  fill: currentColor;
+}
+
+.thread-art .now {
+  fill: var(--accent);
+  animation: halo-dot 2s ease-in-out infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+@keyframes march {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes halo-dot {
+  50% {
+    r: 10;
+  }
+}
+
+.map-panel {
+  left: 0;
+  right: 0;
+  top: 20px;
+}
+
+@container page (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .entry {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}

@@ -1,0 +1,52 @@
+<header
+  class="hero"
+  data-section="accueil"
+  data-label="Accueil"
+  [attr.id]="page.anchor('accueil')"
+  data-x="&lt;app-hero-section&gt; · min-height : 100vh"
+>
+  <div class="wrap head">
+    <div class="top">
+      <p class="label kicker">{{ profile.kicker }}</p>
+      <p class="label where">
+        <span class="pin" aria-hidden="true"></span>{{ profile.city }} · <time>{{ time() }}</time>
+      </p>
+    </div>
+
+    <app-hero-orb class="orb" />
+
+    <div class="title">
+      <span class="chip measure" appSecret="hero-measure">font-size : {{ fontSize() }} · mesuré en direct</span>
+      <h1 class="name" #name>
+        <span class="first"><app-split-text [text]="profile.firstName" /></span>
+        <span class="last"><app-split-text [text]="profile.lastName" [offset]="profile.firstName.length" /></span>
+      </h1>
+    </div>
+  </div>
+
+  <app-marquee class="band" [items]="skills" [duration]="60" />
+
+  <div class="wrap bottom">
+    <div class="pitch">
+      <p class="lead">{{ profile.lead }}</p>
+      <div class="actions">
+        <a class="btn" href="#parcours" appMagnetic>Voir le parcours <span aria-hidden="true">↓</span></a>
+        <a class="btn ghost" href="#contact" appMagnetic>Me contacter</a>
+      </div>
+    </div>
+
+    <div class="side">
+      <p class="status"><span class="dot" aria-hidden="true"></span>{{ profile.status }}</p>
+      <a class="hint" href="#coulisses">
+        <app-window-gesture class="hint-art" />
+        <span class="hint-text">
+          <b>Ce site a une face cachée.</b>
+          Ouvrez-le dans une seconde fenêtre, rétrécissez-la et posez-la ici : elle devient une loupe.
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <p class="stamp seen" appSecret="hero-stamp">Vous n'étiez pas<br />censé voir ça</p>
+  <p class="note twin" appSecret="hero-twin">oui, cette page existe en deux exemplaires.<br />vous regardez la deuxième.</p>
+</header>

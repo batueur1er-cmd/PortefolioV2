@@ -1,0 +1,698 @@
+/* Toutes les animations sont calées sur l'horloge commune (--clock) et leurs durées divisent
+   120 s : la loupe voit chaque illustration au même instant de son cycle. */
+
+:host {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.surface,
+.xray {
+  position: absolute;
+  inset: 0;
+}
+
+.surface {
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.surface > div {
+  position: absolute;
+}
+
+/* Le plan tient toujours dans le cadre, quelle que soit sa proportion. */
+.wire {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: calc(100% - 28px);
+  height: calc(100% - 28px);
+}
+
+.art-chip {
+  left: 12px;
+  top: 12px;
+  z-index: 1;
+}
+
+i,
+span {
+  position: absolute;
+  display: block;
+}
+
+/* ---------- Argus : appli de supervision ---------- */
+
+:host(.art-argus) .surface {
+  background: radial-gradient(circle at 70% 30%, var(--art-night), var(--art-night-2) 72%);
+}
+
+.phone {
+  position: absolute;
+  left: 9%;
+  top: 9%;
+  bottom: -8%;
+  width: 30%;
+  padding: 14% 7% 0;
+  border: 2px solid color-mix(in srgb, #fff 20%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--art-night-2) 80%, #000);
+  box-shadow: 0 24px 50px color-mix(in srgb, #000 40%, transparent);
+  animation: hover-y 8s ease-in-out infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.notch {
+  left: 38%;
+  top: 4%;
+  width: 24%;
+  height: 4%;
+  border-radius: 9px;
+  background: color-mix(in srgb, #fff 18%, transparent);
+}
+
+.app-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 8%;
+  font: 600 clamp(9px, 1.1cqi, 13px) / 1 var(--sans);
+  color: var(--art-sheet);
+}
+
+.badge {
+  position: relative;
+  padding: 2px 6px;
+  border-radius: 9px;
+  background: var(--art-flame);
+  color: #fff;
+  font: 700 9px/1.2 var(--mono);
+  animation: bump 3s ease-in-out infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.pulse {
+  display: block;
+  width: 100%;
+  height: 16%;
+  margin-bottom: 8%;
+  overflow: visible;
+}
+
+.pulse polyline {
+  fill: none;
+  stroke: var(--art-teal);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 100;
+  animation: draw 4s linear infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.alerts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alerts li {
+  position: relative;
+  height: 14%;
+  min-height: 16px;
+  margin-bottom: 6%;
+  border-radius: 6px;
+  background: color-mix(in srgb, #fff 8%, transparent);
+}
+
+.alerts li i {
+  left: 8%;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+}
+
+.alerts li span {
+  left: 22%;
+  top: 42%;
+  height: 3px;
+  border-radius: 2px;
+  background: color-mix(in srgb, #fff 35%, transparent);
+}
+
+.alerts .high i {
+  background: var(--art-flame);
+  animation: blink 2s steps(2) infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.alerts .mid i {
+  background: var(--art-gold);
+}
+
+.alerts .ok i {
+  background: var(--art-teal);
+}
+
+.server {
+  right: 10%;
+  width: 34%;
+  height: 22%;
+  border-radius: 6px;
+  background: repeating-linear-gradient(180deg, var(--art-mist) 0 3px, var(--art-night) 3px 9px);
+  opacity: 0.85;
+}
+
+.server i {
+  top: 18%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--art-teal);
+  box-shadow: 0 0 8px var(--art-teal);
+  animation: blink 1s steps(2) infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.server i:nth-child(1) {
+  right: 8%;
+}
+
+.server i:nth-child(2) {
+  right: 16%;
+  animation-delay: calc(var(--clock, 0ms) - 0.5s);
+}
+
+.server i:nth-child(3) {
+  right: 24%;
+  background: var(--art-gold);
+  box-shadow: 0 0 8px var(--art-gold);
+  animation-duration: 2s;
+}
+
+.s1 {
+  top: 18%;
+}
+
+.s2 {
+  top: 50%;
+}
+
+.wave {
+  left: 39%;
+  top: 46%;
+  width: 22%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--art-teal), transparent);
+  background-size: 200% 100%;
+  animation: flow 2s linear infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+/* ---------- CRM : tableau de bord ---------- */
+
+:host(.art-crm) .surface {
+  background: linear-gradient(160deg, var(--art-forest), var(--art-forest-2));
+}
+
+.side {
+  left: 6%;
+  top: 9%;
+  bottom: 9%;
+  width: 18%;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--art-sheet) 14%, transparent);
+}
+
+.side i {
+  left: 16%;
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--art-sheet) 60%, transparent);
+}
+
+.side i:nth-child(1) {
+  top: 14%;
+  width: 60%;
+}
+
+.side i:nth-child(2) {
+  top: 24%;
+  width: 46%;
+}
+
+.side i:nth-child(3) {
+  top: 34%;
+  width: 54%;
+  background: var(--art-gold);
+}
+
+.table {
+  left: 29%;
+  top: 9%;
+  right: 6%;
+  height: 40%;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--art-sheet) 90%, transparent);
+}
+
+.table i {
+  left: 5%;
+  right: 5%;
+  height: 12%;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--art-forest) 14%, transparent);
+}
+
+.table i:nth-child(1) {
+  top: 10%;
+  background: color-mix(in srgb, var(--art-forest) 30%, transparent);
+}
+
+.table i:nth-child(2) {
+  top: 32%;
+}
+
+.table i:nth-child(3) {
+  top: 54%;
+  animation: highlight-row 6s ease-in-out infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.table i:nth-child(4) {
+  top: 76%;
+}
+
+.chart {
+  left: 29%;
+  right: 6%;
+  bottom: 9%;
+  height: 38%;
+  display: flex;
+  align-items: flex-end;
+  gap: 5%;
+  padding: 3% 4%;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--art-sheet) 14%, transparent);
+}
+
+.chart span {
+  position: relative;
+  flex: 1;
+  height: calc(var(--h) * 100%);
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(180deg, var(--art-gold), var(--art-flame));
+  transform-origin: bottom;
+  animation: bars 5s ease-in-out infinite;
+  animation-delay: calc(var(--clock, 0ms) - var(--d) * 0.6s);
+}
+
+/* ---------- Ciné : affiches qui défilent ---------- */
+
+:host(.art-cine) .surface {
+  background: linear-gradient(180deg, #161018, #2a1420);
+}
+
+.reel {
+  left: 6%;
+  right: 6%;
+  top: 0;
+  animation: reel 20s linear infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.posters {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding-bottom: 8px;
+}
+
+.posters span {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  border-radius: 6px;
+  background: linear-gradient(
+    calc(var(--p) * 47deg),
+    color-mix(in srgb, var(--art-flame) calc(30% + var(--p) * 8%), var(--art-night)),
+    color-mix(in srgb, var(--art-gold) 60%, var(--art-night-2))
+  );
+}
+
+.posters i {
+  right: 6px;
+  bottom: 5px;
+  font: 700 9px/1 var(--mono);
+  font-style: normal;
+  color: var(--art-gold);
+}
+
+.tmdb {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 10px 14px;
+  background: linear-gradient(transparent, color-mix(in srgb, #000 70%, transparent));
+  font: 600 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--art-sheet);
+}
+
+/* ---------- Why So Serious : terminal ---------- */
+
+:host(.art-wss) .surface {
+  background: linear-gradient(140deg, var(--art-night-2), #000);
+}
+
+.term {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 12%;
+  bottom: 12%;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, #fff 14%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, #000 60%, var(--art-night-2));
+  font: 500 clamp(9px, 1.05cqi, 12px) / 1.6 var(--mono);
+  color: var(--art-mist);
+}
+
+.term .bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 8px 10px;
+  border-bottom: 1px solid color-mix(in srgb, #fff 10%, transparent);
+}
+
+.term .bar i {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--art-flame);
+}
+
+.term .bar i:nth-child(2) {
+  background: var(--art-gold);
+}
+
+.term .bar i:nth-child(3) {
+  background: var(--art-teal);
+}
+
+.term .bar span {
+  position: relative;
+  margin-left: 8px;
+  opacity: 0.6;
+}
+
+.line {
+  width: 0;
+  margin: 0 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: type 8s steps(28) infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.line b {
+  color: var(--art-teal);
+}
+
+.l1 {
+  margin-top: 10px;
+}
+
+.l2 {
+  color: var(--art-gold);
+  animation-name: type-2;
+}
+
+.l3 {
+  animation-name: type-3;
+}
+
+.caret {
+  position: relative;
+  display: inline-block;
+  width: 7px;
+  height: 1em;
+  margin-left: 3px;
+  vertical-align: -2px;
+  background: var(--art-mist);
+  animation: blink 1s steps(2) infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.link {
+  right: 8%;
+  top: 12%;
+  width: 10px;
+  height: 10px;
+  margin: 6px;
+  border-radius: 50%;
+  background: var(--art-teal);
+  box-shadow: 0 0 0 0 var(--art-teal);
+  animation: ping-out 2s ease-out infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+/* ---------- Infrastructure : réseau et baies ---------- */
+
+:host(.art-infra) .surface {
+  background: radial-gradient(circle at 50% 30%, var(--art-night), var(--art-night-2) 74%);
+}
+
+.mesh {
+  position: absolute;
+  inset: 10% 14% 46%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  place-items: center;
+}
+
+.mesh i {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--art-teal);
+  opacity: 0.4;
+  animation: glow 3s ease-in-out infinite;
+  animation-delay: calc(var(--clock, 0ms) - var(--n) * 0.25s);
+}
+
+.rack {
+  bottom: 12%;
+  width: 26%;
+  height: 30%;
+  border-radius: 5px;
+  background: repeating-linear-gradient(180deg, var(--art-mist) 0 3px, var(--art-night) 3px 10px);
+}
+
+.rack i {
+  right: 10%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--art-teal);
+  box-shadow: 0 0 6px var(--art-teal);
+  animation: blink 1s steps(2) infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.rack i:nth-child(1) {
+  top: 12%;
+}
+
+.rack i:nth-child(2) {
+  top: 37%;
+  animation-delay: calc(var(--clock, 0ms) - 0.3s);
+}
+
+.rack i:nth-child(3) {
+  top: 62%;
+  animation-duration: 2s;
+}
+
+.rack i:nth-child(4) {
+  top: 87%;
+  background: var(--art-gold);
+  box-shadow: 0 0 6px var(--art-gold);
+}
+
+.r1 {
+  left: 16%;
+}
+
+.r2 {
+  right: 16%;
+  background: repeating-linear-gradient(180deg, var(--art-gold) 0 3px, var(--art-night) 3px 10px);
+}
+
+.packet {
+  left: 42%;
+  bottom: 26%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--art-sheet);
+  box-shadow: 0 0 10px var(--art-sheet);
+  animation: packet 3s ease-in-out infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+/* ---------- Ce site : deux fenêtres, une loupe ---------- */
+
+:host(.art-site) .surface {
+  background: var(--art-sand);
+}
+
+.gesture {
+  position: absolute;
+  inset: 14% 16%;
+}
+
+/* ---------- Animations ---------- */
+
+@keyframes hover-y {
+  50% {
+    transform: translateY(-4%);
+  }
+}
+
+@keyframes bump {
+  0%,
+  80%,
+  100% {
+    transform: none;
+  }
+  88% {
+    transform: scale(1.35);
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@keyframes flow {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes highlight-row {
+  0%,
+  100% {
+    background: color-mix(in srgb, var(--art-forest) 14%, transparent);
+  }
+  50% {
+    background: color-mix(in srgb, var(--art-gold) 55%, transparent);
+  }
+}
+
+@keyframes bars {
+  50% {
+    transform: scaleY(0.55);
+  }
+}
+
+@keyframes reel {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes type {
+  0% {
+    width: 0;
+  }
+  25%,
+  100% {
+    width: calc(100% - 24px);
+  }
+}
+
+@keyframes type-2 {
+  0%,
+  30% {
+    width: 0;
+  }
+  50%,
+  100% {
+    width: calc(100% - 24px);
+  }
+}
+
+@keyframes type-3 {
+  0%,
+  55% {
+    width: 0;
+  }
+  80%,
+  100% {
+    width: calc(100% - 24px);
+  }
+}
+
+@keyframes ping-out {
+  70%,
+  100% {
+    box-shadow: 0 0 0 12px transparent;
+  }
+}
+
+@keyframes glow {
+  50% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+}
+
+@keyframes packet {
+  0% {
+    transform: translate(-90px, 0);
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(90px, 0);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+  }
+
+  .line {
+    width: calc(100% - 24px);
+  }
+}

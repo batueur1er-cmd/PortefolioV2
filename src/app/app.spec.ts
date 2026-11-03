@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
+import { SECRETS } from '@features/secrets/data/secrets.catalog';
+
 import { App } from './app';
 import { routes } from './app.routes';
-import { SECRETS } from './core/secrets.catalog';
 
 describe('App', () => {
   it('démarre', async () => {

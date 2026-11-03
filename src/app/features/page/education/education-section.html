@@ -1,0 +1,70 @@
+<section
+  class="wrap sec"
+  data-section="formation"
+  data-label="Formation"
+  [attr.id]="page.anchor('formation')"
+  [attr.aria-labelledby]="page.anchor('formation-titre')"
+>
+  <app-section-header
+    index="05"
+    name="Formation"
+    [title]="headline.title"
+    [intro]="headline.intro ?? null"
+    [count]="items.length"
+    [titleId]="page.anchor('formation-titre')"
+  />
+
+  <div class="ruler" appReveal aria-hidden="true" data-x="frise · une barre par diplôme">
+    <div class="lanes">
+      @for (bar of ruler.bars; track bar.id) {
+        <span
+          class="bar"
+          [style.left.%]="bar.start * 100"
+          [style.width.%]="bar.width * 100"
+          [style.top.px]="$index * 30"
+          [style.--d]="$index"
+        >
+          {{ bar.label }}
+        </span>
+      }
+    </div>
+    <div class="ticks">
+      @for (tick of ruler.years; track tick.year) {
+        <span class="tick" [style.left.%]="tick.at * 100">{{ tick.year }}</span>
+      }
+    </div>
+  </div>
+
+  <ol class="rows">
+    @for (item of items; track item.id) {
+      <li class="row" [appReveal]="$index * 100" [attr.data-x]="'formation · ' + (item.acronym ?? item.school)">
+        <span class="period">{{ item.period }}</span>
+        <div class="what">
+          <h3 class="school">{{ item.school }}</h3>
+          <p class="degree">
+            {{ item.degree }}
+            @if (item.acronym) {
+              <abbr [attr.title]="item.degree">({{ item.acronym }})</abbr>
+            }
+          </p>
+          @if (item.field) {
+            <p class="label">{{ item.field }}</p>
+          }
+        </div>
+        <span class="mark" aria-hidden="true">{{ item.acronym ?? 'BAC' }}</span>
+      </li>
+    }
+  </ol>
+
+  <div class="extras">
+    @for (certification of certifications; track certification.id) {
+      <p class="cert" appReveal>
+        <span class="seal" aria-hidden="true">✔</span>
+        <span><span class="label">Certification</span> {{ certification.label }} — {{ certification.description }}</span>
+      </p>
+    }
+    <p class="note chain" appSecret="edu-chain">BTS jusqu'en 2025, Bachelor dès juillet 2025 : enchaînés.</p>
+    <pre class="code decoder" appSecret="edu-decoder">{{ decoder }}</pre>
+    <span class="chip span" appSecret="edu-span">{{ span }}</span>
+  </div>
+</section>

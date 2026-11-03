@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "node scripts/check-architecture.mjs && ng test",
+    "lint:archi": "node scripts/check-architecture.mjs"
   },
   "private": true,
   "packageManager": "npm@11.7.0",

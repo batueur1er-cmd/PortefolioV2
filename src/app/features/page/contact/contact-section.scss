@@ -1,0 +1,141 @@
+:host {
+  display: block;
+}
+
+.contact {
+  padding-bottom: clamp(64px, 8cqi, 110px);
+}
+
+.mail-wrap {
+  position: relative;
+  padding-bottom: 72px;
+}
+
+.mail {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.2em;
+  max-width: 100%;
+  font: 400 clamp(34px, 7.4cqi, 112px) / 1 var(--serif);
+  letter-spacing: -0.03em;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+
+.mail::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.06em;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: right;
+  transform: scaleX(0);
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+
+.mail:hover::after,
+.mail:focus-visible::after {
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
+/* Au survol, les lettres font la vague. */
+.mail ::ng-deep .piece {
+  transition: transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.mail:hover ::ng-deep .piece {
+  transform: translateY(-0.08em);
+  transition-delay: calc(var(--i) * 18ms);
+}
+
+.arrow {
+  font-size: 0.4em;
+  color: var(--accent);
+  transition: transform 0.4s;
+}
+
+.mail:hover .arrow {
+  transform: translate(0.2em, -0.2em) rotate(8deg);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.local {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 0 0;
+  font: 500 12px/1.4 var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.local time {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+  animation: breathe 2s ease-in-out infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+@keyframes breathe {
+  50% {
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--ok) 22%, transparent);
+  }
+}
+
+.score {
+  right: 0;
+  bottom: 8px;
+  --r: -3deg;
+}
+
+.footer {
+  position: relative;
+  padding-top: 26px;
+  padding-bottom: 120px;
+  border-top: 1px solid var(--line);
+}
+
+.big {
+  margin: 0;
+  font: italic 400 clamp(64px, 15cqi, 230px) / 0.85 var(--serif);
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 30%, transparent);
+  white-space: nowrap;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.top {
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.made {
+  right: 0;
+  top: 18px;
+}

@@ -1,0 +1,130 @@
+:host {
+  --r: 150px;
+  --x: -999px;
+  --y: -999px;
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  clip-path: circle(var(--r) at var(--x) var(--y));
+}
+
+.layer-page {
+  transform-origin: 0 0;
+}
+
+.ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: calc(var(--r) * 2);
+  height: calc(var(--r) * 2);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--xl) 90%, transparent),
+    0 0 0 9px color-mix(in srgb, var(--xbg) 55%, transparent),
+    0 0 0 10px color-mix(in srgb, var(--xl) 35%, transparent),
+    0 18px 60px color-mix(in srgb, var(--xbg) 55%, transparent),
+    inset 0 0 40px color-mix(in srgb, var(--xl) 25%, transparent);
+  will-change: transform;
+  animation: ring-in 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes ring-in {
+  from {
+    scale: 0.4;
+    opacity: 0;
+  }
+}
+
+.ring::before,
+.ring::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: color-mix(in srgb, var(--xl) 55%, transparent);
+  transform: translate(-50%, -50%);
+}
+
+.ring::before {
+  width: 18px;
+  height: 1px;
+}
+
+.ring::after {
+  width: 1px;
+  height: 18px;
+}
+
+.arc {
+  position: absolute;
+  inset: -9px;
+  width: calc(100% + 18px);
+  height: calc(100% + 18px);
+  transform: rotate(-90deg);
+}
+
+.arc circle {
+  fill: none;
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
+
+.arc-track {
+  stroke: transparent;
+}
+
+.arc-bar {
+  stroke: var(--xn);
+  stroke-dasharray: 100;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px var(--xn));
+}
+
+.zoom {
+  position: absolute;
+  left: 50%;
+  bottom: -34px;
+  transform: translateX(-50%);
+  padding: 4px 9px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--xbg) 85%, transparent);
+  color: var(--xtext);
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.16em;
+}
+
+.help {
+  position: fixed;
+  left: 50%;
+  top: 76px;
+  margin: 0;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--xbg) 85%, transparent);
+  color: var(--xtext);
+  font: 500 10.5px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (pointer: coarse) {
+  .ring {
+    pointer-events: auto;
+    touch-action: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .help {
+    font-size: 9px;
+  }
+}

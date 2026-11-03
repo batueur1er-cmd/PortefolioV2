@@ -1,0 +1,27 @@
+<a class="skip-link" href="#contenu">Aller au contenu</a>
+
+<div class="stage">
+  <app-portfolio-page [mode]="xrayView() ? 'xray' : 'surface'" [vh]="vh()" [scrollY]="scrollY()" />
+  @if (pocketLens()) {
+    <app-pocket-lens [vh]="vh()" [scrollY]="scrollY()" (closed)="pocketLens.set(false)" />
+  }
+</div>
+
+<div class="grain" aria-hidden="true"></div>
+<app-cursor-aura [off]="pocketLens()" />
+<app-lens-frames />
+<app-found-toast [notice]="notice()" />
+<app-control-dock
+  [pocketLens]="pocketLens()"
+  [xrayView]="xrayView()"
+  [singularityAvailable]="singularityAvailable()"
+  (togglePocket)="togglePocket()"
+  (toggleXray)="toggleXray()"
+  (openSingularity)="setSingularity(true, true)"
+/>
+
+@defer (when singularityOpen()) {
+  @if (singularityOpen()) {
+    <app-singularity-overlay (closed)="setSingularity(false, true)" />
+  }
+}
