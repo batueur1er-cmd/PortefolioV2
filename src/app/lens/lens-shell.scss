@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+.lens-page {
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* opacity et non visibility : les secrets forcent visibility: visible sur eux-mêmes. */
+.lens-page.hidden {
+  opacity: 0;
+}

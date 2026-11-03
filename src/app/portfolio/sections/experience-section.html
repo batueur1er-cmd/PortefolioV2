@@ -1,0 +1,61 @@
+<section class="wrap sec" [attr.id]="page.anchor('parcours')" [attr.aria-labelledby]="page.anchor('parcours-titre')">
+  <div class="sec-head">
+    <span class="sec-index">02</span>
+    <h2 class="sec-title" [attr.id]="page.anchor('parcours-titre')">Parcours</h2>
+    <span class="sec-count">({{ items.length }})</span>
+  </div>
+
+  <div class="layout">
+    <ol class="timeline">
+      @for (item of items; track item.exp.id) {
+        <li class="entry" [attr.data-x]="'expérience · ' + item.duration">
+          <div class="when">
+            <span class="period">{{ item.period }}</span>
+            <span class="label">{{ item.exp.contract }}</span>
+            <span class="xv bar" [style.width.%]="item.barWidth * 100"></span>
+          </div>
+          <div class="what">
+            <h3 class="company">{{ item.exp.company }}</h3>
+            <p class="role">{{ item.exp.role }}</p>
+            <p class="summary">{{ item.exp.summary }}</p>
+          </div>
+          <p class="where label">{{ item.exp.place.city }}</p>
+          <span class="chip entry-secret" [appSecret]="item.secretId">{{ item.secretText }}</span>
+        </li>
+      }
+    </ol>
+
+    <aside class="thread" aria-label="Fil rouge du parcours">
+      <p class="label">Fil rouge</p>
+      <p class="thread-big">{{ span }}</p>
+      <p class="thread-text">{{ cityCount }} villes · {{ region }}</p>
+      <p class="thread-text">Infrastructure d'abord, développement ensuite : un fil qui relie la machine à l'interface.</p>
+
+      <div class="panel map-panel" appSecret="exp-map">
+        <span class="panel-title">Carte du parcours · ≈ {{ map.totalKm }} km</span>
+        <svg class="wire map" viewBox="0 0 300 210" aria-hidden="true">
+          <rect class="d" x="0.5" y="0.5" width="299" height="209" />
+          <line class="d" x1="150" y1="0" x2="150" y2="210" />
+          <line class="d" x1="0" y1="105" x2="300" y2="105" />
+          <polyline class="hot" [attr.points]="map.path" />
+          @for (point of map.points; track point.id) {
+            <svg:circle [attr.cx]="point.x" [attr.cy]="point.y" [attr.r]="point.landmark ? 2.5 : 5" [class.d]="point.landmark" />
+            <svg:text
+              [attr.x]="point.anchor === 'end' ? point.x - 10 : point.x + 10"
+              [attr.y]="point.y + point.dy"
+              [attr.text-anchor]="point.anchor"
+            >
+              {{ point.label }}
+            </svg:text>
+          }
+          <text x="268" y="22">N ↑</text>
+        </svg>
+        <ol class="legs">
+          @for (leg of map.legs; track leg.key) {
+            <li>{{ leg.label }}</li>
+          }
+        </ol>
+      </div>
+    </aside>
+  </div>
+</section>

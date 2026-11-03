@@ -1,0 +1,34 @@
+:host {
+  display: block;
+  position: relative;
+  overflow: clip;
+  container: page / inline-size;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+main:focus {
+  outline: none;
+}
+
+/* Rayons X : on ne change que la palette et le fond. Le quadrillage part du coin de la page,
+   il tombe donc au même endroit dans toutes les fenêtres. */
+:host(.xray) {
+  --paper: #06101d;
+  --paper-2: #0a1a2c;
+  --ink: #7fe9ff;
+  --muted: rgba(127, 233, 255, 0.64);
+  --accent: #ff5bd0;
+  --line: rgba(127, 233, 255, 0.24);
+  color-scheme: dark;
+  background-image:
+    linear-gradient(rgba(127, 233, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(127, 233, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(127, 233, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(127, 233, 255, 0.03) 1px, transparent 1px);
+  background-size:
+    120px 120px,
+    120px 120px,
+    24px 24px,
+    24px 24px;
+}

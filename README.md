@@ -1,59 +1,75 @@
-# PortfolioV2
+# Portfolio v2 — Révélateur
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.29.
+Le portfolio de Baptiste Nodon, en Angular 21. Il a une face cachée : une **loupe** révèle une
+version « rayons X » de la page (coulisses, schémas, calculs en direct) et une chasse aux secrets.
 
-## Development server
-
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Lancer le projet
 
 ```bash
-ng generate component component-name
+npm install
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Ouvre <http://localhost:4200>, puis clique sur **« ◎ Ouvrir la loupe »** : une petite fenêtre
+s'ouvre. Pose-la par-dessus le portfolio, elle montre exactement ce qui se trouve dessous, aux
+rayons X.
 
 ```bash
-ng generate --help
+npm test        # tests unitaires (Vitest)
+npm run build   # build de production dans dist/portfolio-v2/browser
 ```
 
-## Building
+## Les trois façons de percer la page
 
-To build the project run:
+| Mode | Comment | Les secrets comptent ? |
+| --- | --- | --- |
+| Loupe fenêtre | bouton « Ouvrir la loupe », puis glisser la fenêtre sur le portfolio | oui |
+| Loupe intégrée | bouton « Loupe intégrée » : un cercle qui suit la souris (ou le doigt) | oui |
+| Rayons X | bouton « Rayons X » : toute la page d'un coup | non |
 
-```bash
-ng build
-```
+Dans la fenêtre loupe : molette pour faire défiler le portfolio d'en dessous, Maj + molette
+(ou `+` / `-` / `0`) pour zoomer, `M` pour le compteur Geiger sonore. Un secret est trouvé
+quand il reste un court instant sous la loupe. Tous trouvés, la **singularité** se débloque
+(l'Effet 1 : chaque fenêtre devient un trou noir et elles s'échangent de la lumière). Le code
+Konami l'ouvre directement.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Comment ça marche
 
-## Running unit tests
+- **Deux exemplaires de la même page.** `PortfolioPage` est rendue en surface dans la fenêtre
+  principale et en rayons X dans la loupe. Le mode rayons X ne change que des couleurs, des
+  contours et des opacités, jamais la mise en page : les deux exemplaires restent identiques au
+  pixel près. Les tailles s'appuient sur des container queries (`cqi`) et sur `--vh`, la hauteur
+  de la fenêtre portfolio, pour ne jamais dépendre de la taille de la loupe.
+- **Synchronisation entre fenêtres.** Chaque fenêtre publie sa position écran, sa largeur et son
+  défilement sur un `BroadcastChannel` (`core/presence-channel.ts`, `core/window-bus.ts`), à chaque
+  image tant que quelque chose change. La loupe se cale sur la largeur du portfolio et se décale
+  de l'écart entre les deux fenêtres (`lensTransform` dans `core/geometry.ts`).
+- **Secrets.** La directive `appSecret` enregistre chaque élément caché ; la loupe mesure leur
+  recouvrement (`coverage`, `circleCoverage`) et `ScanEngine` impose un temps d'analyse. Les
+  secrets trouvés sont partagés entre fenêtres (localStorage + bus).
+- **Zoneless.** Pas de zone.js : l'état passe par des signaux, et la boucle d'animation unique
+  (`core/frame-loop.ts`) écrit directement dans le DOM sans relancer la détection de changements.
+- **Chargement à la demande.** Les deux fenêtres sont des routes chargées paresseusement, et la
+  singularité un bloc `@defer`.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Modifier le contenu
 
-```bash
-ng test
-```
+Tout le texte est dans [`src/app/core/profile.data.ts`](src/app/core/profile.data.ts) : parcours,
+réalisations, compétences, formation, contact, et les coulisses révélées par la loupe. Les
+compteurs (mois en entreprise, jours d'alternance, distances sur la carte, graphe des
+compétences) sont recalculés à partir de ces données.
 
-## Running end-to-end tests
+Pour ajouter un secret : déclare-le dans `src/app/core/secrets.catalog.ts`, puis pose
+`appSecret="son-id"` sur un élément du gabarit, positionné en absolu dans un espace libre.
+Le test `portfolio-page.spec.ts` vérifie que catalogue et gabarits restent synchronisés.
 
-For end-to-end (e2e) testing, run:
+## Déploiement
 
-```bash
-ng e2e
-```
+Le build est statique : n'importe quel hébergement de fichiers convient. La loupe est la même
+page ouverte avec `?loupe`, aucune réécriture d'URL n'est nécessaire.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Limites
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Le zoom du navigateur doit être le même (idéalement 100 %) dans les deux fenêtres.
+- La loupe doit être une vraie fenêtre (pas un onglet), sur le même écran que le portfolio.
+- `BroadcastChannel` ne relie que des fenêtres de la même origine et du même navigateur.

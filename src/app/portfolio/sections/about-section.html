@@ -1,0 +1,30 @@
+<section class="wrap sec" [attr.id]="page.anchor('profil')" [attr.aria-labelledby]="page.anchor('profil-titre')">
+  <div class="sec-head">
+    <span class="sec-index">01</span>
+    <h2 class="sec-title" [attr.id]="page.anchor('profil-titre')">Profil</h2>
+  </div>
+
+  <div class="grid">
+    <p class="statement">{{ about.title }}</p>
+    <div class="body" data-x="&lt;app-about-section&gt; · texte issu du profil LinkedIn">
+      @for (paragraph of about.paragraphs; track $index) {
+        <p>{{ paragraph }}</p>
+      }
+      <div class="panel summary" appSecret="about-summary">
+        <span class="panel-title">Résumé LinkedIn d'origine</span>
+        <s>« {{ about.linkedinSummary }} »</s>
+        <span class="outcome">→ {{ about.linkedinSummaryOutcome }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="facts-wrap">
+    <ul class="facts">
+      <li><b>{{ experienceCount }}</b><span>expériences en entreprise</span></li>
+      <li><b>{{ totalMonths }}</b><span>mois sur le terrain</span></li>
+      <li><b>{{ educationCount }}</b><span>formations</span></li>
+      <li><b>{{ certificationCount }}</b><span>certification</span></li>
+    </ul>
+    <p class="note facts-note" appSecret="about-facts">{{ breakdown }}</p>
+  </div>
+</section>

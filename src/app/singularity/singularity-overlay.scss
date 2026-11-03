@@ -1,0 +1,57 @@
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #03020a;
+  animation: fade-in 0.8s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ui {
+  position: fixed;
+  left: 22px;
+  bottom: 20px;
+  max-width: min(420px, calc(100vw - 44px));
+  color: rgba(225, 215, 255, 0.7);
+  font: 500 11px/1.7 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font: 600 11px/1.7 var(--mono);
+  letter-spacing: 0.35em;
+  color: rgba(255, 240, 220, 0.85);
+}
+
+.hint {
+  margin: 4px 0 12px;
+}
+
+button {
+  padding: 9px 14px;
+  border: 1px solid rgba(255, 180, 100, 0.4);
+  border-radius: 2px;
+  background: rgba(255, 170, 80, 0.08);
+  color: #ffe9d0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+button:hover {
+  background: rgba(255, 170, 80, 0.18);
+}

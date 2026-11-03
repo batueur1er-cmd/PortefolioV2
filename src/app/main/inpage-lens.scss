@@ -1,0 +1,122 @@
+:host {
+  --r: 150px;
+  --x: -999px;
+  --y: -999px;
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  clip-path: circle(var(--r) at var(--x) var(--y));
+}
+
+.layer-page {
+  transform-origin: 0 0;
+}
+
+.ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: calc(var(--r) * 2);
+  height: calc(var(--r) * 2);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px rgba(127, 233, 255, 0.9),
+    0 0 0 9px rgba(6, 16, 29, 0.55),
+    0 0 0 10px rgba(127, 233, 255, 0.35),
+    0 18px 60px rgba(6, 16, 29, 0.55),
+    inset 0 0 40px rgba(127, 233, 255, 0.25);
+  will-change: transform;
+}
+
+.ring::before,
+.ring::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: rgba(127, 233, 255, 0.55);
+  transform: translate(-50%, -50%);
+}
+
+.ring::before {
+  width: 18px;
+  height: 1px;
+}
+
+.ring::after {
+  width: 1px;
+  height: 18px;
+}
+
+.arc {
+  position: absolute;
+  inset: -9px;
+  width: calc(100% + 18px);
+  height: calc(100% + 18px);
+  transform: rotate(-90deg);
+}
+
+.arc circle {
+  fill: none;
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
+
+.arc-track {
+  stroke: transparent;
+}
+
+.arc-bar {
+  stroke: var(--xn);
+  stroke-dasharray: 100;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px var(--xn));
+}
+
+.zoom {
+  position: absolute;
+  left: 50%;
+  bottom: -34px;
+  transform: translateX(-50%);
+  padding: 4px 9px;
+  border-radius: 99px;
+  background: rgba(6, 16, 29, 0.85);
+  color: #e8fbff;
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.16em;
+}
+
+.help {
+  position: fixed;
+  left: 50%;
+  top: 14px;
+  margin: 0;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  border-radius: 99px;
+  background: rgba(6, 16, 29, 0.85);
+  color: #e8fbff;
+  font: 500 10.5px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (pointer: coarse) {
+  .ring {
+    pointer-events: auto;
+    touch-action: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .help {
+    font-size: 9px;
+  }
+}
