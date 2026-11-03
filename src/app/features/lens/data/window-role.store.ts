@@ -54,6 +54,8 @@ export class WindowRoleStore {
     const win = this.win;
     const onResize = () => {
       const viewport = this.measure();
+      const current = this.viewportState();
+      if (viewport.w === current.w && viewport.h === current.h) return;
       this.viewportState.set(viewport);
       this.smallState.set(isLensSized(viewport, this.smallState()));
     };
@@ -61,8 +63,12 @@ export class WindowRoleStore {
 
     // Une petite fenêtre ne sait pas encore si une grande est ouverte : elle écoute d'abord.
     const listen = this.roleState() === null ? setTimeout(() => this.roleState.set(this.wanted()), LISTEN_MS) : undefined;
-    // Les pairs disparus sans prévenir sont oubliés même quand aucune animation ne tourne.
-    const prune = setInterval(() => this.bus.windows.snapshot(), 500);
+    // Toutes les 500 ms : on oublie les pairs disparus sans prévenir, et on remesure la fenêtre,
+    // au cas où elle aurait changé de taille avant que l'écouteur ne soit posé.
+    const prune = setInterval(() => {
+      onResize();
+      this.bus.windows.snapshot();
+    }, 500);
 
     effect((onCleanup) => {
       const wanted = this.wanted();

@@ -1,5 +1,6 @@
 /*
- * Thème « Papier », le thème par défaut. C'est le seul fichier à modifier pour changer le
+ * Thème « Clair », le thème par défaut, aux couleurs de l'ancien portfolio (indigo et gris).
+ * C'est le seul fichier à modifier pour changer le
  * style du site : chaque composant lit ces variables, aucun ne contient de couleur en dur.
  * Les transparences sont dérivées avec color-mix(), elles suivent donc la couleur de base.
  *
@@ -10,14 +11,15 @@
   color-scheme: light;
 
   /* ---------- Surface : le portfolio tel qu'on le voit ---------- */
-  --paper: #f1ece3; /* fond de page */
-  --paper-2: #e7dfd2; /* fond secondaire : étiquettes, bandeaux */
-  --ink: #15120f; /* texte et titres */
-  --muted: #625b52; /* texte secondaire, dates (contraste AA sur --paper) */
-  --accent: #b5320f; /* couleur unique : index de section, liens, focus, sphère */
+  --paper: #f9fafb; /* fond de page (gris 50) */
+  --paper-2: #eef2ff; /* fond secondaire : étiquettes, cartes (indigo 50) */
+  --ink: #111827; /* texte et titres (gris 900) */
+  --muted: #4b5563; /* texte secondaire, dates (gris 600, contraste AA sur --paper) */
+  --accent: #4f46e5; /* couleur principale : index de section, liens, focus, sphère (indigo 600) */
+  --accent-2: #9333ea; /* seconde teinte des dégradés (violet 600) */
   --on-accent: #ffffff;
   --line: color-mix(in srgb, var(--ink) 14%, transparent); /* filets de séparation */
-  --ok: #23874f; /* pastille « en alternance » */
+  --ok: #15803d; /* pastille « en alternance » */
   --glass: color-mix(in srgb, #ffffff 78%, transparent); /* boutons flottants */
 
   /* ---------- Rayons X : ce que révèle la loupe ---------- */
@@ -39,6 +41,12 @@
   --art-teal: #7fd1c7;
   --art-gold: #f0b35a;
   --art-flame: #e8441c;
+  --art-plum: #161018;
+  --art-plum-2: #2a1420;
+  --art-light: #ffffff;
+  --art-cube-1: #3b5bdb;
+  --art-cube-2: #e64980;
+  --art-cube-3: #63e6be;
 
   /* ---------- Singularité (écran final) ---------- */
   --void: #03020a;

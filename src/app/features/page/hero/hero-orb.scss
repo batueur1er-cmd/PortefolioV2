@@ -25,7 +25,7 @@
       circle at calc(40% + var(--px) * 20%) calc(38% + var(--py) * 20%),
       color-mix(in srgb, var(--accent) 18%, #fff) 0,
       color-mix(in srgb, var(--accent) 50%, #fff) 34%,
-      var(--accent) 70%,
+      color-mix(in srgb, var(--accent) 55%, var(--accent-2)) 70%,
       color-mix(in srgb, var(--accent) 22%, #000) 100%
     );
   box-shadow:

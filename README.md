@@ -20,8 +20,7 @@ npm run build        # build de production dans dist/portfolio-v2/browser
 
 ## La loupe : aucun bouton
 
-1. Ouvre le site dans **une seconde fenêtre** (glisse l'onglet hors du navigateur, ou utilise le
-   lien « ouvrez-en une ici » de la section *Sous le capot*).
+1. Ouvre le site dans **une seconde fenêtre** (glisse l'onglet hors du navigateur).
 2. **Rétrécis-la** sous 680 × 620 px : elle comprend toute seule qu'elle est une loupe.
 3. **Pose-la** par-dessus le portfolio : elle montre exactement ce qui se trouve dessous, aux rayons X.
 
@@ -29,10 +28,10 @@ Agrandis-la de nouveau et elle redevient un portfolio. Dans la loupe : molette p
 le portfolio d'en dessous, Maj + molette (ou `+` / `-` / `0`) pour zoomer, `M` pour le compteur
 Geiger sonore. Un secret est trouvé quand il reste un court instant sous le réticule.
 
-Le dock propose aussi la **loupe de poche** (un cercle qui suit la souris ou le doigt, pour une seule
-fenêtre ou un écran tactile) et la **vue rayons X** (toute la page d'un coup, les secrets ne comptent
-pas). Tous les secrets trouvés, la **singularité** se débloque (chaque fenêtre devient un trou noir).
-Le code Konami l'ouvre directement. `?loupe` ou `?portfolio` dans l'URL imposent un rôle.
+La loupe n'existe que dans une autre fenêtre du navigateur, et aucun bouton ne la montre : c'est au
+visiteur de faire la manœuvre. Le seul bouton flottant est le **mode nuit**. Tous les secrets trouvés,
+la **singularité** s'ouvre d'elle-même (chaque fenêtre devient un trou noir) ; le code Konami l'ouvre
+directement. `?loupe` ou `?portfolio` dans l'URL imposent un rôle (démonstration, tests).
 
 ## Architecture
 
@@ -46,10 +45,10 @@ src/app/
 ├── shared/     briques d'interface et de mouvement, sans métier
 ├── features/   une fonctionnalité par dossier
 │   ├── page/         la page portfolio et ses sections (hero, profil, parcours…)
-│   ├── secrets/      catalogue, progression, directive appSecret, carnet, notification
-│   ├── lens/         rôle de la fenêtre, vue loupe, HUD, loupe de poche, halos
+│   ├── secrets/      catalogue, progression, directive appSecret, notification
+│   ├── lens/         rôle de la fenêtre, vue loupe, HUD, halos
 │   └── singularity/  l'écran final
-└── shell/      assemble le tout : bascule portfolio ↔ loupe, dock, curseur
+└── shell/      assemble le tout : bascule portfolio ↔ loupe, bouton mode nuit, curseur
 ```
 
 | Couche | Peut importer |
@@ -102,11 +101,11 @@ Toutes les couleurs, typographies, rayons et ombres sont des variables CSS rang�
 [`src/styles/themes/`](src/styles/themes/). Aucun composant ne contient de couleur en dur, et les
 transparences sont calculées avec `color-mix()` à partir des couleurs de base.
 
-- **Modifier le thème actuel** : édite [`_papier.scss`](src/styles/themes/_papier.scss). Chaque
+- **Modifier le thème actuel** : édite [`_clair.scss`](src/styles/themes/_clair.scss) (couleurs de l'ancien portfolio : indigo et gris). Chaque
   variable y est commentée (fond, encre, accent, palette des rayons X, illustrations…).
 - **Ajouter un thème** : copie `_nuit.scss` sous un autre nom, change le sélecteur
   `:root[data-theme='…']`, ajoute-le dans `index.scss` et dans
-  [`core/theme/themes.ts`](src/app/core/theme/themes.ts). Il apparaît alors dans le bouton de thème du dock.
+  [`core/theme/themes.ts`](src/app/core/theme/themes.ts). Le bouton « Mode nuit » bascule entre `clair` et `nuit`.
 - **Tester un thème** : `http://localhost:4200/?theme=nuit` force un thème sans l'enregistrer.
 - **Changer de police** : installe-la avec Fontsource, ajoute son CSS dans `angular.json`
   (`styles`), puis modifie `--serif`, `--sans`, `--mono` ou `--hand`.

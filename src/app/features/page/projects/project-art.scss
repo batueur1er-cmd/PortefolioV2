@@ -18,8 +18,70 @@
   border-radius: inherit;
 }
 
-.surface > div {
+.scene,
+.slides {
   position: absolute;
+  inset: 0;
+}
+
+.scene > div {
+  position: absolute;
+}
+
+/* ---------- Diaporama des captures, calé sur l'horloge ---------- */
+
+.slides {
+  background: var(--paper-2);
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.slide.on {
+  opacity: 1;
+}
+
+.slide img {
+  object-fit: cover;
+  object-position: top center;
+  transform: scale(1.06);
+  transition: transform 4.6s ease-out;
+}
+
+.slide.on img {
+  transform: scale(1);
+}
+
+.dots {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  z-index: 1;
+  display: flex;
+  gap: 5px;
+  margin: 0;
+}
+
+.dots i {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: color-mix(in srgb, #fff 55%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, #000 20%, transparent);
+  transition:
+    width 0.3s,
+    background 0.3s;
+}
+
+.dots i.on {
+  width: 18px;
+  border-radius: 3px;
+  background: var(--accent);
 }
 
 /* Le plan tient toujours dans le cadre, quelle que soit sa proportion. */
@@ -87,7 +149,7 @@ span {
   padding: 2px 6px;
   border-radius: 9px;
   background: var(--art-flame);
-  color: #fff;
+  color: var(--art-light);
   font: 700 9px/1.2 var(--mono);
   animation: bump 3s ease-in-out infinite;
   animation-delay: var(--clock, 0ms);
@@ -212,108 +274,10 @@ span {
   animation-delay: var(--clock, 0ms);
 }
 
-/* ---------- CRM : tableau de bord ---------- */
-
-:host(.art-crm) .surface {
-  background: linear-gradient(160deg, var(--art-forest), var(--art-forest-2));
-}
-
-.side {
-  left: 6%;
-  top: 9%;
-  bottom: 9%;
-  width: 18%;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--art-sheet) 14%, transparent);
-}
-
-.side i {
-  left: 16%;
-  height: 4px;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--art-sheet) 60%, transparent);
-}
-
-.side i:nth-child(1) {
-  top: 14%;
-  width: 60%;
-}
-
-.side i:nth-child(2) {
-  top: 24%;
-  width: 46%;
-}
-
-.side i:nth-child(3) {
-  top: 34%;
-  width: 54%;
-  background: var(--art-gold);
-}
-
-.table {
-  left: 29%;
-  top: 9%;
-  right: 6%;
-  height: 40%;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--art-sheet) 90%, transparent);
-}
-
-.table i {
-  left: 5%;
-  right: 5%;
-  height: 12%;
-  border-radius: 3px;
-  background: color-mix(in srgb, var(--art-forest) 14%, transparent);
-}
-
-.table i:nth-child(1) {
-  top: 10%;
-  background: color-mix(in srgb, var(--art-forest) 30%, transparent);
-}
-
-.table i:nth-child(2) {
-  top: 32%;
-}
-
-.table i:nth-child(3) {
-  top: 54%;
-  animation: highlight-row 6s ease-in-out infinite;
-  animation-delay: var(--clock, 0ms);
-}
-
-.table i:nth-child(4) {
-  top: 76%;
-}
-
-.chart {
-  left: 29%;
-  right: 6%;
-  bottom: 9%;
-  height: 38%;
-  display: flex;
-  align-items: flex-end;
-  gap: 5%;
-  padding: 3% 4%;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--art-sheet) 14%, transparent);
-}
-
-.chart span {
-  position: relative;
-  flex: 1;
-  height: calc(var(--h) * 100%);
-  border-radius: 3px 3px 0 0;
-  background: linear-gradient(180deg, var(--art-gold), var(--art-flame));
-  transform-origin: bottom;
-  animation: bars 5s ease-in-out infinite;
-  animation-delay: calc(var(--clock, 0ms) - var(--d) * 0.6s);
-}
-
 /* ---------- Ciné : affiches qui défilent ---------- */
 
 :host(.art-cine) .surface {
-  background: linear-gradient(180deg, #161018, #2a1420);
+  background: linear-gradient(180deg, var(--art-plum), var(--art-plum-2));
 }
 
 .reel {
@@ -365,107 +329,71 @@ span {
   color: var(--art-sheet);
 }
 
-/* ---------- Why So Serious : terminal ---------- */
+/* ---------- Visualiseur 3D : un cube qui tourne ---------- */
 
-:host(.art-wss) .surface {
-  background: linear-gradient(140deg, var(--art-night-2), #000);
+:host(.art-visu3d) .surface {
+  background: radial-gradient(circle at 50% 45%, var(--art-night), var(--art-night-2) 75%);
 }
 
-.term {
+.cube-stage {
+  inset: 0;
+  display: grid;
+  place-items: center;
+  perspective: 600px;
+}
+
+.cube {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  transform-style: preserve-3d;
+  animation: spin3d 12s linear infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+.face {
   position: absolute;
-  left: 8%;
-  right: 8%;
-  top: 12%;
-  bottom: 12%;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, #fff 14%, transparent);
-  border-radius: 10px;
-  background: color-mix(in srgb, #000 60%, var(--art-night-2));
-  font: 500 clamp(9px, 1.05cqi, 12px) / 1.6 var(--mono);
-  color: var(--art-mist);
+  inset: 0;
+  opacity: 0.92;
 }
 
-.term .bar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 0;
-  padding: 8px 10px;
-  border-bottom: 1px solid color-mix(in srgb, #fff 10%, transparent);
+.front {
+  background: var(--art-cube-1);
+  transform: translateZ(35px);
 }
 
-.term .bar i {
-  position: relative;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--art-flame);
+.back {
+  background: var(--art-cube-1);
+  transform: rotateY(180deg) translateZ(35px);
 }
 
-.term .bar i:nth-child(2) {
-  background: var(--art-gold);
+.right {
+  background: var(--art-cube-2);
+  transform: rotateY(90deg) translateZ(35px);
 }
 
-.term .bar i:nth-child(3) {
-  background: var(--art-teal);
+.left {
+  background: var(--art-cube-2);
+  transform: rotateY(-90deg) translateZ(35px);
 }
 
-.term .bar span {
-  position: relative;
-  margin-left: 8px;
-  opacity: 0.6;
+.top {
+  background: var(--art-cube-3);
+  transform: rotateX(90deg) translateZ(35px);
 }
 
-.line {
-  width: 0;
-  margin: 0 12px;
-  overflow: hidden;
-  white-space: nowrap;
-  animation: type 8s steps(28) infinite;
-  animation-delay: var(--clock, 0ms);
+.bottom {
+  background: var(--art-cube-3);
+  transform: rotateX(-90deg) translateZ(35px);
 }
 
-.line b {
-  color: var(--art-teal);
-}
-
-.l1 {
-  margin-top: 10px;
-}
-
-.l2 {
-  color: var(--art-gold);
-  animation-name: type-2;
-}
-
-.l3 {
-  animation-name: type-3;
-}
-
-.caret {
-  position: relative;
-  display: inline-block;
-  width: 7px;
-  height: 1em;
-  margin-left: 3px;
-  vertical-align: -2px;
-  background: var(--art-mist);
-  animation: blink 1s steps(2) infinite;
-  animation-delay: var(--clock, 0ms);
-}
-
-.link {
-  right: 8%;
-  top: 12%;
-  width: 10px;
-  height: 10px;
-  margin: 6px;
-  border-radius: 50%;
-  background: var(--art-teal);
-  box-shadow: 0 0 0 0 var(--art-teal);
-  animation: ping-out 2s ease-out infinite;
-  animation-delay: var(--clock, 0ms);
+@keyframes spin3d {
+  from {
+    transform: rotateX(-24deg) rotateY(0deg);
+  }
+  to {
+    transform: rotateX(-24deg) rotateY(360deg);
+  }
 }
 
 /* ---------- Infrastructure : réseau et baies ---------- */
@@ -604,21 +532,7 @@ span {
   }
 }
 
-@keyframes highlight-row {
-  0%,
-  100% {
-    background: color-mix(in srgb, var(--art-forest) 14%, transparent);
-  }
-  50% {
-    background: color-mix(in srgb, var(--art-gold) 55%, transparent);
-  }
-}
 
-@keyframes bars {
-  50% {
-    transform: scaleY(0.55);
-  }
-}
 
 @keyframes reel {
   to {
@@ -626,44 +540,9 @@ span {
   }
 }
 
-@keyframes type {
-  0% {
-    width: 0;
-  }
-  25%,
-  100% {
-    width: calc(100% - 24px);
-  }
-}
 
-@keyframes type-2 {
-  0%,
-  30% {
-    width: 0;
-  }
-  50%,
-  100% {
-    width: calc(100% - 24px);
-  }
-}
 
-@keyframes type-3 {
-  0%,
-  55% {
-    width: 0;
-  }
-  80%,
-  100% {
-    width: calc(100% - 24px);
-  }
-}
 
-@keyframes ping-out {
-  70%,
-  100% {
-    box-shadow: 0 0 0 12px transparent;
-  }
-}
 
 @keyframes glow {
   50% {
@@ -692,7 +571,4 @@ span {
     animation: none !important;
   }
 
-  .line {
-    width: calc(100% - 24px);
-  }
 }

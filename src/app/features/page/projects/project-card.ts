@@ -18,13 +18,20 @@ export interface ProjectView extends Project {
   template: `
     <article class="card" appTilt="4" [attr.data-x]="'article · visuel ' + project().visual">
       <div class="frame">
-        <app-project-art [visual]="project().visual" [secretId]="project().secretId" [secret]="project().secret" />
+        <app-project-art
+          [visual]="project().visual"
+          [images]="project().images ?? []"
+          [secretId]="project().secretId"
+          [secret]="project().secret"
+        />
         <span class="num" aria-hidden="true">{{ number() < 10 ? '0' + number() : number() }}</span>
       </div>
       <div class="body">
         <p class="meta">
           <span>{{ project().context }}</span>
-          <span>{{ project().year }}</span>
+          @if (project().year; as year) {
+            <span>{{ year }}</span>
+          }
         </p>
         <h3 class="title">{{ project().title }}</h3>
         <p class="summary">{{ project().summary }}</p>

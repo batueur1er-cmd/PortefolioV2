@@ -1,65 +1,76 @@
-<div class="surface surface-only" aria-hidden="true">
-  @switch (visual()) {
-    @case ('argus') {
-      <div class="phone">
-        <span class="notch"></span>
-        <p class="app-bar"><b>Argus</b><span class="badge">3</span></p>
-        <svg class="pulse" viewBox="0 0 200 40" preserveAspectRatio="none">
-          <polyline points="0,30 30,28 45,10 58,34 72,22 100,24 118,6 132,30 150,20 200,22" pathLength="100" />
-        </svg>
-        <ul class="alerts">
-          @for (alert of alerts; track $index) {
-            <li [class]="alert.level"><i></i><span [style.width.%]="alert.width"></span></li>
+<div class="surface surface-only">
+  @if (images().length) {
+    <div class="slides">
+      @for (image of images(); track image.src) {
+        <div class="slide" [class.on]="$index === slide()">
+          <img [ngSrc]="image.src" [alt]="image.alt" fill sizes="(max-width: 680px) 100vw, 50vw" />
+        </div>
+      }
+      @if (images().length > 1) {
+        <p class="dots" aria-hidden="true">
+          @for (image of images(); track image.src) {
+            <i [class.on]="$index === slide()"></i>
           }
-        </ul>
-      </div>
-      <div class="server s1"><i></i><i></i><i></i></div>
-      <div class="server s2"><i></i><i></i><i></i></div>
-      <span class="wave"></span>
-    }
-    @case ('crm') {
-      <div class="side"><i></i><i></i><i></i></div>
-      <div class="table"><i></i><i></i><i></i><i></i></div>
-      <div class="chart">
-        @for (bar of bars; track $index) {
-          <span [style.--h]="bar" [style.--d]="$index"></span>
+        </p>
+      }
+    </div>
+  } @else {
+    <div class="scene" aria-hidden="true">
+      @switch (visual()) {
+        @case ('argus') {
+          <div class="phone">
+            <span class="notch"></span>
+            <p class="app-bar"><b>Argus</b><span class="badge">3</span></p>
+            <svg class="pulse" viewBox="0 0 200 40" preserveAspectRatio="none">
+              <polyline points="0,30 30,28 45,10 58,34 72,22 100,24 118,6 132,30 150,20 200,22" pathLength="100" />
+            </svg>
+            <ul class="alerts">
+              @for (alert of alerts; track $index) {
+                <li [class]="alert.level"><i></i><span [style.width.%]="alert.width"></span></li>
+              }
+            </ul>
+          </div>
+          <div class="server s1"><i></i><i></i><i></i></div>
+          <div class="server s2"><i></i><i></i><i></i></div>
+          <span class="wave"></span>
         }
-      </div>
-    }
-    @case ('cine') {
-      <div class="reel">
-        @for (copy of [0, 1]; track copy) {
-          <div class="posters">
-            @for (poster of posters; track poster) {
-              <span [style.--p]="poster"><i>★</i></span>
+        @case ('cine') {
+          <div class="reel">
+            @for (copy of [0, 1]; track copy) {
+              <div class="posters">
+                @for (poster of posters; track poster) {
+                  <span [style.--p]="poster"><i>★</i></span>
+                }
+              </div>
             }
           </div>
+          <p class="tmdb">TMDB · populaires</p>
         }
-      </div>
-      <p class="tmdb">TMDB · populaires</p>
-    }
-    @case ('wss') {
-      <div class="term">
-        <p class="bar"><i></i><i></i><i></i><span>wss — client</span></p>
-        <p class="line l1"><b>$</b> dotnet run --project Server</p>
-        <p class="line l2">SignalR hub en écoute…</p>
-        <p class="line l3"><b>$</b> wss connect<span class="caret"></span></p>
-      </div>
-      <span class="link"><i></i></span>
-    }
-    @case ('infra') {
-      <div class="mesh">
-        @for (node of nodes; track node) {
-          <i [style.--n]="node"></i>
+        @case ('visu3d') {
+          <div class="cube-stage">
+            <div class="cube">
+              @for (face of faces; track face) {
+                <span [class]="'face ' + face"></span>
+              }
+            </div>
+          </div>
+          <p class="tmdb">Three.js · OBJ</p>
         }
-      </div>
-      <div class="rack r1"><i></i><i></i><i></i><i></i></div>
-      <div class="rack r2"><i></i><i></i><i></i><i></i></div>
-      <span class="packet"></span>
-    }
-    @case ('site') {
-      <app-window-gesture class="gesture" />
-    }
+        @case ('infra') {
+          <div class="mesh">
+            @for (node of nodes; track node) {
+              <i [style.--n]="node"></i>
+            }
+          </div>
+          <div class="rack r1"><i></i><i></i><i></i><i></i></div>
+          <div class="rack r2"><i></i><i></i><i></i><i></i></div>
+          <span class="packet"></span>
+        }
+        @case ('site') {
+          <app-window-gesture class="gesture" />
+        }
+      }
+    </div>
   }
 </div>
 
@@ -126,21 +137,52 @@
         <text x="150" y="232">Koin injecte les implémentations</text>
       </svg>
     }
-    @case ('wss') {
+    @case ('drive') {
       <svg class="wire" viewBox="0 -40 400 260" aria-hidden="true">
-        <rect x="20" y="40" width="140" height="120" rx="6" />
-        <text x="32" y="64">CLI</text>
-        <text x="32" y="82">Terminal.Gui</text>
-        <rect class="hot" x="240" y="40" width="140" height="120" rx="6" />
-        <text x="252" y="64">WebAPI .NET 8</text>
-        <text x="252" y="82">hub SignalR</text>
-        <path d="M160 92 L240 92" />
-        <path class="d" d="M240 116 L160 116" />
-        <text x="172" y="84">WebSocket</text>
-        <rect x="270" y="186" width="80" height="30" rx="4" />
-        <text x="278" y="206">PostgreSQL</text>
-        <path d="M310 160 L310 186" />
-        <text x="20" y="206">docker compose up -d</text>
+        <rect x="16" y="24" width="110" height="150" rx="6" />
+        <text x="28" y="48">navigateur</text>
+        <text x="28" y="64">panier · JS</text>
+        <path d="M126 96 L176 96" />
+        <text x="130" y="88">HTTP</text>
+        <rect class="hot" x="176" y="52" width="110" height="96" rx="6" />
+        <text x="188" y="76">Laravel</text>
+        <text x="188" y="92">routes · contrôleurs</text>
+        <text x="188" y="108">vues Blade</text>
+        <path d="M286 100 L326 100" />
+        <rect x="326" y="74" width="62" height="52" rx="4" />
+        <text x="334" y="104">MySQL</text>
+        <path class="d" d="M231 148 L231 196 L71 196 L71 174" />
+        <text x="96" y="214">pages rendues côté serveur</text>
+      </svg>
+    }
+    @case ('magasin') {
+      <svg class="wire" viewBox="0 -40 400 260" aria-hidden="true">
+        <rect x="16" y="20" width="120" height="170" rx="6" />
+        <line x1="16" y1="40" x2="136" y2="40" />
+        <text x="26" y="34">Windows Forms</text>
+        <rect class="d" x="28" y="54" width="96" height="18" rx="9" />
+        <rect class="d" x="28" y="82" width="96" height="18" rx="9" />
+        <rect class="d" x="28" y="110" width="96" height="18" rx="9" />
+        <text x="34" y="160">produits · horaires</text>
+        <path d="M136 104 L180 104" />
+        <rect class="hot" x="180" y="70" width="110" height="68" rx="6" />
+        <text x="190" y="98">Entity</text>
+        <text x="190" y="114">Framework</text>
+        <path d="M290 104 L326 104" />
+        <rect x="326" y="78" width="62" height="52" rx="4" />
+        <text x="334" y="108">MySQL</text>
+      </svg>
+    }
+    @case ('visu3d') {
+      <svg class="wire" viewBox="0 -40 400 260" aria-hidden="true">
+        <path d="M200 40 L270 78 L270 158 L200 196 L130 158 L130 78 Z" />
+        <path class="d" d="M200 40 L200 118 M130 78 L200 118 L270 78 M200 118 L200 196" />
+        <circle class="hot" cx="330" cy="40" r="12" />
+        <text x="300" y="70">lumière</text>
+        <path class="d" d="M40 190 L130 158" />
+        <rect x="16" y="190" width="50" height="30" rx="4" />
+        <text x="18" y="236">caméra</text>
+        <text x="146" y="226">OBJLoader → scène</text>
       </svg>
     }
     @case ('infra') {

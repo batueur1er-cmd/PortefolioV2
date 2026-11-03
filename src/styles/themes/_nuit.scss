@@ -1,19 +1,20 @@
 /*
- * Thème « Nuit », un exemple de second thème. Il ne redéfinit que ce qui change : le reste
- * (rayons X, illustrations, typographies) vient du thème par défaut.
+ * Thème « Nuit », le mode sombre de l'ancien portfolio (gris 800, indigo 400). Il ne redéfinit
+ * que ce qui change : le reste (rayons X, illustrations, typographies) vient du thème clair.
  */
 :root[data-theme='nuit'] {
   color-scheme: dark;
 
-  --paper: #14161b;
-  --paper-2: #1e2129;
-  --ink: #ece7df;
-  --muted: #a39c92;
-  --accent: #ff7a45;
-  --on-accent: #14161b;
-  --ok: #4cc27a;
+  --paper: #1f2937;
+  --paper-2: #374151;
+  --ink: #f9fafb;
+  --muted: #d1d5db;
+  --accent: #818cf8;
+  --accent-2: #c084fc;
+  --on-accent: #111827;
+  --ok: #4ade80;
   --glass: color-mix(in srgb, var(--paper-2) 82%, transparent);
 
-  --art-sand: #2a2e38;
-  --art-sheet: #3a3f4b;
+  --art-sand: #374151;
+  --art-sheet: #4b5563;
 }

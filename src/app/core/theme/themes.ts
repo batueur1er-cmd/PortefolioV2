@@ -4,7 +4,7 @@
  * et n'a pas besoin d'attribut.
  */
 export const THEMES = [
-  { id: 'papier', label: 'Papier' },
+  { id: 'clair', label: 'Clair' },
   { id: 'nuit', label: 'Nuit' },
 ] as const;
 

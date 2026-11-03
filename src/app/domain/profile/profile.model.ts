@@ -27,14 +27,23 @@ export interface Experience {
   readonly secretLabel: string;
 }
 
-/** Illustration animée d'un projet ; chacune a son plan rayons X. */
-export type ProjectVisual = 'argus' | 'crm' | 'cine' | 'wss' | 'infra' | 'site';
+/** Illustration d'un projet ; chacune a son plan rayons X. */
+export type ProjectVisual = 'argus' | 'crm' | 'cine' | 'drive' | 'magasin' | 'visu3d' | 'infra' | 'site';
+
+/** Une capture d'écran, servie depuis `public/`. */
+export interface ProjectImage {
+  readonly src: string;
+  readonly alt: string;
+}
 
 export interface Project {
   readonly id: string;
   readonly title: string;
   readonly context: string;
-  readonly year: string;
+  /** Absente quand la date n'est pas connue avec certitude. */
+  readonly year?: string;
+  /** Captures qui défilent à la place de l'illustration animée. */
+  readonly images?: readonly ProjectImage[];
   readonly summary: string;
   /** Points marquants, une ligne chacun. */
   readonly highlights: readonly string[];

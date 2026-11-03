@@ -2,8 +2,9 @@ import { Profile } from './profile.model';
 
 /*
  * Tout le contenu du portfolio. Les faits viennent de l'export LinkedIn (novembre 2026) et des
- * dépôts publics github.com/BaptisteNodon (Argus, Ciné Baptiste, Why So Serious) ; les phrases
- * d'accroche et les coulisses sont des propositions à reformuler librement.
+ * dépôts publics github.com/BaptisteNodon (Argus, Ciné Baptiste), et de l'ancien portfolio
+ * (drive Laravel, CRM, gestion de magasin, visualiseur 3D, captures dans public/projects/) ;
+ * les phrases d'accroche et les coulisses sont des propositions à reformuler librement.
  * Les coordonnées GPS sont celles des villes, à quelques centaines de mètres près.
  */
 export const PROFILE: Profile = {
@@ -142,11 +143,17 @@ export const PROFILE: Profile = {
       context: 'Stage · Celere Ouvertures',
       year: '2025',
       summary:
-        "Application Angular pour gérer les clients de l'entreprise et générer des rapports, " +
-        'conçue et développée pendant un stage de six semaines.',
-      highlights: ['Fiches clients et recherche', 'Génération de rapports', 'Livré en six semaines'],
-      skills: ['angular', 'typescript', 'html-css'],
+        'Un CRM pour les commerciaux : Angular et NgRx côté interface, une API REST Nest.js et Prisma ' +
+        'sur MySQL, conçu et développé pendant un stage de six semaines.',
+      highlights: [
+        'Gestion des prospects et des clients',
+        'Suivi des interactions et des opportunités',
+        'Tableaux de bord et rapports',
+        'Authentification et rôles utilisateurs',
+      ],
+      skills: ['angular', 'typescript', 'nestjs', 'sql', 'api-rest'],
       visual: 'crm',
+      images: [{ src: 'projects/crm-1.png', alt: "Page d'accueil du CRM Celere Ouverture" }],
       secret: 'schéma de principe · clients ↔ rapports',
       secretLabel: 'Le schéma du CRM',
     },
@@ -166,19 +173,72 @@ export const PROFILE: Profile = {
       secretLabel: 'Les couches de Ciné Baptiste',
     },
     {
-      id: 'wss',
-      title: 'Why So Serious ?',
-      context: "Projet d'équipe · DIIAGE",
-      year: '2025',
+      id: 'drive',
+      title: 'Drive en Laravel',
+      context: 'Projet BTS SIO',
       summary:
-        'Une API web .NET 8 temps réel et son client en ligne de commande : SignalR pour les échanges, ' +
-        "Terminal.Gui pour l'interface, PostgreSQL sous Docker.",
-      highlights: ['API web et WebSockets avec SignalR', 'Client console avec Terminal.Gui', 'PostgreSQL et PgAdmin sous Docker'],
-      skills: ['dotnet', 'sql', 'docker', 'gitlab-ci'],
-      visual: 'wss',
-      repo: 'https://github.com/BaptisteNodon/DI1-P1',
-      secret: '1 API · 1 terminal · SignalR entre les deux',
-      secretLabel: 'Le duo API + terminal',
+        'Un site de courses en ligne façon « drive », responsive, avec des vues générées côté serveur ' +
+        'par Laravel et Blade.',
+      highlights: [
+        'Catalogue, comptes et commandes gérés par Laravel',
+        'Panier interactif en JavaScript',
+        'Espace client pour suivre ses commandes',
+        'Interface responsive avec Bootstrap',
+      ],
+      skills: ['php-laravel', 'javascript', 'sql', 'html-css'],
+      visual: 'drive',
+      images: [
+        { src: 'projects/drive-1.png', alt: 'Le panier du drive, avec cinq produits' },
+        { src: 'projects/drive-2.png', alt: 'Capture du drive Laravel, deuxième écran' },
+        { src: 'projects/drive-3.png', alt: 'Capture du drive Laravel, troisième écran' },
+        { src: 'projects/drive-4.png', alt: 'Capture du drive Laravel, quatrième écran' },
+        { src: 'projects/drive-5.png', alt: 'Capture du drive Laravel, cinquième écran' },
+      ],
+      secret: 'Blade rend les pages · JavaScript tient le panier',
+      secretLabel: 'Le drive vu de l’intérieur',
+    },
+    {
+      id: 'magasin',
+      title: 'Gestion de magasin',
+      context: 'Projet BTS SIO · C#',
+      summary:
+        "Une application de bureau en C# et Windows Forms pour gérer un magasin : produits, " +
+        'informations et horaires, sur une base MySQL via Entity Framework.',
+      highlights: [
+        'Connexion des comptes du personnel',
+        'Catalogue produits classé par familles (ajout, modification, suppression)',
+        "Horaires d'ouverture réglables jour par jour",
+        'Entity Framework entre l’application et MySQL',
+      ],
+      skills: ['dotnet', 'sql'],
+      visual: 'magasin',
+      images: [
+        { src: 'projects/magasin-1.png', alt: 'Capture de la gestion de magasin, premier écran' },
+        { src: 'projects/magasin-2.png', alt: "Page d'accueil de l'application, avec ses six actions" },
+        { src: 'projects/magasin-3.png', alt: 'Capture de la gestion de magasin, troisième écran' },
+        { src: 'projects/magasin-4.png', alt: 'Capture de la gestion de magasin, quatrième écran' },
+        { src: 'projects/magasin-5.png', alt: 'Capture de la gestion de magasin, cinquième écran' },
+        { src: 'projects/magasin-6.png', alt: 'Capture de la gestion de magasin, sixième écran' },
+      ],
+      secret: 'WinForms → Entity Framework → MySQL',
+      secretLabel: 'Les couches du magasin',
+    },
+    {
+      id: 'visu3d',
+      title: 'Visualiseur 3D',
+      context: 'Expérimentation · navigateur',
+      summary:
+        'Charger un modèle 3D au format OBJ et le manipuler dans le navigateur, avec Three.js dans ' +
+        'une application Angular.',
+      highlights: [
+        'Import de fichiers OBJ',
+        'Caméra libre : zoom, rotation, déplacement',
+        'Réglage des lumières et de la position du modèle',
+      ],
+      skills: ['threejs', 'angular', 'typescript'],
+      visual: 'visu3d',
+      secret: 'scène · caméra · lumière · OBJLoader',
+      secretLabel: 'La scène Three.js',
     },
     {
       id: 'infra',
@@ -221,11 +281,15 @@ export const PROFILE: Profile = {
     { id: 'angular', label: 'Angular', group: 'dev' },
     { id: 'typescript', label: 'TypeScript', group: 'dev' },
     { id: 'html-css', label: 'HTML & CSS', group: 'dev' },
+    { id: 'javascript', label: 'JavaScript', group: 'dev' },
     { id: 'dotnet', label: '.NET · C#', group: 'dev' },
     { id: 'kotlin', label: 'Kotlin', group: 'dev' },
     { id: 'compose', label: 'Jetpack Compose', group: 'dev' },
     { id: 'api-rest', label: 'API REST', group: 'dev' },
-    { id: 'sql', label: 'SQL', group: 'dev' },
+    { id: 'nestjs', label: 'Node.js · Nest.js', group: 'dev' },
+    { id: 'php-laravel', label: 'PHP · Laravel', group: 'dev' },
+    { id: 'sql', label: 'SQL · MySQL', group: 'dev' },
+    { id: 'threejs', label: 'Three.js', group: 'dev' },
     { id: 'clean-archi', label: 'Clean Architecture', group: 'archi' },
     { id: 'gitlab-ci', label: 'Git · GitLab CI', group: 'archi' },
     { id: 'docker', label: 'Docker', group: 'archi' },

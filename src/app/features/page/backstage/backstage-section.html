@@ -41,13 +41,7 @@
     <ol class="steps">
       <li>
         <b>Ouvrez une seconde fenêtre</b>
-        <span>
-          Glissez cet onglet hors du navigateur, ou
-          <button type="button" class="inline" (click)="openTwin()">ouvrez-en une ici</button>.
-          @if (blocked()) {
-            <em class="warn">Le navigateur a bloqué la fenêtre : autorisez les fenêtres surgissantes pour ce site.</em>
-          }
-        </span>
+        <span>Une vraie fenêtre, pas un onglet : glissez l'onglet hors du navigateur.</span>
       </li>
       <li>
         <b>Rétrécissez-la</b>
@@ -58,7 +52,6 @@
         <span>Elle voit à travers celle-ci. Molette pour faire défiler, Maj + molette pour zoomer.</span>
       </li>
     </ol>
-    <p class="pocket">Une seule fenêtre, ou un écran tactile ? La <b>loupe de poche</b> du dock fait le même travail.</p>
   </div>
 
   <div class="vault" data-x="zone confidentielle">

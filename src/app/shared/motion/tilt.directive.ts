@@ -2,8 +2,8 @@ import { DOCUMENT, DestroyRef, Directive, ElementRef, afterNextRender, inject, i
 
 /**
  * Incline légèrement une carte vers le pointeur et y pose un halo (`--mx`, `--my` en %).
- * Rien sur écran tactile, ni quand l'utilisateur limite les animations, ni pendant qu'une loupe
- * de poche survole la page : la copie rayons X, elle, ne bouge pas.
+ * Rien sur écran tactile, ni quand l'utilisateur limite les animations. Les copies de la page
+ * affichées dans une loupe n'ont pas de pointeur : elles restent droites.
  */
 @Directive({ selector: '[appTilt]' })
 export class TiltDirective {
@@ -22,7 +22,7 @@ export class TiltDirective {
       let frame = 0;
 
       const onMove = (e: PointerEvent) => {
-        if (reduced.matches || doc.documentElement.classList.contains('pocket-lens')) return reset();
+        if (reduced.matches) return reset();
         const rect = element.getBoundingClientRect();
         const px = (e.clientX - rect.left) / rect.width;
         const py = (e.clientY - rect.top) / rect.height;

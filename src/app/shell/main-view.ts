@@ -4,7 +4,6 @@ import {
   DOCUMENT,
   DestroyRef,
   afterNextRender,
-  computed,
   effect,
   inject,
   input,
@@ -17,7 +16,6 @@ import { contentOrigin } from '@core/geometry/geometry';
 import { BusCommand, WindowBus } from '@core/sync/window-bus';
 import { WindowRoleStore } from '@features/lens/data/window-role.store';
 import { LensFrames } from '@features/lens/lens-frames';
-import { PocketLens } from '@features/lens/pocket-lens';
 import { PortfolioPage } from '@features/page/portfolio-page';
 import { SecretsStore } from '@features/secrets/data/secrets.store';
 import { FoundToast } from '@features/secrets/ui/found-toast';
@@ -31,7 +29,7 @@ const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'Ar
 /** La fenêtre portfolio : la page en surface, et tout ce qui permet de la percer à jour. */
 @Component({
   selector: 'app-main-view',
-  imports: [PortfolioPage, PocketLens, LensFrames, ControlDock, FoundToast, SingularityOverlay, CursorAura],
+  imports: [PortfolioPage, LensFrames, ControlDock, FoundToast, SingularityOverlay, CursorAura],
   templateUrl: './main-view.html',
   styleUrl: './main-view.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,18 +51,15 @@ export class MainView {
 
   protected readonly vh = signal(this.win?.innerHeight ?? 800);
   protected readonly scrollY = signal(Math.round(this.win?.scrollY ?? 0));
-  protected readonly pocketLens = signal(false);
-  protected readonly xrayView = signal(false);
   protected readonly singularityOpen = signal(false);
   protected readonly notice = signal<string | null>(null);
-  private readonly cheat = signal(false);
-  protected readonly singularityAvailable = computed(() => this.store.complete() || this.cheat());
   private konamiIndex = 0;
 
   constructor() {
     const destroyRef = inject(DestroyRef);
     this.bus.commands$.pipe(takeUntilDestroyed()).subscribe((command) => this.onCommand(command));
     this.watchLenses();
+    this.watchCompletion();
 
     afterNextRender(() => {
       const win = this.win;
@@ -107,19 +102,6 @@ export class MainView {
     this.vh.set(this.win?.innerHeight ?? 800);
   }
 
-  protected togglePocket(): void {
-    this.pocketLens.update((open) => !open);
-    if (this.pocketLens()) this.xrayView.set(false);
-  }
-
-  protected toggleXray(): void {
-    this.xrayView.update((open) => !open);
-    if (this.xrayView()) {
-      this.pocketLens.set(false);
-      this.notify('Vue rayons X : tout est visible, mais les secrets ne comptent pas.');
-    }
-  }
-
   protected setSingularity(open: boolean, broadcast: boolean): void {
     this.singularityOpen.set(open);
     if (broadcast) this.bus.send({ type: 'singularity', open });
@@ -133,9 +115,18 @@ export class MainView {
     else this.konamiIndex = key === KONAMI[0] ? 1 : 0;
     if (this.konamiIndex === KONAMI.length) {
       this.konamiIndex = 0;
-      this.cheat.set(true);
       this.setSingularity(true, true);
     }
+  }
+
+  /** Le dernier secret trouvé ouvre la singularité : c'est la récompense, sans bouton. */
+  private watchCompletion(): void {
+    let before = this.store.complete();
+    effect(() => {
+      const complete = this.store.complete();
+      if (complete && !before) setTimeout(() => this.setSingularity(true, true), 1600);
+      before = complete;
+    });
   }
 
   /** Annonce l'arrivée d'une loupe : quelqu'un vient de rétrécir une autre fenêtre. */

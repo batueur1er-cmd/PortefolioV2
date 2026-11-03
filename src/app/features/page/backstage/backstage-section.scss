@@ -112,37 +112,6 @@
   opacity: 0.78;
 }
 
-.inline {
-  padding: 0;
-  border: 0;
-  border-bottom: 1px solid currentColor;
-  background: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-
-.inline:hover {
-  opacity: 1;
-  color: color-mix(in srgb, var(--accent) 45%, #fff);
-}
-
-.warn {
-  display: block;
-  margin-top: 6px;
-  font-style: normal;
-  color: color-mix(in srgb, var(--xn) 85%, #fff);
-}
-
-.pocket {
-  grid-column: 1 / -1;
-  margin: 0;
-  padding-top: 14px;
-  border-top: 1px dashed color-mix(in srgb, currentColor 25%, transparent);
-  font: 400 14px/1.5 var(--sans);
-  opacity: 0.7;
-}
-
 .vault {
   position: relative;
   min-height: 330px;
