@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Navigation X-Ray — Baptiste Nodon</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Caveat:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    :root {
+      --color-xray-bg: #06101D;
+      --color-xray-grid: rgba(127, 233, 255, 0.08);
+      --color-xray-line: #7FE9FF;
+      --color-xray-note: #FFD84D;
+      --color-xray-highlight: #FF5BD0;
+      --color-xray-text: #CFE9F2;
+      --color-xray-dim: rgba(127, 233, 255, 0.35);
+    }
+    body {
+      background-color: var(--color-xray-bg);
+      background-image: 
+        linear-gradient(to right, var(--color-xray-grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--color-xray-grid) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--color-xray-text);
+      font-family: 'Inter Tight', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-serif-display {
+      font-family: 'Instrument Serif', Georgia, serif;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .font-handwriting {
+      font-family: 'Caveat', cursive;
+    }
+    /* X-ray cyan outline styling for wordmark & headers */
+    .xray-outline-text {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--color-xray-line);
+      text-shadow: 0 0 10px rgba(127, 233, 255, 0.25);
+    }
+  </style>
+<meta content="web_standard" name="shell-type"/></head>
+<body class="relative selection:bg-[#FF5BD0] selection:text-[#06101D]">
+<!-- Sticky Navigation Bar (X-RAY Variant: Identical layout & dimensions to Surface) -->
+<header class="sticky top-0 z-50 w-full bg-[#06101D]/90 backdrop-blur-md border-b border-[rgba(127,233,255,0.22)] transition-colors">
+<div class="max-w-[1200px] mx-auto px-7 sm:px-14 h-20 flex items-center justify-between">
+<!-- Left: Wordmark & REVEALED X-ray mono chip in the reserved empty space -->
+<div class="flex flex-col justify-center">
+<a class="group inline-flex items-baseline gap-2 transition-colors" href="#accueil">
+<span class="font-serif-display text-2xl tracking-tight font-normal xray-outline-text">Baptiste Nodon</span>
+<!-- Radar pulse node in place of the green status dot -->
+<span class="relative flex h-2 w-2 transform translate-y-[-2px]">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7FE9FF] opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-[#7FE9FF]"></span>
+</span>
+</a>
+<!-- X-ray Version Chip: Occupies the exact 18px reserved space below wordmark -->
+<div class="h-[18px] w-auto mt-0.5 flex items-center gap-1.5">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded-[4px] bg-[#06101D] border border-[#7FE9FF]/60 font-mono-code text-[10px] text-[#7FE9FF] tracking-wider leading-none shadow-[0_0_8px_rgba(127,233,255,0.25)]">
+            v2.0 · Angular 21 · zoneless
+          </span>
+</div>
+</div>
+<!-- Center / Anchor Links (Cyan outline / technical HUD style, identical spacing) -->
+<nav class="hidden md:flex items-center gap-7 lg:gap-8 font-mono-code text-[12px] tracking-[0.08em] uppercase text-[#7FE9FF]/70">
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#profil">
+<span class="text-[#FF5BD0] mr-1">01.</span>Profil
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#parcours">
+<span class="text-[#FF5BD0] mr-1">02.</span>Parcours
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#realisations">
+<span class="text-[#FF5BD0] mr-1">03.</span>Réalisations
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#competences">
+<span class="text-[#FF5BD0] mr-1">04.</span>Compétences
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#formation">
+<span class="text-[#FF5BD0] mr-1">05.</span>Formation
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#contact">
+<span class="text-[#FF5BD0] mr-1">06.</span>Contact
+        </a>
+</nav>
+<!-- Right: X-ray LinkedIn Pill with cyan outline and coordinates badge -->
+<div class="flex items-center gap-3">
+<a class="inline-flex items-center gap-1.5 font-mono-code text-[12px] tracking-[0.06em] text-[#7FE9FF] px-3.5 py-1.5 rounded-full border border-[#7FE9FF] hover:bg-[#7FE9FF]/10 hover:shadow-[0_0_12px_rgba(127,233,255,0.35)] transition-all" href="https://linkedin.com" rel="noopener noreferrer" target="_blank">
+<span>LinkedIn</span>
+<span class="text-xs text-[#FF5BD0]">↗</span>
+</a>
+</div>
+</div>
+</header>
+<!-- Blueprint Contextual Workspace & HUD Annotations -->
+<main class="max-w-[1200px] mx-auto px-7 sm:px-14 py-20 sm:py-28 relative"><div class="flex flex-col w-full relative">
+<!-- Soft Mauve Atmospheric Backing with layered radial blooms -->
+<div class="absolute -top-32 -left-20 w-[680px] h-[680px] bg-gradient-to-br from-[#EBDFF8]/70 via-[#F3ECFB]/40 to-transparent rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="absolute top-1/4 -right-16 w-[740px] h-[740px] bg-gradient-to-bl from-[#DDD0F5]/60 via-[#EDE4F9]/30 to-transparent rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="absolute top-2/3 left-1/3 w-[520px] h-[520px] bg-gradient-to-tr from-[#E6DAF7]/50 via-transparent to-transparent rounded-full blur-2xl pointer-events-none -z-10"></div>
+<!-- Hero Content Grid (1200px max centered within App Shell) -->
+<div class="relative w-full min-h-[780px] flex flex-col justify-between">
+<!-- Top Row: Kicker & Reserved Stamp Clearance Zone -->
+<div class="w-full flex items-center justify-between mb-8">
+<!-- Kicker: Mauve Technical Monospace Pill -->
+<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FAF7FD]/90 shadow-sm backdrop-blur-md">
+<span class="w-1.5 h-1.5 rounded-full bg-[#7C3AED]"></span>
+<span class="font-mono text-label tracking-[0.08em] uppercase text-ink">
+          Apprenti développeur · Bachelor CPI · DIIAGE
+        </span>
+</div>
+<!-- CRITICAL RESERVED ZONE: Top Right (Cleared 180x60px for X-ray rotated stamp) -->
+<div aria-hidden="true" class="w-48 h-12 pointer-events-none opacity-0 select-none">
+<!-- Reserved viewport slot for technical telemetry stamp overlay -->
+</div>
+</div>
+<!-- Main Editorial Stage (Asymmetric 12-column grid) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+<!-- Left Column: Display Typography & Lead Meta (7 Columns) -->
+<div class="lg:col-span-7 flex flex-col z-10">
+<!-- Massive Display Headline with Reserved Right Measurement Channel -->
+<div class="relative mb-8">
+<h1 class="font-display text-display text-ink tracking-[-0.03em] select-none flex flex-col">
+<span class="block hover:translate-x-1 transition-transform duration-500 ease-out">Baptiste</span>
+<span class="block -mt-6 sm:-mt-10 italic font-normal text-ink/95 hover:translate-x-1 transition-transform duration-500 ease-out">Nodon</span>
+</h1>
+<!-- RESERVED GAP: Explicit 80px channel to the right of title for X-ray blueprint dimension lines -->
+<div aria-hidden="true" class="absolute right-0 top-0 bottom-0 w-20 pointer-events-none opacity-0"></div>
+</div>
+<!-- Editorial Lead Paragraph -->
+<p class="font-lead text-lead text-[#3A3540] max-w-[560px] leading-relaxed mb-8">
+          Du serveur à l’interface : je développe des outils métiers qui tiennent la route, sans jamais perdre de vue l’infrastructure qui les fait tourner.
+        </p>
+<!-- Status & Telemetry Metadata Cluster -->
+<div class="flex flex-wrap items-center gap-6 mb-10">
+<!-- Live Status Indicator -->
+<div class="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-[#FAF7FD]/80 shadow-sm">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-status opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-status"></span>
+</span>
+<span class="font-mono text-mono text-ink font-medium">
+              En alternance chez Quercy Réfrigération
+            </span>
+</div>
+<!-- Geographic Location Tag -->
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FAF7FD]/60">
+<span class="material-symbols-outlined text-muted text-base" style="font-variation-settings: 'FILL' 1;">near_me</span>
+<span class="font-mono text-mono text-muted">
+              Auvergne-Rhône-Alpes, France
+            </span>
+</div>
+</div>
+<!-- Call to Action Buttons -->
+<div class="flex items-center gap-4">
+<!-- Primary Pill Button -->
+<a class="group inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-ink text-[#FAF7FD] font-mono text-label uppercase tracking-widest transition-all duration-300 shadow-md hover:bg-[#7C3AED] hover:shadow-lg hover:shadow-[#7C3AED]/25" href="#parcours">
+<span>Voir le parcours</span>
+<span class="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1">arrow_forward</span>
+</a>
+<!-- Ghost Pill Button -->
+<a class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#FAF7FD]/60 text-ink font-mono text-label uppercase tracking-widest shadow-sm transition-all duration-300 hover:bg-[#FAF7FD] hover:text-[#7C3AED]" href="#contact">
+<span>Me contacter</span>
+<span class="text-xs text-[#7C3AED]">↗</span>
+</a>
+</div>
+</div>
+<!-- Right Column: Abstract Caustic Luminous Glass Sculpture (5 Columns) -->
+<div class="lg:col-span-5 relative w-full h-[480px] lg:h-[540px] flex items-center justify-center">
+<!-- Multi-layered Ambient Glow Center -->
+<div class="absolute w-72 h-72 rounded-full bg-gradient-to-tr from-[#C4B5FD] via-[#DDD6FE] to-[#F5D0FE] blur-2xl opacity-70 animate-pulse" style="animation-duration: 6s;"></div>
+<!-- Translucent Prismatic Glass Form -->
+<div class="relative w-80 h-96 sm:w-96 sm:h-[430px] rounded-3xl bg-gradient-to-br from-white/60 via-[#F3EDFB]/40 to-[#DDD0F5]/30 backdrop-blur-xl shadow-2xl p-8 flex flex-col justify-between overflow-hidden">
+<!-- Caustic Specular Highlights & Ray Streaks -->
+<div class="absolute -top-24 -right-24 w-60 h-60 bg-gradient-to-br from-white/90 to-transparent rounded-full blur-xl pointer-events-none"></div>
+<div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#C4B5FD]/20 to-transparent pointer-events-none"></div>
+<!-- Glass Card Top: System Coordinates & Monospace Spec -->
+<div class="flex items-center justify-between text-ink/70">
+<span class="font-mono text-label tracking-widest uppercase">NODE // 45.7640° N</span>
+<span class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-white/70 text-ink/80 shadow-xs">SYS: READY</span>
+</div>
+<!-- Glass Center Graphic: Precise Concentric Orbit Visual -->
+<div class="relative w-full h-44 flex items-center justify-center">
+<svg class="w-full h-full text-ink/30" fill="none" viewbox="0 0 240 160" xmlns="http://www.w3.org/2000/svg">
+<!-- Orbit lines -->
+<ellipse class="opacity-60" cx="120" cy="80" rx="90" ry="45" stroke="currentColor" stroke-dasharray="3 3"></ellipse>
+<ellipse cx="120" cy="80" rx="65" ry="30" stroke="#7C3AED" stroke-opacity="0.4"></ellipse>
+<ellipse class="opacity-40" cx="120" cy="80" rx="35" ry="16" stroke="currentColor"></ellipse>
+<!-- Orbital Nodes -->
+<circle cx="120" cy="80" fill="#7C3AED" r="5"></circle>
+<circle class="animate-ping" cx="185" cy="80" fill="#15120F" r="3.5" style="animation-duration: 3s;"></circle>
+<circle cx="185" cy="80" fill="#15120F" r="3.5"></circle>
+<circle cx="55" cy="80" fill="#7C3AED" r="2.5"></circle>
+</svg>
+</div>
+<!-- Glass Card Bottom: Architecture Stack Summary -->
+<div class="space-y-2">
+<div class="flex items-center justify-between font-mono text-[11px] text-ink/60">
+<span>PIPELINE</span>
+<span class="text-ink font-medium">FULL-STACK &amp; INFRA</span>
+</div>
+<!-- Dynamic Mini Progress Bar -->
+<div class="w-full h-1.5 bg-black/5 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-[#7C3AED] to-[#C4B5FD] w-4/5 rounded-full"></div>
+</div>
+<div class="flex items-center justify-between font-mono text-[10px] text-muted pt-1">
+<span>ANGULAR · C# · LINUX</span>
+<span>100% DISPONIBLE</span>
+</div>
+</div>
+</div>
+<!-- Ambient Floating Spherical Accent Orbs -->
+<div class="absolute -bottom-6 -left-4 w-20 h-20 rounded-full bg-gradient-to-br from-white/80 via-[#DDD0F5]/60 to-[#C4B5FD]/40 backdrop-blur-md shadow-lg pointer-events-none"></div>
+<div class="absolute -top-4 right-6 w-14 h-14 rounded-full bg-gradient-to-tr from-white/90 via-[#FAF7FD]/50 to-[#E9D5FF]/40 backdrop-blur-md shadow-md pointer-events-none"></div>
+</div>
+</div>
+<!-- CRITICAL RESERVED ZONE: Yellow Caveat Handwritten Note Buffer -->
+<!-- 48px calibrated negative breathing room reserved for subsequent blueprint layer -->
+<div aria-hidden="true" class="w-full h-12 pointer-events-none opacity-0 select-none my-6">
+<!-- Reserved horizontal gap for X-ray manuscript annotation -->
+</div>
+<!-- CRITICAL RESERVED BUFFER: Exact 120px viewport footer gap -->
+<!-- Preserves clean clearance for the bottom floating dock HUD ("◎ 7 / 24 · Rayons X · Ouvrir la loupe") -->
+<div aria-hidden="true" class="w-full h-[120px] pointer-events-none select-none flex-shrink-0"></div>
+</div>
+</div></main>
+</body></html>

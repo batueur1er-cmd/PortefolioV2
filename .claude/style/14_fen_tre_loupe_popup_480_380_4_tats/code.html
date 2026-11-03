@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&amp;family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Instrument+Serif:ital@0;1&amp;family=Inter+Tight:ital,wght@0,300..900;1,300..900&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#7e766f", "error": "#ba1a1a", "on-surface-variant": "#4c4640", "xray-text": "#CFE9F2", "on-secondary-fixed": "#3c0700", "tertiary-container": "#00210b", "on-tertiary": "#ffffff", "inverse-on-surface": "#f5f0e7", "on-secondary-container": "#5e1100", "surface-container-highest": "#e7e2d9", "secondary": "#b02e0b", "on-primary-container": "#89837e", "surface-variant": "#e7e2d9", "on-tertiary-fixed": "#00210b", "secondary-container": "#fd653f", "on-secondary": "#ffffff", "outline-variant": "#cfc5bd", "primary-container": "#1e1b18", "paper": "#F1ECE3", "surface-container-lowest": "#ffffff", "xray-note": "#FFD84D", "secondary-fixed-dim": "#ffb4a2", "status": "#2F8F4E", "tertiary-fixed-dim": "#7cda91", "primary-fixed": "#e9e1db", "surface-bright": "#fef9f0", "surface-dim": "#ded9d1", "error-container": "#ffdad6", "muted": "#625B52", "surface-tint": "#635d59", "xray-dim": "rgba(127, 233, 255, 0.35)", "surface": "#fef9f0", "on-tertiary-container": "#369553", "primary-fixed-dim": "#cdc5c0", "on-primary": "#ffffff", "xray-highlight": "#FF5BD0", "background": "#fef9f0", "line": "rgba(21, 18, 15, 0.14)", "on-background": "#1d1c16", "on-accent": "#FFFFFF", "xray-bg": "#06101D", "secondary-fixed": "#ffdad2", "tertiary": "#000000", "on-tertiary-fixed-variant": "#005225", "surface-container": "#f2ede4", "on-error-container": "#93000a", "inverse-primary": "#cdc5c0", "ink": "#15120F", "xray-line": "#7FE9FF", "on-secondary-fixed-variant": "#8a1d00", "surface-container-high": "#ede8df", "paper-2": "#E7DFD2", "tertiary-fixed": "#98f7ab", "primary": "#000000", "on-surface": "#1d1c16", "on-primary-fixed": "#1e1b18", "on-primary-fixed-variant": "#4a4642", "inverse-surface": "#32302a", "on-error": "#ffffff", "surface-container-low": "#f8f3ea", "accent": "#B5320F", "xray-grid": "rgba(127, 233, 255, 0.08)" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "2.5rem", "space-xs": "0.25rem", "space-xl": "2.5rem", "space-lg": "1.5rem", "space-section": "9.375rem", "2xl": "72px", "md": "16px", "xs": "4px", "section": "150px", "gutter": "56px", "margin-mobile": "1.25rem", "space-md": "1rem", "gutter-mobile": "1rem", "max-width": "1200px", "space-sm": "0.5rem", "lg": "24px", "space-2xl": "4.5rem", "sm": "8px", "xl": "40px" }, "fontFamily": { "headline-lg": [ "EB Garamond" ], "note": [ "Caveat" ], "mono": [ "JetBrains Mono" ], "h3": [ "Inter Tight" ], "headline-lg-mobile": [ "EB Garamond" ], "display": [ "Instrument Serif" ], "h2": [ "Instrument Serif" ], "headline-md": [ "Inter" ], "body": [ "Inter Tight" ], "lead": [ "Inter Tight" ], "label": [ "JetBrains Mono" ], "display-mobile": [ "EB Garamond" ] }, "fontSize": { "headline-lg": [ "3.5rem", { "lineHeight": "1.02", "letterSpacing": "-0.02em", "fontWeight": "400" } ], "note": [ "1.5rem", { "lineHeight": "1.1", "fontWeight": "500" } ], "mono": [ "0.8125rem", { "lineHeight": "1.4", "fontWeight": "400" } ], "h3": [ "1.375rem", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "headline-lg-mobile": [ "2.25rem", { "lineHeight": "1.1", "letterSpacing": "-0.01em", "fontWeight": "400" } ], "display": [ "10.5rem", { "lineHeight": "0.88", "letterSpacing": "-0.03em", "fontWeight": "400" } ], "h2": [ "3.5rem", { "lineHeight": "1.02", "letterSpacing": "-0.02em", "fontWeight": "400" } ], "headline-md": [ "1.375rem", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "body": [ "1rem", { "lineHeight": "1.55", "fontWeight": "400" } ], "lead": [ "1.375rem", { "lineHeight": "1.45", "fontWeight": "400" } ], "label": [ "0.75rem", { "lineHeight": "1", "letterSpacing": "0.08em", "fontWeight": "500" } ], "display-mobile": [ "4.5rem", { "lineHeight": "0.95", "letterSpacing": "-0.02em", "fontWeight": "400" } ] } } } };</script></head><body class="bg-paper font-body text-body text-ink antialiased selection:bg-accent selection:text-on-accent"><header class="fixed top-0 inset-x-0 z-50 bg-paper/85 backdrop-blur-md shadow-[0_1px_8px_rgba(21,18,15,0.06)]"><div class="h-16 max-w-[1200px] mx-auto px-gutter-mobile lg:px-gutter flex items-center justify-between"><div class="flex items-center gap-space-md"><span class="font-h2 text-h3 tracking-tight text-ink font-normal">Révélateur</span><span class="font-label text-label uppercase tracking-widest text-muted hidden sm:inline-block">FOLIO // 2025</span></div><nav class="hidden md:flex items-center gap-space-xs p-1" data-active-classes="bg-ink text-paper rounded-full"><a class="font-label text-label uppercase px-space-md py-space-sm rounded-full text-on-surface-variant hover:text-ink transition-colors" data-path="portfolio-canvas" href="#">Works</a><a class="font-label text-label uppercase px-space-md py-space-sm rounded-full text-on-surface-variant hover:text-ink transition-colors" data-path="case-study-inspection" href="#">Inspection</a><a aria-current="page" class="font-label uppercase px-space-md py-space-sm transition-colors bg-ink text-paper rounded-full" data-path="technical-telemetry" href="#">Telemetry</a><a class="font-label text-label uppercase px-space-md py-space-sm rounded-full text-on-surface-variant hover:text-ink transition-colors" data-path="about-craft" href="#">Profile</a></nav><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center gap-space-xs px-space-sm py-xs bg-paper-2 rounded-full"><span class="w-2 h-2 rounded-full bg-status"></span><span class="font-mono text-mono text-muted">CALIBRATED</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-paper min-h-screen"><div class="flex flex-col w-full">
+<!-- Interactive Workbench Header Section -->
+<section class="max-w-[1200px] mx-auto w-full px-gutter-mobile lg:px-gutter pt-8 pb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8">
+<div class="space-y-3">
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-1 bg-ink text-paper rounded-full font-label text-label tracking-widest uppercase">SYSTÈME OPTIQUE HUD</span>
+<span class="font-mono text-mono text-muted">MODULE V4.2.0 // CALIBRATION POPUP</span>
+</div>
+<h1 class="font-h2 text-headline-lg text-ink font-normal tracking-tight">Banc d’Essai Optique</h1>
+<p class="font-lead text-lead text-on-surface-variant max-w-2xl">
+          Matrice d’états du module loupe flottant (480×380 px). Échantillonnage de la visionneuse synchronisée BroadcastChannel à travers ses quatre régimes nominaux d’inspection.
+        </p>
+</div>
+<!-- Quick Switcher Bar -->
+<div class="flex flex-wrap items-center gap-2 p-1.5 bg-paper-2 rounded-full">
+<button class="px-4 py-2 rounded-full bg-paper hover:bg-ink hover:text-paper font-label text-label uppercase transition-all shadow-sm" onclick="document.getElementById('state-01').scrollIntoView({behavior: 'smooth'})">
+          01. Détection
+        </button>
+<button class="px-4 py-2 rounded-full bg-paper hover:bg-ink hover:text-paper font-label text-label uppercase transition-all shadow-sm" onclick="document.getElementById('state-02').scrollIntoView({behavior: 'smooth'})">
+          02. Recherche
+        </button>
+<button class="px-4 py-2 rounded-full bg-paper hover:bg-ink hover:text-paper font-label text-label uppercase transition-all shadow-sm" onclick="document.getElementById('state-03').scrollIntoView({behavior: 'smooth'})">
+          03. Déconnexion
+        </button>
+<button class="px-4 py-2 rounded-full bg-paper hover:bg-ink hover:text-paper font-label text-label uppercase transition-all shadow-sm" onclick="document.getElementById('state-04').scrollIntoView({behavior: 'smooth'})">
+          04. Guide
+        </button>
+</div>
+</div>
+<!-- Telemetry Status Ribbon -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 bg-paper-2 rounded-xl shadow-sm">
+<div class="space-y-1">
+<span class="font-label text-label text-muted uppercase">DIMENSIONS FENÊTRE</span>
+<p class="font-mono text-mono text-ink font-bold">480 × 380 DP (1:1)</p>
+</div>
+<div class="space-y-1">
+<span class="font-label text-label text-muted uppercase">CANAL TÉLÉMÉTRIQUE</span>
+<p class="font-mono text-mono text-status font-bold">bc://reveleur-sync</p>
+</div>
+<div class="space-y-1">
+<span class="font-label text-label text-muted uppercase">TAUX DE BALAYAGE</span>
+<p class="font-mono text-mono text-ink font-bold">120 Hz BUFFERED</p>
+</div>
+<div class="space-y-1">
+<span class="font-label text-label text-muted uppercase">CADENCE AUDIO</span>
+<p class="font-mono text-mono text-secondary font-bold">GEIGER 44.1 kHz</p>
+</div>
+</div>
+</section>
+<!-- 4-State Inspection Stage (2x2 Grid on Large Screens) -->
+<section class="max-w-[1200px] mx-auto w-full px-gutter-mobile lg:px-gutter pb-24">
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-12 lg:gap-16 items-start">
+<!-- ========================================================= -->
+<!-- STATE 01: LOUPE ACTIVE & DÉTECTION -->
+<!-- ========================================================= -->
+<div class="flex flex-col space-y-4" id="state-01">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-status/20 text-status flex items-center justify-center font-mono text-mono font-bold">1</span>
+<span class="font-h3 text-h3 text-ink">État 01 — Loupe Active &amp; Détection</span>
+</div>
+<span class="px-2.5 py-0.5 rounded bg-status/10 text-status font-mono text-mono text-xs uppercase tracking-wider">Verrouillage 80%</span>
+</div>
+<p class="font-body text-body text-on-surface-variant text-sm">
+          Capture en temps réel avec calque d’anisotropie négative (#06101D), réticule holographique et notification d'artéfact décodé.
+        </p>
+<!-- Window Mockup Frame -->
+<div class="mx-auto w-full max-w-[480px] h-[380px] bg-xray-bg rounded-xl shadow-2xl flex flex-col overflow-hidden relative select-none">
+<!-- Window Titlebar -->
+<div class="h-8 bg-[#03080F] px-3 flex items-center justify-between shrink-0 shadow-sm z-30">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-[#FF5F56] inline-block opacity-80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] inline-block opacity-80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#27C93F] inline-block opacity-80"></span>
+</div>
+<div class="font-mono text-[10px] tracking-wider text-xray-text/70 uppercase">
+              Loupe X-Ray · 480×380 · Port 0x7F
+            </div>
+<div class="flex items-center gap-1 text-xray-line/60">
+<span class="material-symbols-outlined text-[14px]">sensors</span>
+<span class="font-mono text-[9px]">LIVE</span>
+</div>
+</div>
+<!-- Lens Viewport with Blueprint & HUD Layers -->
+<div class="relative flex-1 w-full h-full overflow-hidden bg-xray-bg">
+<!-- Background Blueprint Grid Pattern (SVG based for sharp rendering) -->
+<div class="absolute inset-0 opacity-25 pointer-events-none" style="background-image: radial-gradient(rgba(127, 233, 255, 0.4) 1px, transparent 1px), linear-gradient(to right, rgba(127, 233, 255, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(127, 233, 255, 0.08) 1px, transparent 1px); background-size: 24px 24px;"></div>
+<!-- Blueprint Underlying Architecture (Editorial & Wireframe under X-Ray) -->
+<div class="absolute inset-0 p-6 pointer-events-none flex flex-col justify-center">
+<div class="space-y-2 opacity-80 pl-2">
+<span class="font-mono text-[10px] text-xray-line tracking-widest uppercase">STRUCT: ARCHIVE_NODE_34</span>
+<div class="font-display text-4xl text-xray-text leading-tight tracking-tight">Le Chantier Furtif</div>
+<div class="w-48 h-0.5 bg-xray-line/40"></div>
+<div class="font-mono text-xs text-xray-text/70 space-y-0.5 pt-1">
+<div>X: 1042.84 • Y: 382.11 • ANGLE: 0.00°</div>
+<div>LAYER: CANV_RENDERER_GL_P2</div>
+</div>
+</div>
+<!-- Caveat Handwritten Annotation Under X-Ray -->
+<div class="absolute right-8 top-16 rotate-[-4deg] bg-xray-note/10 p-2.5 rounded shadow-sm max-w-[170px]">
+<span class="font-note text-note text-xray-note leading-none block">« C’est ici que le tracé topographique prend vie... »</span>
+<span class="font-mono text-[9px] text-xray-note/70 uppercase tracking-tighter mt-1 block">— Notes de Baptiste</span>
+</div>
+</div>
+<!-- Optical HUD Overlay: Vignette & CRT Scanline -->
+<div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_45%,rgba(6,16,29,0.75)_100%)]"></div>
+<div class="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(127,233,255,0)_50%,rgba(127,233,255,0.02)_50%)] bg-[length:100%_4px]"></div>
+<!-- HUD Technical Corner Brackets -->
+<div class="absolute top-2 left-2 font-mono text-xray-line text-xs font-light leading-none">⌜</div>
+<div class="absolute top-2 right-2 font-mono text-xray-line text-xs font-light leading-none">⌝</div>
+<div class="absolute bottom-2 left-2 font-mono text-xray-line text-xs font-light leading-none">⌞</div>
+<div class="absolute bottom-2 right-2 font-mono text-xray-line text-xs font-light leading-none">⌟</div>
+<!-- Central Target Reticle with Scanning Ring (80% lock) -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<div class="relative w-36 h-36 flex items-center justify-center">
+<!-- Circular Scanning Ring (Inline SVG under 2KB) -->
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<circle class="text-xray-line/20" cx="50" cy="50" fill="none" r="42" stroke="currentColor" stroke-width="2"></circle>
+<circle class="text-xray-line" cx="50" cy="50" fill="none" r="42" stroke="currentColor" stroke-dasharray="264" stroke-dashoffset="52.8" stroke-linecap="round" stroke-width="2.5"></circle>
+<circle class="text-xray-dim" cx="50" cy="50" fill="none" r="34" stroke="currentColor" stroke-dasharray="4 4" stroke-width="1"></circle>
+</svg>
+<!-- Center Crosshairs -->
+<div class="absolute w-8 h-[1px] bg-xray-line shadow-[0_0_6px_#7FE9FF]"></div>
+<div class="absolute h-8 w-[1px] bg-xray-line shadow-[0_0_6px_#7FE9FF]"></div>
+<div class="absolute w-2 h-2 rounded-full bg-xray-highlight/80 shadow-[0_0_8px_#FF5BD0] animate-pulse"></div>
+<!-- Circular HUD Tag -->
+<span class="absolute bottom-2 font-mono text-[9px] text-xray-text tracking-widest uppercase bg-xray-bg/90 px-1 py-0.5 rounded">
+                  SCAN: 80%
+                </span>
+</div>
+</div>
+<!-- Floating In-Window Toast Notification -->
+<div class="absolute top-10 inset-x-8 z-20 flex justify-center animate-bounce">
+<div class="bg-primary-container text-xray-text px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg shadow-black/40">
+<span class="w-2 h-2 rounded-full bg-status"></span>
+<span class="font-label text-[10px] uppercase tracking-wide text-paper">Secret trouvé</span>
+<span class="font-mono text-[10px] text-muted">— La carte du parcours</span>
+<span class="font-mono text-[10px] text-xray-note font-bold bg-ink px-1.5 py-0.2 rounded">+1</span>
+</div>
+</div>
+<!-- HUD Top Bar Controls -->
+<div class="absolute top-2 inset-x-4 flex items-center justify-between z-10">
+<!-- Zoom Level Chip with [−] [+] -->
+<div class="flex items-center gap-1 bg-ink/80 backdrop-blur px-2 py-1 rounded-full text-xray-text">
+<button class="w-4 h-4 flex items-center justify-center font-mono text-xs hover:text-white transition-colors">
+                  −
+                </button>
+<span class="font-mono text-mono text-xs font-semibold px-1 text-xray-line">×1.0</span>
+<button class="w-4 h-4 flex items-center justify-center font-mono text-xs hover:text-white transition-colors">
+                  +
+                </button>
+</div>
+<!-- Proximity Geiger Signal (5 Bars) -->
+<div class="flex items-center gap-2 bg-ink/80 backdrop-blur px-2.5 py-1 rounded-full text-xray-text">
+<span class="font-mono text-[9px] text-muted tracking-wider uppercase">SIGNAL</span>
+<div class="flex items-end gap-1 h-3">
+<div class="w-1 h-1.5 bg-xray-line rounded-xs"></div>
+<div class="w-1 h-2 bg-xray-line rounded-xs"></div>
+<div class="w-1 h-2.5 bg-xray-line rounded-xs"></div>
+<div class="w-1 h-3 bg-xray-line rounded-xs"></div>
+<div class="w-1 h-3 bg-xray-note rounded-xs animate-pulse"></div>
+</div>
+<span class="font-label text-[9px] text-xray-note uppercase tracking-widest pl-1 font-bold">PROXIMITÉ</span>
+</div>
+</div>
+<!-- HUD Bottom Bar Controls -->
+<div class="absolute bottom-2 inset-x-4 flex items-center justify-between z-10">
+<!-- Counter Chip -->
+<div class="flex items-center gap-1.5 bg-ink/80 backdrop-blur px-2.5 py-1 rounded-full text-xray-text">
+<span class="text-xray-highlight text-xs leading-none">◎</span>
+<span class="font-mono text-mono text-xs text-xray-text">7 / 24 secrets</span>
+</div>
+<!-- Audio Toggle & Help Button -->
+<div class="flex items-center gap-1.5">
+<button class="flex items-center gap-1 bg-ink/80 backdrop-blur px-2.5 py-1 rounded-full text-xray-text hover:bg-ink transition-colors">
+<span class="text-[11px] text-status">♪</span>
+<span class="font-mono text-[10px] text-xray-text uppercase">son : ON</span>
+</button>
+<button class="w-6 h-6 flex items-center justify-center bg-ink/80 backdrop-blur rounded-full text-xray-line hover:text-white font-mono text-xs">
+                  ?
+                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================================= -->
+<!-- STATE 02: RECHERCHE / HORS CIBLE -->
+<!-- ========================================================= -->
+<div class="flex flex-col space-y-4" id="state-02">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-paper-2 text-ink flex items-center justify-center font-mono text-mono font-bold">2</span>
+<span class="font-h3 text-h3 text-ink">État 02 — En Recherche / Hors Cible</span>
+</div>
+<span class="px-2.5 py-0.5 rounded bg-paper-2 text-muted font-mono text-mono text-xs uppercase tracking-wider">Signal 0/5</span>
+</div>
+<p class="font-body text-body text-on-surface-variant text-sm">
+          Attente d’alignement géométrique lorsque la loupe survole des zones neutres ou est déplacée en dehors de la page active.
+        </p>
+<!-- Window Mockup Frame -->
+<div class="mx-auto w-full max-w-[480px] h-[380px] bg-xray-bg rounded-xl shadow-2xl flex flex-col overflow-hidden relative select-none">
+<!-- Window Titlebar -->
+<div class="h-8 bg-[#03080F] px-3 flex items-center justify-between shrink-0 shadow-sm z-30">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-[#FF5F56] inline-block opacity-80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] inline-block opacity-80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#27C93F] inline-block opacity-80"></span>
+</div>
+<div class="font-mono text-[10px] tracking-wider text-xray-text/70 uppercase">
+              Loupe X-Ray · 480×380 · Port 0x7F
+            </div>
+<div class="flex items-center gap-1 text-muted">
+<span class="material-symbols-outlined text-[14px]">radar</span>
+<span class="font-mono text-[9px]">SWEEP</span>
+</div>
+</div>
+<!-- Searching Viewport -->
+<div class="relative flex-1 w-full h-full overflow-hidden bg-xray-bg flex flex-col items-center justify-center p-6 text-center">
+<!-- Background Blueprint Grid Pattern (Dimmed) -->
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(127, 233, 255, 0.4) 1px, transparent 1px), linear-gradient(to right, rgba(127, 233, 255, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(127, 233, 255, 0.08) 1px, transparent 1px); background-size: 24px 24px;"></div>
+<!-- HUD Technical Corner Brackets -->
+<div class="absolute top-2 left-2 font-mono text-xray-line/40 text-xs font-light leading-none">⌜</div>
+<div class="absolute top-2 right-2 font-mono text-xray-line/40 text-xs font-light leading-none">⌝</div>
+<div class="absolute bottom-2 left-2 font-mono text-xray-line/40 text-xs font-light leading-none">⌞</div>
+<div class="absolute bottom-2 right-2 font-mono text-xray-line/40 text-xs font-light leading-none">⌟</div>
+<!-- Radar Sweep Visual -->
+<div class="relative w-44 h-44 mb-4 flex items-center justify-center">
+<!-- Radar circles -->
+<div class="absolute inset-0 rounded-full border border-xray-line/20"></div>
+<div class="absolute inset-6 rounded-full border border-dashed border-xray-line/25"></div>
+<div class="absolute inset-14 rounded-full border border-xray-line/20"></div>
+<!-- Crosshairs -->
+<div class="absolute inset-x-0 h-[1px] bg-xray-line/20"></div>
+<div class="absolute inset-y-0 w-[1px] bg-xray-line/20"></div>
+<!-- Animated Sweep Line & Gradient Sector (Inline CSS rotation) -->
+<div class="absolute inset-0 rounded-full overflow-hidden animate-[spin_4s_linear_infinite]">
+<div class="w-1/2 h-1/2 origin-bottom-right bg-gradient-to-br from-xray-line/30 via-transparent to-transparent"></div>
+</div>
+<!-- Central Pinging Dot -->
+<div class="w-2.5 h-2.5 rounded-full bg-xray-line shadow-[0_0_10px_#7FE9FF] z-10"></div>
+</div>
+<!-- Search Information Payload -->
+<div class="relative z-10 max-w-sm space-y-2">
+<h2 class="font-h3 text-h3 text-paper font-medium tracking-tight">
+                Placez la loupe au-dessus du portfolio
+              </h2>
+<p class="font-mono text-[11px] leading-relaxed text-xray-text/70">
+                En attente d'alignement avec les coordonnées du document parent...
+              </p>
+<div class="pt-2">
+<span class="inline-block px-3 py-1 bg-ink text-muted font-mono text-[10px] rounded-full uppercase tracking-wider">
+                  SIGNAL : 0 / 5 • HORS_CHAMP
+                </span>
+</div>
+</div>
+<!-- Bottom Diagnostic Pin -->
+<div class="absolute bottom-2 inset-x-4 flex justify-between font-mono text-[9px] text-muted">
+<span>LATENCE: 1.2ms</span>
+<span>SYNCHRONISATION: POLLED</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================================= -->
+<!-- STATE 03: PORTFOLIO DÉCONNECTÉ -->
+<!-- ========================================================= -->
+<div class="flex flex-col space-y-4" id="state-03">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-secondary/20 text-secondary flex items-center justify-center font-mono text-mono font-bold">3</span>
+<span class="font-h3 text-h3 text-ink">État 03 — Portfolio Déconnecté</span>
+</div>
+<span class="px-2.5 py-0.5 rounded bg-secondary/10 text-secondary font-mono text-mono text-xs uppercase tracking-wider">ERR_CHANNEL_LOST</span>
+</div>
+<p class="font-body text-body text-on-surface-variant text-sm">
+          Perte de connexion ou fermeture intempestive de l'onglet parent hôte. Bascule en mode veille ambre/cyan avec procédure de rétablissement.
+        </p>
+<!-- Window Mockup Frame -->
+<div class="mx-auto w-full max-w-[480px] h-[380px] bg-xray-bg rounded-xl shadow-2xl flex flex-col overflow-hidden relative select-none">
+<!-- Window Titlebar -->
+<div class="h-8 bg-[#03080F] px-3 flex items-center justify-between shrink-0 shadow-sm z-30">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-[#FF5F56] inline-block opacity-80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] inline-block opacity-80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#27C93F] inline-block opacity-80"></span>
+</div>
+<div class="font-mono text-[10px] tracking-wider text-xray-note/70 uppercase">
+              Loupe X-Ray · Liaison Interrompue
+            </div>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[14px]">link_off</span>
+<span class="font-mono text-[9px]">OFFLINE</span>
+</div>
+</div>
+<!-- Standby Amber Terminal Aesthetic -->
+<div class="relative flex-1 w-full h-full bg-[#070D17] flex flex-col items-center justify-center p-6 text-center overflow-hidden">
+<!-- Background Static Scanline Amber Accent -->
+<div class="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(255,216,77,0.06)_0%,transparent_70%)]"></div>
+<!-- HUD Technical Corner Brackets (Amber Tone) -->
+<div class="absolute top-2 left-2 font-mono text-xray-note/40 text-xs font-light leading-none">⌜</div>
+<div class="absolute top-2 right-2 font-mono text-xray-note/40 text-xs font-light leading-none">⌝</div>
+<div class="absolute bottom-2 left-2 font-mono text-xray-note/40 text-xs font-light leading-none">⌞</div>
+<div class="absolute bottom-2 right-2 font-mono text-xray-note/40 text-xs font-light leading-none">⌟</div>
+<!-- Warning Icon Glyph -->
+<div class="w-16 h-16 rounded-full bg-secondary-container/20 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-secondary text-3xl">warning</span>
+</div>
+<!-- Status Typography -->
+<div class="space-y-2 max-w-sm">
+<h2 class="font-h3 text-h3 text-xray-note font-medium tracking-tight">
+                Portfolio introuvable — rouvrez-le
+              </h2>
+<p class="font-mono text-[11px] text-xray-text/80 leading-relaxed">
+                Liaison BroadcastChannel interrompue.<br/>En attente de reconnexion avec la fenêtre principale.
+              </p>
+</div>
+<!-- Interactive Relink CTA -->
+<div class="mt-6 flex flex-col sm:flex-row items-center gap-3 z-10">
+<button class="px-4 py-2 bg-xray-note text-ink rounded-full font-label text-[11px] uppercase tracking-wider font-semibold hover:bg-white transition-all shadow-md">
+                Relancer le portfolio
+              </button>
+<button class="px-4 py-2 bg-ink/60 text-xray-text rounded-full font-label text-[11px] uppercase tracking-wider hover:bg-ink transition-all">
+                Réessayer la liaison
+              </button>
+</div>
+<!-- Telemetry Footer Note -->
+<div class="absolute bottom-3 inset-x-6 flex items-center justify-between font-mono text-[9px] text-muted">
+<span>PORT : 0x7F (FERMÉ)</span>
+<span class="animate-pulse text-xray-note">AUTO-RETRY : 4s</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================================= -->
+<!-- STATE 04: RACCOURCIS & GUIDE OPTIQUE -->
+<!-- ========================================================= -->
+<div class="flex flex-col space-y-4" id="state-04">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-xray-line/20 text-xray-line flex items-center justify-center font-mono text-mono font-bold">4</span>
+<span class="font-h3 text-h3 text-ink">État 04 — Raccourcis &amp; Guide Optique</span>
+</div>
+<span class="px-2.5 py-0.5 rounded bg-paper-2 text-ink font-mono text-mono text-xs uppercase tracking-wider">HUD_HELP_OVERLAY</span>
+</div>
+<p class="font-body text-body text-on-surface-variant text-sm">
+          Aide contextuelle modale avec tableau synthétique des commandes clavier et mécaniques de manipulation gestuelle.
+        </p>
+<!-- Window Mockup Frame -->
+<div class="mx-auto w-full max-w-[480px] h-[380px] bg-xray-bg rounded-xl shadow-2xl flex flex-col overflow-hidden relative select-none">
+<!-- Window Titlebar -->
+<div class="h-8 bg-[#03080F] px-3 flex items-center justify-between shrink-0 shadow-sm z-30">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-[#FF5F56] inline-block opacity-80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] inline-block opacity-80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#27C93F] inline-block opacity-80"></span>
+</div>
+<div class="font-mono text-[10px] tracking-wider text-xray-text/70 uppercase">
+              Loupe X-Ray · Guide Utilisateur
+            </div>
+<div class="flex items-center gap-1 text-xray-line">
+<span class="font-mono text-[9px]">[ÉCHAP POUR FERMER]</span>
+</div>
+</div>
+<!-- Frosted Dark Blueprint Help Modal -->
+<div class="relative flex-1 w-full h-full bg-[#06101D] p-5 flex flex-col justify-between overflow-hidden">
+<!-- Subtle Blueprint Grid -->
+<div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(rgba(127, 233, 255, 0.4) 1px, transparent 1px); background-size: 16px 16px;"></div>
+<!-- HUD Technical Corner Brackets -->
+<div class="absolute top-2 left-2 font-mono text-xray-line text-xs font-light leading-none">⌜</div>
+<div class="absolute top-2 right-2 font-mono text-xray-line text-xs font-light leading-none">⌝</div>
+<div class="absolute bottom-2 left-2 font-mono text-xray-line text-xs font-light leading-none">⌞</div>
+<div class="absolute bottom-2 right-2 font-mono text-xray-line text-xs font-light leading-none">⌟</div>
+<!-- Modal Header -->
+<div class="relative z-10 flex items-start justify-between pb-2">
+<div>
+<span class="font-label text-[10px] uppercase text-xray-line tracking-widest">AIDE À LA NAVIGATION</span>
+<h2 class="font-h3 text-h3 text-paper font-normal">Commandes du Viseur</h2>
+</div>
+<div class="p-1 rounded bg-ink text-xray-line">
+<span class="material-symbols-outlined text-[16px]">keyboard</span>
+</div>
+</div>
+<!-- Keybinding Cheatsheet Grid -->
+<div class="relative z-10 space-y-2 py-1">
+<!-- Item 1 -->
+<div class="flex items-center justify-between p-2 rounded bg-ink/70">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-[#112236] font-mono text-[10px] text-xray-text uppercase">Molette</span>
+</div>
+<span class="font-body text-xs text-xray-text/90">Faire défiler la vue sous la lentille</span>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between p-2 rounded bg-ink/70">
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-[#112236] font-mono text-[10px] text-xray-text">Maj</span>
+<span class="text-muted text-xs">+</span>
+<span class="px-1.5 py-0.5 rounded bg-[#112236] font-mono text-[10px] text-xray-text">molette</span>
+<span class="text-muted text-xs">/</span>
+<span class="px-1.5 py-0.5 rounded bg-[#112236] font-mono text-[10px] text-xray-line font-bold">+ − 0</span>
+</div>
+<span class="font-body text-xs text-xray-text/90">Zoom optique (0.5× à 3.0×)</span>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between p-2 rounded bg-ink/70">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-[#112236] font-mono text-[10px] text-xray-text font-bold">M</span>
+</div>
+<span class="font-body text-xs text-xray-text/90">Couper / activer le retour audio</span>
+</div>
+<!-- Item 4 -->
+<div class="flex items-center justify-between p-2 rounded bg-ink/70">
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-[#112236] font-mono text-[10px] text-xray-text">← ↑ → ↓</span>
+<span class="text-muted text-xs">/</span>
+<span class="px-1.5 py-0.5 rounded bg-[#112236] font-mono text-[10px] text-xray-text">Espace</span>
+</div>
+<span class="font-body text-xs text-xray-text/90">Défilement continu &amp; saut</span>
+</div>
+</div>
+<!-- Modal Footer Action -->
+<div class="relative z-10 flex items-center justify-between pt-2">
+<span class="font-note text-note text-xray-note">« 17 secrets restent encore enfouis... »</span>
+<button class="px-3.5 py-1.5 bg-xray-line text-ink rounded-full font-label text-[10px] font-bold uppercase tracking-wider hover:bg-white transition-colors">
+                Fermer [Échap]
+              </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Technical Specification & Interaction Notes Section -->
+<section class="max-w-[1200px] mx-auto w-full px-gutter-mobile lg:px-gutter pb-section">
+<div class="p-8 bg-paper-2 rounded-2xl space-y-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<span class="font-label text-label uppercase text-muted tracking-widest">PROTOCOLE TECHNIQUE SECTION 14</span>
+<h2 class="font-h2 text-h2 text-ink mt-1">Spécifications Mécaniques &amp; Synchronisation</h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-3 py-1 bg-paper text-ink rounded-full font-mono text-mono text-xs">CHANNEL: 'reveleur_lens'</span>
+<span class="px-3 py-1 bg-paper text-ink rounded-full font-mono text-mono text-xs">VIEWPORT: 480 × 380 PX</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+<div class="p-5 bg-paper rounded-xl space-y-2">
+<div class="flex items-center gap-2 text-ink font-semibold">
+<span class="material-symbols-outlined text-[18px]">sync_alt</span>
+<span class="font-headline-md text-headline-md">Couplage Spatial Bidirectionnel</span>
+</div>
+<p class="font-body text-body text-on-surface-variant text-sm">
+            La fenêtre pop-up écoute la position curseur de la page mère via <code class="font-mono text-xs bg-paper-2 px-1 py-0.5 rounded">BroadcastChannel</code>. Le calque interne duplique fidèlement l’arbre DOM en version blueprint inversé.
+          </p>
+</div>
+<div class="p-5 bg-paper rounded-xl space-y-2">
+<div class="flex items-center gap-2 text-ink font-semibold">
+<span class="material-symbols-outlined text-[18px]">volume_up</span>
+<span class="font-headline-md text-headline-md">Sonde Acoustique Geiger</span>
+</div>
+<p class="font-body text-body text-on-surface-variant text-sm">
+            Un synthétiseur Web Audio API calcule la distance euclidienne relative au secret le plus proche, modulant la fréquence des clics audios (de 0.5 Hz à 40 Hz).
+          </p>
+</div>
+<div class="p-5 bg-paper rounded-xl space-y-2">
+<div class="flex items-center gap-2 text-ink font-semibold">
+<span class="material-symbols-outlined text-[18px]">emergency</span>
+<span class="font-headline-md text-headline-md">Survie &amp; Rétablissement Hors-Ligne</span>
+</div>
+<p class="font-body text-body text-on-surface-variant text-sm">
+            En cas de perte de heartbeat parent (&gt; 2500ms), la loupe sauvegarde l'historique de progression en <code class="font-mono text-xs bg-paper-2 px-1 py-0.5 rounded">localStorage</code> et active l’affichage standby ambre.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive JavaScript for Live Inspection Sandbox Buttons -->
+<script>
+    // Lightweight local script for testing zoom toggles inside State 01 demo preview
+    document.addEventListener('DOMContentLoaded', () => {
+      let currentZoom = 1.0;
+      const zoomDisplay = document.querySelector('#state-01 span.font-mono.text-mono');
+      const zoomButtons = document.querySelectorAll('#state-01 button');
+
+      if (zoomButtons.length >= 2 && zoomDisplay) {
+        zoomButtons[0].addEventListener('click', (e) => {
+          e.preventDefault();
+          if (currentZoom > 0.6) {
+            currentZoom = Math.round((currentZoom - 0.2) * 10) / 10;
+            zoomDisplay.textContent = '×' + currentZoom.toFixed(1);
+          }
+        });
+        zoomButtons[1].addEventListener('click', (e) => {
+          e.preventDefault();
+          if (currentZoom < 2.4) {
+            currentZoom = Math.round((currentZoom + 0.2) * 10) / 10;
+            zoomDisplay.textContent = '×' + currentZoom.toFixed(1);
+          }
+        });
+      }
+    });
+  </script>
+</div></main><footer class="w-full bg-paper-2 mt-section shadow-[0_-1px_6px_rgba(21,18,15,0.04)]"><div class="max-w-[1200px] mx-auto px-gutter-mobile lg:px-gutter py-space-xl flex flex-col sm:flex-row items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><span class="font-label text-label uppercase text-ink font-semibold">Baptiste Nodon</span><span class="font-mono text-mono text-muted">— Creative Engineer</span></div><div class="font-mono text-mono text-muted text-center sm:text-right">HUD DRAFTING CORE 4.2.0 • REVELEUR ARCHIVE</div></div></footer></body></html>

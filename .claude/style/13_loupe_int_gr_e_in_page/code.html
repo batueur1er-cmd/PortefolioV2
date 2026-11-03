@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&amp;family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Instrument+Serif:ital@0;1&amp;family=Inter+Tight:ital,wght@0,300..900;1,300..900&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#7e766f", "error": "#ba1a1a", "on-surface-variant": "#4c4640", "xray-text": "#CFE9F2", "on-secondary-fixed": "#3c0700", "tertiary-container": "#00210b", "on-tertiary": "#ffffff", "inverse-on-surface": "#f5f0e7", "on-secondary-container": "#5e1100", "surface-container-highest": "#e7e2d9", "secondary": "#b02e0b", "on-primary-container": "#89837e", "surface-variant": "#e7e2d9", "on-tertiary-fixed": "#00210b", "secondary-container": "#fd653f", "on-secondary": "#ffffff", "outline-variant": "#cfc5bd", "primary-container": "#1e1b18", "paper": "#F1ECE3", "surface-container-lowest": "#ffffff", "xray-note": "#FFD84D", "secondary-fixed-dim": "#ffb4a2", "status": "#2F8F4E", "tertiary-fixed-dim": "#7cda91", "primary-fixed": "#e9e1db", "surface-bright": "#fef9f0", "surface-dim": "#ded9d1", "error-container": "#ffdad6", "muted": "#625B52", "surface-tint": "#635d59", "xray-dim": "rgba(127, 233, 255, 0.35)", "surface": "#fef9f0", "on-tertiary-container": "#369553", "primary-fixed-dim": "#cdc5c0", "on-primary": "#ffffff", "xray-highlight": "#FF5BD0", "background": "#fef9f0", "line": "rgba(21, 18, 15, 0.14)", "on-background": "#1d1c16", "on-accent": "#FFFFFF", "xray-bg": "#06101D", "secondary-fixed": "#ffdad2", "tertiary": "#000000", "on-tertiary-fixed-variant": "#005225", "surface-container": "#f2ede4", "on-error-container": "#93000a", "inverse-primary": "#cdc5c0", "ink": "#15120F", "xray-line": "#7FE9FF", "on-secondary-fixed-variant": "#8a1d00", "surface-container-high": "#ede8df", "paper-2": "#E7DFD2", "tertiary-fixed": "#98f7ab", "primary": "#000000", "on-surface": "#1d1c16", "on-primary-fixed": "#1e1b18", "on-primary-fixed-variant": "#4a4642", "inverse-surface": "#32302a", "on-error": "#ffffff", "surface-container-low": "#f8f3ea", "accent": "#B5320F", "xray-grid": "rgba(127, 233, 255, 0.08)" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "2.5rem", "space-xs": "0.25rem", "space-xl": "2.5rem", "space-lg": "1.5rem", "space-section": "9.375rem", "2xl": "72px", "md": "16px", "xs": "4px", "section": "150px", "gutter": "56px", "margin-mobile": "1.25rem", "space-md": "1rem", "gutter-mobile": "1rem", "max-width": "1200px", "space-sm": "0.5rem", "lg": "24px", "space-2xl": "4.5rem", "sm": "8px", "xl": "40px" }, "fontFamily": { "headline-lg": [ "EB Garamond" ], "note": [ "Caveat" ], "mono": [ "JetBrains Mono" ], "h3": [ "Inter Tight" ], "headline-lg-mobile": [ "EB Garamond" ], "display": [ "Instrument Serif" ], "h2": [ "Instrument Serif" ], "headline-md": [ "Inter" ], "body": [ "Inter Tight" ], "lead": [ "Inter Tight" ], "label": [ "JetBrains Mono" ], "display-mobile": [ "EB Garamond" ] }, "fontSize": { "headline-lg": [ "3.5rem", { "lineHeight": "1.02", "letterSpacing": "-0.02em", "fontWeight": "400" } ], "note": [ "1.5rem", { "lineHeight": "1.1", "fontWeight": "500" } ], "mono": [ "0.8125rem", { "lineHeight": "1.4", "fontWeight": "400" } ], "h3": [ "1.375rem", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "headline-lg-mobile": [ "2.25rem", { "lineHeight": "1.1", "letterSpacing": "-0.01em", "fontWeight": "400" } ], "display": [ "10.5rem", { "lineHeight": "0.88", "letterSpacing": "-0.03em", "fontWeight": "400" } ], "h2": [ "3.5rem", { "lineHeight": "1.02", "letterSpacing": "-0.02em", "fontWeight": "400" } ], "headline-md": [ "1.375rem", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "body": [ "1rem", { "lineHeight": "1.55", "fontWeight": "400" } ], "lead": [ "1.375rem", { "lineHeight": "1.45", "fontWeight": "400" } ], "label": [ "0.75rem", { "lineHeight": "1", "letterSpacing": "0.08em", "fontWeight": "500" } ], "display-mobile": [ "4.5rem", { "lineHeight": "0.95", "letterSpacing": "-0.02em", "fontWeight": "400" } ] } } } };</script></head><body class="bg-paper font-body text-body text-ink antialiased selection:bg-accent selection:text-on-accent"><header class="fixed top-0 inset-x-0 z-50 bg-paper/85 backdrop-blur-md shadow-[0_1px_8px_rgba(21,18,15,0.06)]"><div class="h-16 max-w-[1200px] mx-auto px-gutter-mobile lg:px-gutter flex items-center justify-between"><div class="flex items-center gap-space-md"><span class="font-h2 text-h3 tracking-tight text-ink font-normal">Révélateur</span><span class="font-label text-label uppercase tracking-widest text-muted hidden sm:inline-block">FOLIO // 2025</span></div><nav class="hidden md:flex items-center gap-space-xs p-1" data-active-classes="bg-ink text-paper rounded-full"><a aria-current="page" class="font-label uppercase px-space-md py-space-sm transition-colors bg-ink text-paper rounded-full" data-path="portfolio-canvas" href="#">Works</a><a class="font-label text-label uppercase px-space-md py-space-sm rounded-full text-on-surface-variant hover:text-ink transition-colors" data-path="case-study-inspection" href="#">Inspection</a><a class="font-label text-label uppercase px-space-md py-space-sm rounded-full text-on-surface-variant hover:text-ink transition-colors" data-path="technical-telemetry" href="#">Telemetry</a><a class="font-label text-label uppercase px-space-md py-space-sm rounded-full text-on-surface-variant hover:text-ink transition-colors" data-path="about-craft" href="#">Profile</a></nav><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center gap-space-xs px-space-sm py-xs bg-paper-2 rounded-full"><span class="w-2 h-2 rounded-full bg-status"></span><span class="font-mono text-mono text-muted">CALIBRATED</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-paper min-h-screen"><div class="flex flex-col w-full relative select-none">
+<!-- Interactive Viewport Master Container -->
+<div class="relative w-full overflow-hidden cursor-crosshair" id="lens-stage">
+<!-- ========================================== -->
+<!-- LAYER 1: BASE EDITORIAL SURFACE             -->
+<!-- ========================================== -->
+<div class="w-full bg-paper px-gutter-mobile lg:px-gutter py-space-xl min-h-[920px]">
+<div class="max-w-[1200px] mx-auto flex flex-col">
+<!-- Folio Metadata Ribbon -->
+<div class="flex items-center justify-between py-space-sm mb-space-lg">
+<div class="flex items-center gap-space-md">
+<span class="font-label text-label uppercase tracking-widest text-muted">PORTFOLIO SYSTÈME</span>
+<span class="w-1.5 h-1.5 rounded-full bg-muted"></span>
+<span class="font-mono text-mono text-muted">VOL. 04 / 2025</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label text-label uppercase text-ink px-space-sm py-xs bg-paper-2 rounded-full">PARIS · 48.8566° N, 2.3522° E</span>
+</div>
+</div>
+<!-- Hero Headline & Core Thesis -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-end mt-space-sm mb-space-2xl">
+<div class="lg:col-span-8">
+<span class="font-label text-label text-accent uppercase tracking-widest block mb-space-xs">Ingénierie Créative &amp; Typographie</span>
+<h1 class="font-display text-display leading-none text-ink tracking-tight font-normal">
+              Révélateur
+            </h1>
+<p class="font-headline-lg text-headline-lg text-ink/80 italic mt-space-sm">
+              L'anatomie visible du code sensible.
+            </p>
+</div>
+<div class="lg:col-span-4 flex flex-col gap-space-md pb-space-sm">
+<p class="font-lead text-lead text-on-surface-variant font-light leading-relaxed">
+              J'explore la tension féconde entre la matérialité feutrée de l'édition imprimée et la brutalité analytique des systèmes temps-réel.
+            </p>
+<div class="flex items-center gap-space-sm">
+<span class="font-label text-label uppercase px-space-md py-space-sm rounded-full bg-ink text-paper">Inspecter le code</span>
+<span class="font-label text-label uppercase px-space-md py-space-sm rounded-full bg-paper-2 text-ink">Archive indexée</span>
+</div>
+</div>
+</div>
+<!-- Section Transition: 01 — Profil -->
+<div class="w-full pt-space-xl mt-space-xl">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- Index indicator -->
+<div class="lg:col-span-3 flex flex-col">
+<span class="font-mono text-mono text-accent uppercase">01 / ARCHITECTURE</span>
+<h2 class="font-h2 text-h2 text-ink mt-space-xs">Profil</h2>
+<span class="font-label text-label text-muted mt-space-sm">BAPTISTE NODON — DIRECTEUR TECHNIQUE</span>
+</div>
+<!-- Profile Narrative & Metrics -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<p class="font-body text-body text-ink leading-relaxed">
+                Diplômé en sciences computationnelles et design éditorial, je façonne des architectures web où chaque glyphe, chaque contrainte de grille et chaque transition WebGL répondent à une rigueur typographique séculaire.
+              </p>
+<div class="bg-paper-2 p-space-md rounded-lg flex items-center justify-between">
+<div>
+<span class="font-label text-label text-muted uppercase block">Précision de rendu</span>
+<span class="font-headline-md text-headline-md text-ink">Sub-pixel 60fps</span>
+</div>
+<div class="text-right">
+<span class="font-label text-label text-muted uppercase block">Pipeline</span>
+<span class="font-mono text-mono text-ink">Vulkan / Canvas2D</span>
+</div>
+</div>
+</div>
+<!-- Visual Fragment / Editorial Card -->
+<div class="lg:col-span-4 flex flex-col justify-between p-space-md bg-paper-2 rounded-xl">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-muted uppercase">Spécimen Optique</span>
+<span class="material-symbols-outlined text-muted text-sm">visibility</span>
+</div>
+<div class="py-space-md">
+<p class="font-display text-headline-lg text-ink italic leading-tight">« Rendre lisible l'invisible sans rompre le silence. »</p>
+</div>
+<div class="flex items-center gap-space-xs text-muted">
+<span class="font-mono text-mono">REF: MOD-2025-BN</span>
+<span class="text-xs">·</span>
+<span class="font-mono text-mono">FR-ED</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- LAYER 2: THE REVEALED X-RAY CLONE LAYER     -->
+<!-- (Masked to the exact circular lens bounds) -->
+<!-- ========================================== -->
+<div class="absolute inset-0 pointer-events-none overflow-hidden [clip-path:circle(110px_at_50%_380px)]" id="lens-xray-mask">
+<!-- Exact clone of identical structure with X-RAY styling -->
+<div class="w-full bg-xray-bg px-gutter-mobile lg:px-gutter py-space-xl min-h-[920px] text-xray-text relative">
+<!-- Technical Vector Coordinates Overlay -->
+<svg class="absolute inset-0 w-full h-full opacity-20 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="40" id="xray-grid-pattern" patternunits="userSpaceOnUse" width="40">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#7FE9FF" stroke-width="0.75"></path>
+<circle cx="0" cy="0" fill="#7FE9FF" r="1.5"></circle>
+</pattern>
+</defs>
+<rect fill="url(#xray-grid-pattern)" height="100%" width="100%"></rect>
+</svg>
+<div class="max-w-[1200px] mx-auto flex flex-col relative z-10">
+<!-- Folio Metadata Ribbon (Blueprint) -->
+<div class="flex items-center justify-between py-space-sm mb-space-lg">
+<div class="flex items-center gap-space-md">
+<span class="font-mono text-mono text-xray-line bg-xray-bg px-space-xs py-xs rounded uppercase">GRID_STATE: ACTIVE</span>
+<span class="w-1.5 h-1.5 rounded-full bg-xray-line shadow-[0_0_8px_#7FE9FF]"></span>
+<span class="font-mono text-mono text-xray-line">MEM_ADDR: 0x7FFE2190</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-mono text-mono text-xray-line bg-xray-bg px-space-sm py-xs rounded">CANVAS_RES: 2400×1840@2x</span>
+</div>
+</div>
+<!-- Hero Headline & Core Thesis (Blueprint) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-end mt-space-sm mb-space-2xl">
+<div class="lg:col-span-8 relative">
+<span class="font-mono text-mono text-xray-highlight uppercase tracking-widest block mb-space-xs">
+                NODE_GRAPH: ENGINE_V4 // SYNTHÈSE
+              </span>
+<h1 class="font-display text-display leading-none text-xray-line tracking-tight font-normal opacity-95">
+                Révélateur
+              </h1>
+<!-- Blueprint wireframe bounding box simulation -->
+<div class="absolute -top-2 -left-2 -right-2 -bottom-2 pointer-events-none">
+<span class="absolute top-0 left-0 w-2 h-2 bg-xray-line"></span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-xray-line"></span>
+<span class="absolute bottom-0 left-0 w-2 h-2 bg-xray-line"></span>
+<span class="absolute bottom-0 right-0 w-2 h-2 bg-xray-line"></span>
+<span class="font-mono text-label text-xray-line absolute -top-4 right-0">DOM_RECT [1024x172]</span>
+</div>
+<!-- SECRET OPTICAL DISCOVERY NOTE & CHIP -->
+<div class="mt-space-sm flex items-center gap-space-md relative">
+<p class="font-headline-lg text-headline-lg text-xray-line italic">
+                  L'anatomie visible du code sensible.
+                </p>
+<!-- Secret handwritten yellow discovery note -->
+<div class="bg-xray-bg/90 px-space-sm py-1 rounded shadow-lg flex items-center gap-2 transform -rotate-1">
+<span class="font-note text-note text-xray-note text-xl tracking-wide select-none">
+                    ~découverte optique : fragment secret
+                  </span>
+<span class="font-mono text-label text-xray-line bg-xray-bg px-2 py-0.5 rounded shadow-[0_0_8px_rgba(127,233,255,0.4)]" id="lens-fragment-07">
+                    #lens-fragment-07
+                  </span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4 flex flex-col gap-space-md pb-space-sm">
+<p class="font-mono text-mono text-xray-text leading-relaxed">
+                AST_PARSER :: DÉCODAGE CHROMATIQUE ACTIF. Les vecteurs de glyphes Instrument Serif sont rasterisés via un shader de fragment personnalisé.
+              </p>
+<div class="flex items-center gap-space-sm">
+<span class="font-mono text-label text-xray-line bg-xray-bg px-space-md py-space-sm rounded shadow-[0_0_6px_rgba(127,233,255,0.3)]">FLUX_GL: OK</span>
+<span class="font-mono text-label text-xray-text bg-xray-bg px-space-md py-space-sm rounded">FPS: 60.03</span>
+</div>
+</div>
+</div>
+<!-- Section Transition: 01 — Profil (Blueprint) -->
+<div class="w-full pt-space-xl mt-space-xl">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<div class="lg:col-span-3 flex flex-col">
+<span class="font-mono text-mono text-xray-highlight uppercase">[NODE_REF_01_ARCH]</span>
+<h2 class="font-h2 text-h2 text-xray-line mt-space-xs">Profil</h2>
+<span class="font-mono text-label text-xray-dim mt-space-sm">AUTH: BN_ROOT // 0x489F</span>
+</div>
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<p class="font-mono text-mono text-xray-text leading-relaxed">
+                  MEM_USAGE: 42.4MB / 128MB ALLOUÉ. Réticule optique calibré sur l'axe barycentrique de l'écran.
+                </p>
+<div class="bg-xray-bg p-space-md rounded-lg flex items-center justify-between shadow-[0_0_12px_rgba(127,233,255,0.15)]">
+<div>
+<span class="font-mono text-label text-xray-dim uppercase block">SAMPLER_RATE</span>
+<span class="font-mono text-mono text-xray-line">1000 HZ / POINTER</span>
+</div>
+<div class="text-right">
+<span class="font-mono text-label text-xray-dim uppercase block">GPU_PASS</span>
+<span class="font-mono text-mono text-xray-line">DEFERRED_SHADING</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4 flex flex-col justify-between p-space-md bg-xray-bg rounded-xl shadow-[0_0_12px_rgba(127,233,255,0.15)]">
+<div class="flex items-center justify-between">
+<span class="font-mono text-label text-xray-dim uppercase">OPTICAL_KERNEL_V4</span>
+<span class="material-symbols-outlined text-xray-line text-sm">troubleshoot</span>
+</div>
+<div class="py-space-md">
+<p class="font-mono text-mono text-xray-line leading-tight">MATRIX_TRANSFORM: [1.000, 0.000, 0.000, 1.000]</p>
+</div>
+<div class="flex items-center gap-space-xs text-xray-dim">
+<span class="font-mono text-mono">FOV: 45.0°</span>
+<span class="text-xs">·</span>
+<span class="font-mono text-mono">RAY_STEP: 64</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- EXTERNAL LOUPE WINDOW PLACEMENT INDICATOR   -->
+<!-- (Faint broadcast boundary placed on layout)-->
+<!-- ========================================== -->
+<div class="absolute top-24 right-12 w-[480px] h-[380px] rounded-xl pointer-events-none hidden xl:flex flex-col justify-between p-space-sm bg-xray-bg/10 shadow-[0_0_20px_rgba(127,233,255,0.1)]">
+<!-- Dashed Corner Accents -->
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-mono text-label text-xray-line font-medium bg-xray-bg/80 px-space-xs py-xs rounded">
+            [ FENÊTRE LOUPE ACTIVE · BROADCAST_CHANNEL 60FPS · 480×380 ]
+          </span>
+<span class="font-mono text-label text-muted mt-1">ÉCOUTE SYNCHRONE // MASTER_CANVAS</span>
+</div>
+<span class="w-3 h-3 bg-xray-line/80 rounded-sm"></span>
+</div>
+<!-- Center coordinate crosshair indicator inside phantom box -->
+<div class="self-center flex items-center gap-space-xs bg-paper/85 px-space-sm py-1 rounded-full shadow-sm">
+<span class="w-2 h-2 rounded-full bg-status"></span>
+<span class="font-mono text-mono text-ink text-xs">FLUX MIRROIR CALIBRÉ (PORT 9021)</span>
+</div>
+<div class="flex justify-between items-end">
+<span class="font-mono text-label text-muted">BUFFER: OK</span>
+<span class="font-mono text-label text-xray-line">FPS: 59.98</span>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- LAYER 3: HARDWARE OPTICAL LENS RETICLE     -->
+<!-- Exactly ~220px in diameter tracking cursor -->
+<!-- ========================================== -->
+<div class="absolute pointer-events-none z-30 transition-transform duration-75 ease-out" id="lens-hardware" style="left: calc(50% - 110px); top: 270px; width: 220px; height: 220px;">
+<!-- Outer Cyan Glow Ring & Geometry -->
+<div class="relative w-full h-full rounded-full shadow-[0_0_18px_rgba(127,233,255,0.55)]">
+<!-- Precision Optical Ring with 70% Scan Arc (Inline SVG) -->
+<svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewbox="0 0 220 220">
+<!-- Background faint circle -->
+<circle cx="110" cy="110" fill="none" r="108" stroke="rgba(127, 233, 255, 0.25)" stroke-width="1.5"></circle>
+<!-- 70% Progress scanning arc around perimeter -->
+<circle class="animate-pulse" cx="110" cy="110" fill="none" r="108" stroke="#7FE9FF" stroke-dasharray="678.58" stroke-dashoffset="203.57" stroke-linecap="round" stroke-width="2"></circle>
+<!-- Faint secondary concentric guide ring -->
+<circle cx="110" cy="110" fill="none" r="96" stroke="rgba(127, 233, 255, 0.15)" stroke-dasharray="4 6" stroke-width="1"></circle>
+</svg>
+<!-- 4 Cardinal Reticle Crosshair Ticks (0°, 90°, 180°, 270°) -->
+<!-- North (0°) -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 flex flex-col items-center">
+<span class="w-0.5 h-3 bg-xray-line shadow-[0_0_6px_#7FE9FF]"></span>
+<span class="font-mono text-[9px] text-xray-line leading-none mt-0.5">000°</span>
+</div>
+<!-- South (180°) -->
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1 flex flex-col items-center">
+<span class="font-mono text-[9px] text-xray-line leading-none mb-0.5">180°</span>
+<span class="w-0.5 h-3 bg-xray-line shadow-[0_0_6px_#7FE9FF]"></span>
+</div>
+<!-- West (270°) -->
+<div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 flex items-center">
+<span class="h-0.5 w-3 bg-xray-line shadow-[0_0_6px_#7FE9FF]"></span>
+<span class="font-mono text-[9px] text-xray-line leading-none ml-0.5">270°</span>
+</div>
+<!-- East (90°) -->
+<div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 flex items-center">
+<span class="font-mono text-[9px] text-xray-line leading-none mr-0.5">090°</span>
+<span class="h-0.5 w-3 bg-xray-line shadow-[0_0_6px_#7FE9FF]"></span>
+</div>
+<!-- Center Micro Target Crosshair -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
+<div class="w-4 h-0.5 bg-xray-line"></div>
+<div class="h-4 w-0.5 bg-xray-line -ml-2"></div>
+</div>
+<!-- Scanning telemetry badge at top right of circle -->
+<div class="absolute -top-3 -right-2 bg-xray-bg px-1.5 py-0.5 rounded shadow-[0_0_8px_rgba(127,233,255,0.4)] flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-xray-line animate-ping"></span>
+<span class="font-mono text-[10px] text-xray-line">70% SCAN</span>
+</div>
+</div>
+<!-- ATTACHED HUD TOOLTIP PILL BADGE BELOW CIRCLE -->
+<div class="absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap">
+<div class="bg-ink/90 backdrop-blur-md px-space-sm py-1 rounded-full shadow-[0_4px_14px_rgba(0,0,0,0.3)] flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-xray-line"></span>
+<span class="font-mono text-label text-paper tracking-wider">
+            Maj + molette : zoom · Échap : fermer
+          </span>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- HIGH-VISIBILITY FLOATING CONTROL DOCK      -->
+<!-- ========================================== -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+<div class="bg-ink/90 backdrop-blur-md rounded-full h-[52px] p-[6px] shadow-[0_8px_32px_rgba(21,18,15,0.35)] flex items-center gap-space-xs">
+<!-- Loupe intégrée (Active Mode with high-contrast cyan glow) -->
+<button class="flex items-center gap-space-xs px-space-md h-full rounded-full bg-xray-bg text-xray-line shadow-[0_0_16px_rgba(127,233,255,0.5)] transition-all">
+<span class="material-symbols-outlined text-[18px] text-xray-line" style="font-variation-settings: 'FILL' 1;">search_insights</span>
+<span class="font-label text-label uppercase tracking-wider font-semibold">Loupe intégrée</span>
+<span class="w-1.5 h-1.5 rounded-full bg-xray-line animate-ping ml-1"></span>
+</button>
+<!-- Mode Inversion Blueprint global -->
+<button class="flex items-center gap-space-xs px-space-md h-full rounded-full text-paper/80 hover:text-paper hover:bg-paper-2/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">layers</span>
+<span class="font-label text-label uppercase tracking-wider">Vue Plein X-Ray</span>
+</button>
+<!-- Découplage Fenêtre Externe -->
+<button class="flex items-center gap-space-xs px-space-md h-full rounded-full text-paper/80 hover:text-paper hover:bg-paper-2/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+<span class="font-label text-label uppercase tracking-wider">Fenêtre Broadcast</span>
+</button>
+<!-- Calibrage & Réticule -->
+<div class="h-6 w-px bg-outline/30 mx-1"></div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-paper/80 hover:text-paper hover:bg-paper-2/10 transition-colors" title="Paramètres d'échantillonnage">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Inline vanilla JS to drive exact cursor tracking and clip-path update -->
+<script>
+    (function initOpticalLens() {
+      const stage = document.getElementById('lens-stage');
+      const xrayMask = document.getElementById('lens-xray-mask');
+      const hardware = document.getElementById('lens-hardware');
+
+      if (!stage || !xrayMask || !hardware) return;
+
+      let radius = 110; // Exactly 220px diameter
+
+      function updateLensPosition(clientX, clientY) {
+        const rect = stage.getBoundingClientRect();
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+
+        // Synchronize clip-path on revealed blueprint clone
+        xrayMask.style.clipPath = `circle(${radius}px at ${x}px ${y}px)`;
+
+        // Synchronize HUD optical reticle bounding element
+        hardware.style.left = `${x - radius}px`;
+        hardware.style.top = `${y - radius}px`;
+      }
+
+      stage.addEventListener('mousemove', (e) => {
+        updateLensPosition(e.clientX, e.clientY);
+      });
+
+      // Shift + Wheel dynamic magnification
+      window.addEventListener('wheel', (e) => {
+        if (e.shiftKey) {
+          e.preventDefault();
+          if (e.deltaY < 0) {
+            radius = Math.min(radius + 10, 220); // Max size
+          } else {
+            radius = Math.max(radius - 10, 70);  // Min size
+          }
+          hardware.style.width = `${radius * 2}px`;
+          hardware.style.height = `${radius * 2}px`;
+        }
+      }, { passive: false });
+
+      // Escape key to toggle lens visibility
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const isHidden = hardware.style.display === 'none';
+          hardware.style.display = isHidden ? 'block' : 'none';
+          xrayMask.style.display = isHidden ? 'block' : 'none';
+        }
+      });
+    })();
+  </script>
+</div></main><footer class="w-full bg-paper-2 mt-section shadow-[0_-1px_6px_rgba(21,18,15,0.04)]"><div class="max-w-[1200px] mx-auto px-gutter-mobile lg:px-gutter py-space-xl flex flex-col sm:flex-row items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><span class="font-label text-label uppercase text-ink font-semibold">Baptiste Nodon</span><span class="font-mono text-mono text-muted">— Creative Engineer</span></div><div class="font-mono text-mono text-muted text-center sm:text-right">HUD DRAFTING CORE 4.2.0 • REVELEUR ARCHIVE</div></div></footer></body></html>

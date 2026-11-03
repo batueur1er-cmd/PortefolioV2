@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Navigation X-Ray — Baptiste Nodon</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Caveat:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    :root {
+      --color-xray-bg: #06101D;
+      --color-xray-grid: rgba(127, 233, 255, 0.08);
+      --color-xray-line: #7FE9FF;
+      --color-xray-note: #FFD84D;
+      --color-xray-highlight: #FF5BD0;
+      --color-xray-text: #CFE9F2;
+      --color-xray-dim: rgba(127, 233, 255, 0.35);
+    }
+    body {
+      background-color: var(--color-xray-bg);
+      background-image: 
+        linear-gradient(to right, var(--color-xray-grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--color-xray-grid) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--color-xray-text);
+      font-family: 'Inter Tight', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-serif-display {
+      font-family: 'Instrument Serif', Georgia, serif;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .font-handwriting {
+      font-family: 'Caveat', cursive;
+    }
+    /* X-ray cyan outline styling for wordmark & headers */
+    .xray-outline-text {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--color-xray-line);
+      text-shadow: 0 0 10px rgba(127, 233, 255, 0.25);
+    }
+  </style>
+<meta content="web_standard" name="shell-type"/></head>
+<body class="relative selection:bg-[#FF5BD0] selection:text-[#06101D]">
+<!-- Sticky Navigation Bar (X-RAY Variant: Identical layout & dimensions to Surface) -->
+<header class="sticky top-0 z-50 w-full bg-[#06101D]/90 backdrop-blur-md border-b border-[rgba(127,233,255,0.22)] transition-colors">
+<div class="max-w-[1200px] mx-auto px-7 sm:px-14 h-20 flex items-center justify-between">
+<!-- Left: Wordmark & REVEALED X-ray mono chip in the reserved empty space -->
+<div class="flex flex-col justify-center">
+<a class="group inline-flex items-baseline gap-2 transition-colors" href="#accueil">
+<span class="font-serif-display text-2xl tracking-tight font-normal xray-outline-text">Baptiste Nodon</span>
+<!-- Radar pulse node in place of the green status dot -->
+<span class="relative flex h-2 w-2 transform translate-y-[-2px]">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7FE9FF] opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-[#7FE9FF]"></span>
+</span>
+</a>
+<!-- X-ray Version Chip: Occupies the exact 18px reserved space below wordmark -->
+<div class="h-[18px] w-auto mt-0.5 flex items-center gap-1.5">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded-[4px] bg-[#06101D] border border-[#7FE9FF]/60 font-mono-code text-[10px] text-[#7FE9FF] tracking-wider leading-none shadow-[0_0_8px_rgba(127,233,255,0.25)]">
+            v2.0 · Angular 21 · zoneless
+          </span>
+</div>
+</div>
+<!-- Center / Anchor Links (Cyan outline / technical HUD style, identical spacing) -->
+<nav class="hidden md:flex items-center gap-7 lg:gap-8 font-mono-code text-[12px] tracking-[0.08em] uppercase text-[#7FE9FF]/70">
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#profil">
+<span class="text-[#FF5BD0] mr-1">01.</span>Profil
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#parcours">
+<span class="text-[#FF5BD0] mr-1">02.</span>Parcours
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#realisations">
+<span class="text-[#FF5BD0] mr-1">03.</span>Réalisations
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#competences">
+<span class="text-[#FF5BD0] mr-1">04.</span>Compétences
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#formation">
+<span class="text-[#FF5BD0] mr-1">05.</span>Formation
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#contact">
+<span class="text-[#FF5BD0] mr-1">06.</span>Contact
+        </a>
+</nav>
+<!-- Right: X-ray LinkedIn Pill with cyan outline and coordinates badge -->
+<div class="flex items-center gap-3">
+<a class="inline-flex items-center gap-1.5 font-mono-code text-[12px] tracking-[0.06em] text-[#7FE9FF] px-3.5 py-1.5 rounded-full border border-[#7FE9FF] hover:bg-[#7FE9FF]/10 hover:shadow-[0_0_12px_rgba(127,233,255,0.35)] transition-all" href="https://linkedin.com" rel="noopener noreferrer" target="_blank">
+<span>LinkedIn</span>
+<span class="text-xs text-[#FF5BD0]">↗</span>
+</a>
+</div>
+</div>
+</header>
+<!-- Blueprint Contextual Workspace & HUD Annotations -->
+<main class="max-w-[1200px] mx-auto px-7 sm:px-14 py-20 sm:py-28 relative"><div class="flex flex-col w-full">
+<div class="relative w-full rounded-2xl overflow-hidden bg-surface py-16 px-6 sm:px-12 transition-all">
+<!-- Atmospheric Ambient Glows -->
+<div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-paper-2/40 blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/2 -right-24 w-80 h-80 rounded-full bg-surface-container/50 blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-24 left-1/3 w-[30rem] h-64 rounded-full bg-paper-2/30 blur-3xl pointer-events-none"></div>
+<section class="relative z-10 w-full flex flex-col gap-12" id="profil">
+<!-- Section Header -->
+<header class="flex flex-col gap-4 max-w-4xl">
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-surface-container-high text-accent font-label text-label tracking-widest uppercase">
+            01 — Profil
+          </span>
+<span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
+<span class="font-mono text-mono text-muted uppercase tracking-wider">Synthèse Parcours &amp; Architecture</span>
+</div>
+<h1 class="font-h2 text-h2 text-ink tracking-tight">
+          Un parcours qui part de l’infrastructure pour arriver au code.
+        </h1>
+</header>
+<!-- Main Asymmetrical Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start w-full">
+<!-- Left Column: Narratives & Silent Reserved Blueprint Anchor (~60% = 7 cols) -->
+<div class="lg:col-span-7 flex flex-col gap-8">
+<!-- Editorial Bio Panel -->
+<article class="relative p-7 sm:p-9 rounded-xl bg-surface-container-low shadow-sm flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<span class="font-mono text-label text-muted uppercase">Curriculum Vitae / Narrative</span>
+<span class="material-symbols-outlined text-muted text-base" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<p class="font-lead text-lead text-ink">
+              Après un bac Mathématiques et informatique, puis un BTS Services informatiques aux organisations au lycée Lamartine, j’ai rejoint le DIIAGE pour un Bachelor Coordinateur de projets informatiques.
+            </p>
+<p class="font-body text-body text-muted">
+              Depuis décembre 2025, je suis apprenti en développement informatique chez Quercy Réfrigération, à Villefontaine. Avant ça, j’ai configuré des serveurs et un réseau Windows et Linux pour une communauté de communes, puis développé un CRM interne en Angular pendant un stage de six semaines.
+            </p>
+<!-- Focus Tags -->
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-ink font-label text-label">Systems &amp; Network</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-ink font-label text-label">Angular / TypeScript</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-ink font-label text-label">Project Coordination</span>
+</div>
+</article>
+<!-- CALM RESERVED EMPTY SPACE: Secret X-Ray LinkedIn resume mirror surface -->
+<div class="relative w-full min-h-[190px] rounded-xl bg-surface-container/40 p-6 flex flex-col justify-between overflow-hidden shadow-inner group">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status"></span>
+<span class="font-mono text-label text-muted tracking-wider uppercase">Zone Documentaire Réservée</span>
+</div>
+<span class="font-mono text-label text-muted">REF // 45.7485° N, 4.8467° E</span>
+</div>
+<!-- Ambient minimal visual cue -->
+<div class="flex items-end justify-between">
+<p class="font-body text-mono text-muted italic max-w-sm">
+                Espace dédié à la cartographie d’expérience et télémétrie structurelle.
+              </p>
+<div class="flex items-center gap-2 text-muted">
+<span class="font-mono text-label uppercase">X-Ray Ready</span>
+<span class="material-symbols-outlined text-sm">visibility</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Key Facts Metrics (~40% = 5 cols) -->
+<aside class="lg:col-span-5 flex flex-col gap-4">
+<!-- Metric Block 1 -->
+<div class="p-7 rounded-xl bg-surface-container-low shadow-sm flex items-baseline justify-between transition-all hover:bg-surface-container">
+<div class="flex flex-col">
+<span class="font-h2 text-h2 text-accent leading-none">3</span>
+<span class="font-label text-label text-muted uppercase tracking-widest mt-2">Expériences</span>
+</div>
+<div class="text-right">
+<span class="font-mono text-label text-ink block">IT Ops &amp; Dev</span>
+<span class="font-mono text-label text-muted block">Infrastructure to App</span>
+</div>
+</div>
+<!-- Metric Block 2 -->
+<div class="p-7 rounded-xl bg-surface-container-low shadow-sm flex items-baseline justify-between transition-all hover:bg-surface-container">
+<div class="flex flex-col">
+<span class="font-h2 text-h2 text-ink leading-none">11 mois</span>
+<span class="font-label text-label text-muted uppercase tracking-widest mt-2">Sur le terrain</span>
+</div>
+<div class="text-right">
+<span class="font-mono text-label text-ink block">Immersion Active</span>
+<span class="font-mono text-label text-muted block">Prod &amp; Enterprise</span>
+</div>
+</div>
+<!-- Metric Block 3 -->
+<div class="p-7 rounded-xl bg-surface-container-low shadow-sm flex items-baseline justify-between transition-all hover:bg-surface-container">
+<div class="flex flex-col">
+<span class="font-h2 text-h2 text-accent leading-none">3</span>
+<span class="font-label text-label text-muted uppercase tracking-widest mt-2">Diplômes</span>
+</div>
+<div class="text-right">
+<span class="font-mono text-label text-ink block">Bac · BTS · Bachelor</span>
+<span class="font-mono text-label text-muted block">DIIAGE / Lamartine</span>
+</div>
+</div>
+<!-- RESERVED EMPTY SPACE: Calibration footprint for Handwritten Note (100px+) -->
+<div class="w-full h-28 rounded-xl bg-surface-container/30 flex items-center justify-center p-4">
+<span class="font-mono text-label text-muted tracking-widest uppercase opacity-70">
+              [ Calque d'annotation libre // Métriques consolidées ]
+            </span>
+</div>
+</aside>
+</div>
+</section>
+</div>
+</div></main>
+</body></html>

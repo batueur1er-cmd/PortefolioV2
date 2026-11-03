@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="fr"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigation Surface — Baptiste Nodon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --color-paper: #F1ECE3;
+      --color-paper-2: #E7DFD2;
+      --color-ink: #15120F;
+      --color-muted: #625B52;
+      --color-accent: #B5320F;
+      --color-line: rgba(21, 18, 15, 0.14);
+      --color-status: #2F8F4E;
+    }
+    body {
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      font-family: 'Inter Tight', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-serif-display {
+      font-family: 'Instrument Serif', Georgia, serif;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body class="relative selection:bg-[#7C3AED] selection:text-white bg-[#FAF8FD] text-[#18141F]" style="background: radial-gradient(circle at 18% 12%, rgba(240, 233, 248, 0.9) 0%, rgba(247, 245, 250, 0.95) 45%, rgb(239, 234, 245) 100%) fixed; min-height: 100vh;">
+  <!-- Sticky Navigation Bar (Surface Variant) -->
+  <header class="sticky top-0 z-50 w-full bg-white/85 backdrop-blur-md border-b border-[#EDE8F5] transition-colors" style="background-color: rgba(247, 245, 250, 0.82); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(124, 58, 237, 0.12);">
+    <div class="max-w-[1200px] mx-auto px-7 sm:px-14 h-20 flex items-center justify-between"><!-- Left: Wordmark & reserved empty space for X-ray version chip -->
+      <div class="flex flex-col justify-center">
+        <a href="#accueil" class="group inline-flex items-baseline gap-2 text-[#18141F] hover:text-[#7C3AED] transition-colors">
+          <span class="font-serif-display text-2xl tracking-tight font-normal">Baptiste Nodon</span>
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-[#10B981] transform translate-y-[-2px]" title="Disponible en alternance"></span>
+        </a>
+        <!-- Espace réservé calme (Surface layout exact) : 18px d'espace vertical réservé pour le futur chip X-ray -->
+        <div class="h-[18px] w-48 mt-0.5 pointer-events-none" aria-hidden="true"></div>
+      </div>
+
+      <!-- Center / Anchor Links -->
+      <nav class="hidden md:flex items-center gap-7 lg:gap-8 font-mono-code text-[12px] tracking-[0.08em] uppercase text-[#6C6677]">
+        <a href="#profil" class="hover:text-[#18141F] transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#7C3AED] hover:after:w-full after:transition-all">
+          <span class="text-[#7C3AED] mr-1">01.</span>Profil
+        </a>
+        <a href="#parcours" class="hover:text-[#18141F] transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#7C3AED] hover:after:w-full after:transition-all">
+          <span class="text-[#7C3AED] mr-1">02.</span>Parcours
+        </a>
+        <a href="#realisations" class="hover:text-[#18141F] transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#7C3AED] hover:after:w-full after:transition-all">
+          <span class="text-[#7C3AED] mr-1">03.</span>Réalisations
+        </a>
+        <a href="#competences" class="hover:text-[#18141F] transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#7C3AED] hover:after:w-full after:transition-all">
+          <span class="text-[#7C3AED] mr-1">04.</span>Compétences
+        </a>
+        <a href="#formation" class="hover:text-[#18141F] transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#7C3AED] hover:after:w-full after:transition-all">
+          <span class="text-[#7C3AED] mr-1">05.</span>Formation
+        </a>
+        <a href="#contact" class="hover:text-[#18141F] transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#7C3AED] hover:after:w-full after:transition-all">
+          <span class="text-[#7C3AED] mr-1">06.</span>Contact
+        </a>
+      </nav>
+
+      <!-- Right: External LinkedIn Link & Status Badge -->
+      <div class="flex items-center gap-4">
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 font-mono-code text-[12px] tracking-[0.06em] text-[#18141F] px-3.5 py-1.5 rounded-full border border-[rgba(124,58,237,0.22)] bg-white hover:border-[#7C3AED] hover:bg-[#F5F0FA] transition-all" style="background-color: rgba(255, 255, 255, 0.65); backdrop-filter: blur(8px); border-color: rgba(124, 58, 237, 0.18); box-shadow: rgba(124, 58, 237, 0.04) 0px 2px 8px;">
+          <span class="">LinkedIn</span>
+          <span class="text-xs text-[#7C3AED]">↗</span>
+        </a>
+      </div></div>
+  </header>
+
+  <!-- Editorial Preview Canvas / Hero Placeholder below to establish context -->
+  <main class="max-w-[1200px] mx-auto px-7 sm:px-14 py-20 sm:py-28"><div class="border-b border-[#EDE8F5] pb-12 mb-16" style="border-bottom: 1px solid rgba(124, 58, 237, 0.12);">
+      <div class="flex items-center gap-3 font-mono-code text-xs text-[#7C3AED] tracking-[0.08em] mb-4">
+        <span class="">SURFACE VARIANT</span>
+        <span class="">—</span>
+        <span class="text-[#6C6677]">Calque éditorial &amp; white mauve</span>
+      </div>
+      <h1 class="font-serif-display text-5xl sm:text-7xl font-normal leading-[0.95] text-[#18141F] max-w-4xl tracking-tight">
+        Conception d’architectures logicielles &amp; interfaces soignées.
+      </h1>
+      <p class="mt-6 font-sans text-lg text-[#6C6677] max-w-2xl leading-relaxed">
+        Apprenti développeur informatique à DIIAGE &amp; Quercy Réfrigération. Présentation de la barre de navigation supérieure avec espace réservé pour le révélateur X-ray.
+      </p>
+    </div>
+
+    <!-- Details Card of the component -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6"><div class="p-6 rounded-[10px] bg-white/70 backdrop-blur-md border border-[rgba(124,58,237,0.12)] shadow-[0_4px_20px_rgba(124,58,237,0.04)] transition-all hover:bg-white/80 hover:border-[rgba(124,58,237,0.25)]"><div class="font-mono-code text-[11px] uppercase tracking-wider text-[#7C3AED] mb-1">01 / Typographie</div><div class="font-serif-display text-xl text-[#18141F]">Instrument Serif 24px</div><p class="text-sm text-[#6C6677] mt-2">Wordmark discret avec indicateur vert d'alternance active.</p></div><div class="p-6 rounded-[10px] bg-white/70 backdrop-blur-md border border-[rgba(124,58,237,0.12)] shadow-[0_4px_20px_rgba(124,58,237,0.04)] transition-all hover:bg-white/80 hover:border-[rgba(124,58,237,0.25)]"><div class="font-mono-code text-[11px] uppercase tracking-wider text-[#7C3AED] mb-1">02 / Espace Réservé</div><div class="font-mono-code text-sm text-[#18141F]">Zone 18px calée sous le nom</div><p class="text-sm text-[#6C6677] mt-2">Laisse un blanc éditorial qui accueille le chip technique en vision Rayons X.</p></div><div class="p-6 rounded-[10px] bg-white/70 backdrop-blur-md border border-[rgba(124,58,237,0.12)] shadow-[0_4px_20px_rgba(124,58,237,0.04)] transition-all hover:bg-white/80 hover:border-[rgba(124,58,237,0.25)]"><div class="font-mono-code text-[11px] uppercase tracking-wider text-[#7C3AED] mb-1">03 / Navigation &amp; Liens</div><div class="font-mono-code text-sm text-[#18141F]">JetBrains Mono 12px</div><p class="text-sm text-[#6C6677] mt-2">Indexation numérotée rouille avec lien pill LinkedIn externe.</p></div></div></main>
+
+
+
+
+
+</body></html>

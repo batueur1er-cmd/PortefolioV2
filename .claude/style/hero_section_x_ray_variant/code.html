@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Navigation X-Ray — Baptiste Nodon</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Caveat:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    :root {
+      --color-xray-bg: #06101D;
+      --color-xray-grid: rgba(127, 233, 255, 0.08);
+      --color-xray-line: #7FE9FF;
+      --color-xray-note: #FFD84D;
+      --color-xray-highlight: #FF5BD0;
+      --color-xray-text: #CFE9F2;
+      --color-xray-dim: rgba(127, 233, 255, 0.35);
+    }
+    body {
+      background-color: var(--color-xray-bg);
+      background-image: 
+        linear-gradient(to right, var(--color-xray-grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--color-xray-grid) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--color-xray-text);
+      font-family: 'Inter Tight', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-serif-display {
+      font-family: 'Instrument Serif', Georgia, serif;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .font-handwriting {
+      font-family: 'Caveat', cursive;
+    }
+    /* X-ray cyan outline styling for wordmark & headers */
+    .xray-outline-text {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--color-xray-line);
+      text-shadow: 0 0 10px rgba(127, 233, 255, 0.25);
+    }
+  </style>
+<meta content="web_standard" name="shell-type"/></head>
+<body class="relative selection:bg-[#FF5BD0] selection:text-[#06101D]">
+<!-- Sticky Navigation Bar (X-RAY Variant: Identical layout & dimensions to Surface) -->
+<header class="sticky top-0 z-50 w-full bg-[#06101D]/90 backdrop-blur-md border-b border-[rgba(127,233,255,0.22)] transition-colors">
+<div class="max-w-[1200px] mx-auto px-7 sm:px-14 h-20 flex items-center justify-between">
+<!-- Left: Wordmark & REVEALED X-ray mono chip in the reserved empty space -->
+<div class="flex flex-col justify-center">
+<a class="group inline-flex items-baseline gap-2 transition-colors" href="#accueil">
+<span class="font-serif-display text-2xl tracking-tight font-normal xray-outline-text">Baptiste Nodon</span>
+<!-- Radar pulse node in place of the green status dot -->
+<span class="relative flex h-2 w-2 transform translate-y-[-2px]">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7FE9FF] opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-[#7FE9FF]"></span>
+</span>
+</a>
+<!-- X-ray Version Chip: Occupies the exact 18px reserved space below wordmark -->
+<div class="h-[18px] w-auto mt-0.5 flex items-center gap-1.5">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded-[4px] bg-[#06101D] border border-[#7FE9FF]/60 font-mono-code text-[10px] text-[#7FE9FF] tracking-wider leading-none shadow-[0_0_8px_rgba(127,233,255,0.25)]">
+            v2.0 · Angular 21 · zoneless
+          </span>
+</div>
+</div>
+<!-- Center / Anchor Links (Cyan outline / technical HUD style, identical spacing) -->
+<nav class="hidden md:flex items-center gap-7 lg:gap-8 font-mono-code text-[12px] tracking-[0.08em] uppercase text-[#7FE9FF]/70">
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#profil">
+<span class="text-[#FF5BD0] mr-1">01.</span>Profil
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#parcours">
+<span class="text-[#FF5BD0] mr-1">02.</span>Parcours
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#realisations">
+<span class="text-[#FF5BD0] mr-1">03.</span>Réalisations
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#competences">
+<span class="text-[#FF5BD0] mr-1">04.</span>Compétences
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#formation">
+<span class="text-[#FF5BD0] mr-1">05.</span>Formation
+        </a>
+<a class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all" href="#contact">
+<span class="text-[#FF5BD0] mr-1">06.</span>Contact
+        </a>
+</nav>
+<!-- Right: X-ray LinkedIn Pill with cyan outline and coordinates badge -->
+<div class="flex items-center gap-3">
+<a class="inline-flex items-center gap-1.5 font-mono-code text-[12px] tracking-[0.06em] text-[#7FE9FF] px-3.5 py-1.5 rounded-full border border-[#7FE9FF] hover:bg-[#7FE9FF]/10 hover:shadow-[0_0_12px_rgba(127,233,255,0.35)] transition-all" href="https://linkedin.com" rel="noopener noreferrer" target="_blank">
+<span>LinkedIn</span>
+<span class="text-xs text-[#FF5BD0]">↗</span>
+</a>
+</div>
+</div>
+</header>
+<!-- Blueprint Contextual Workspace & HUD Annotations -->
+<main class="max-w-[1200px] mx-auto px-7 sm:px-14 py-20 sm:py-28 relative"><div class="flex flex-col w-full relative">
+<!-- Soft Mauve Atmospheric Backing with layered radial blooms -->
+<!-- Hero Content Grid (1200px max centered within App Shell) -->
+<div class="relative w-full min-h-[780px] flex flex-col justify-between">
+<!-- Top Row: Kicker & Reserved Stamp Clearance Zone -->
+<div class="w-full flex items-center justify-between mb-8">
+<!-- Kicker: Mauve Technical Monospace Pill -->
+<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#06101D]/70 border border-[#7FE9FF]/40 shadow-[0_0_10px_rgba(127,233,255,0.15)] backdrop-blur-md"><span class="w-1.5 h-1.5 rounded-full bg-[#7FE9FF] shadow-[0_0_6px_#7FE9FF]"></span><span class="font-mono-code text-[11px] tracking-[0.08em] uppercase text-[#7FE9FF]">APPRENTI DÉVELOPPEUR · BACHELOR CPI · DIIAGE</span><span class="font-mono-code text-[9px] px-1 rounded bg-[#7FE9FF]/10 text-[#7FE9FF]/70 border border-[#7FE9FF]/30 ml-1">#kicker</span></div>
+<!-- CRITICAL RESERVED ZONE: Top Right (Cleared 180x60px for X-ray rotated stamp) -->
+<div class="relative flex items-center justify-end"><div class="inline-flex items-center gap-2 px-3 py-1 border-2 border-[#FF5BD0] bg-[#FF5BD0]/10 rounded shadow-[0_0_12px_rgba(255,91,208,0.3)] transform -rotate-3 select-none"><span class="font-mono-code text-[11px] font-bold text-[#FF5BD0] tracking-wider uppercase">VOUS N'ÊTES PAS CENSÉ VOIR ÇA</span><span class="font-mono-code text-[9px] text-[#FF5BD0]/70">#hero-stamp</span></div></div>
+</div>
+<!-- Main Editorial Stage (Asymmetric 12-column grid) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+<!-- Left Column: Display Typography & Lead Meta (7 Columns) -->
+<div class="lg:col-span-7 flex flex-col z-10">
+<!-- Massive Display Headline with Reserved Right Measurement Channel -->
+<div class="relative mb-8 flex items-center justify-between"><h1 class="font-serif-display text-display tracking-[-0.03em] select-none flex flex-col"><span class="block hover:translate-x-1 transition-transform duration-500 ease-out" style="color: transparent; -webkit-text-stroke: 1.5px #7FE9FF; text-shadow: 0 0 16px rgba(127, 233, 255, 0.35);">Baptiste</span><span class="block -mt-6 sm:-mt-10 italic font-normal hover:translate-x-1 transition-transform duration-500 ease-out" style="color: transparent; -webkit-text-stroke: 1.5px #FF5BD0; text-shadow: 0 0 16px rgba(255, 91, 208, 0.35);">Nodon</span></h1><div class="relative flex flex-col items-center justify-between h-[180px] w-28 pl-4 border-l border-dashed border-[#7FE9FF]/40 text-[#7FE9FF] select-none"><div class="w-2 h-[1px] bg-[#7FE9FF] absolute left-0 top-0"></div><div class="w-2 h-[1px] bg-[#7FE9FF] absolute left-0 bottom-0"></div><span class="font-mono-code text-[9px] tracking-wider text-[#FF5BD0] px-1 bg-[#FF5BD0]/10 border border-[#FF5BD0]/30 rounded">#hero-dim</span><div class="flex flex-col items-start gap-1 font-mono-code text-[10px] text-[#7FE9FF]/80"><span class="text-[#7FE9FF] font-medium leading-tight">font-size : 168 px</span><span class="text-[9px] text-[#7FE9FF]/60">mesuré en direct</span></div><span class="font-mono-code text-[9px] text-[#7FE9FF]/50">↕ 10.5rem</span></div></div>
+<!-- Editorial Lead Paragraph -->
+<p class="font-lead text-lead text-[#CFE9F2] max-w-[560px] leading-relaxed mb-8 font-normal">Du serveur à l’interface : je développe des outils métiers qui tiennent la route, sans jamais perdre de vue l’infrastructure qui les fait tourner.</p>
+<!-- Status & Telemetry Metadata Cluster -->
+<div class="flex items-center gap-4"><a class="group inline-flex items-center gap-3 px-6 py-3.5 rounded-full border border-[#7FE9FF] bg-[#7FE9FF]/10 text-[#7FE9FF] font-mono-code text-[12px] uppercase tracking-widest transition-all duration-300 shadow-[0_0_12px_rgba(127,233,255,0.25)] hover:bg-[#7FE9FF] hover:text-[#06101D]" href="#parcours"><span>Voir le parcours</span><span class="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1">arrow_forward</span></a><a class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-[#7FE9FF]/40 bg-[#06101D]/60 text-[#7FE9FF] font-mono-code text-[12px] uppercase tracking-widest transition-all duration-300 hover:border-[#7FE9FF] hover:bg-[#7FE9FF]/10" href="#contact"><span>Me contacter</span><span class="text-xs text-[#FF5BD0]">↗</span></a></div>
+<!-- Call to Action Buttons -->
+<div class="flex items-center gap-4"><a class="group inline-flex items-center gap-3 px-6 py-3.5 rounded-full border border-[#7FE9FF] bg-[#7FE9FF]/10 text-[#7FE9FF] font-mono-code text-[12px] uppercase tracking-widest transition-all duration-300 shadow-[0_0_12px_rgba(127,233,255,0.25)] hover:bg-[#7FE9FF] hover:text-[#06101D]" href="#parcours"><span>Voir le parcours</span><span class="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1">arrow_forward</span></a><a class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-[#7FE9FF]/40 bg-[#06101D]/60 text-[#7FE9FF] font-mono-code text-[12px] uppercase tracking-widest transition-all duration-300 hover:border-[#7FE9FF] hover:bg-[#7FE9FF]/10" href="#contact"><span>Me contacter</span><span class="text-xs text-[#FF5BD0]">↗</span></a></div>
+</div>
+<!-- Right Column: Abstract Caustic Luminous Glass Sculpture (5 Columns) -->
+<div class="lg:col-span-5 relative w-full h-[480px] lg:h-[540px] flex items-center justify-center"><div class="absolute w-80 h-80 rounded-full border border-dashed border-[#7FE9FF]/20 animate-pulse pointer-events-none" style="animation-duration: 8s;"></div><div class="relative w-80 h-96 sm:w-96 sm:h-[430px] rounded-3xl bg-[#06101D]/80 border border-[#7FE9FF]/50 backdrop-blur-xl shadow-[0_0_24px_rgba(127,233,255,0.18)] p-8 flex flex-col justify-between overflow-hidden"><div class="absolute inset-0 bg-[radial-gradient(#7FE9FF_1px,transparent_1px)] [background-size:16px_16px] opacity-15 pointer-events-none"></div><div class="relative z-10 flex items-center justify-between text-[#7FE9FF]"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-[#7FE9FF] animate-ping"></span><span class="font-mono-code text-[11px] tracking-widest uppercase text-[#7FE9FF]">NODE // 45.7640° N</span></div><span class="font-mono-code text-[10px] px-2 py-0.5 rounded border border-[#7FE9FF]/50 bg-[#7FE9FF]/10 text-[#7FE9FF] shadow-[0_0_6px_rgba(127,233,255,0.3)]">SYS: READY</span></div><div class="relative w-full h-44 flex items-center justify-center my-auto"><svg class="w-full h-full text-[#7FE9FF]" fill="none" viewbox="0 0 240 160" xmlns="http://www.w3.org/2000/svg"><line stroke="#7FE9FF" stroke-dasharray="2 4" stroke-opacity="0.3" x1="0" x2="240" y1="80" y2="80"></line><line stroke="#7FE9FF" stroke-dasharray="2 4" stroke-opacity="0.3" x1="120" x2="120" y1="0" y2="160"></line><ellipse class="opacity-40" cx="120" cy="80" rx="95" ry="48" stroke="#7FE9FF" stroke-dasharray="4 4"></ellipse><ellipse cx="120" cy="80" rx="68" ry="32" stroke="#7FE9FF" stroke-opacity="0.7"></ellipse><ellipse class="opacity-30" cx="120" cy="80" rx="36" ry="18" stroke="#FF5BD0"></ellipse><circle cx="120" cy="80" fill="#FF5BD0" r="4"></circle><circle class="animate-ping" cx="188" cy="80" fill="#7FE9FF" r="3"></circle><circle cx="188" cy="80" fill="#7FE9FF" r="3"></circle><circle cx="52" cy="80" fill="#7FE9FF" r="2.5"></circle><text fill="#7FE9FF" font-family="'JetBrains Mono', monospace" font-size="7" opacity="0.6" x="194" y="78">[NODE_01]</text><text fill="#FF5BD0" font-family="'JetBrains Mono', monospace" font-size="7" opacity="0.7" x="126" y="76">CORE</text></svg></div><div class="relative z-10 space-y-2 border-t border-[#7FE9FF]/20 pt-3"><div class="flex items-center justify-between font-mono-code text-[11px] text-[#7FE9FF]/80"><span>PIPELINE</span><span class="text-[#7FE9FF] font-medium tracking-wide">FULL-STACK &amp; INFRA</span></div><div class="w-full h-1.5 bg-[#06101D] border border-[#7FE9FF]/30 rounded-full overflow-hidden p-[1px]"><div class="h-full bg-gradient-to-r from-[#7FE9FF] via-[#FF5BD0] to-[#7FE9FF] w-4/5 rounded-full shadow-[0_0_8px_#7FE9FF]"></div></div><div class="flex items-center justify-between font-mono-code text-[10px] text-[#7FE9FF]/60 pt-0.5"><span>ANGULAR · C# · LINUX</span><span class="text-[#7FE9FF]">100% DISPONIBLE</span></div></div></div><div class="absolute -bottom-6 -left-4 w-20 h-20 rounded-full border border-[#7FE9FF]/40 bg-[#06101D]/70 backdrop-blur-md flex items-center justify-center font-mono-code text-[9px] text-[#7FE9FF]/60 select-none shadow-[0_0_12px_rgba(127,233,255,0.15)]">R:40px</div><div class="absolute -top-4 right-6 w-14 h-14 rounded-full border border-dashed border-[#FF5BD0]/50 bg-[#06101D]/70 backdrop-blur-md flex items-center justify-center font-mono-code text-[8px] text-[#FF5BD0]/80 select-none shadow-[0_0_10px_rgba(255,91,208,0.2)]">ORB</div></div>
+</div>
+<!-- CRITICAL RESERVED ZONE: Yellow Caveat Handwritten Note Buffer -->
+<!-- 48px calibrated negative breathing room reserved for subsequent blueprint layer -->
+<div class="w-full h-12 flex items-center justify-between my-6 px-4 border-t border-b border-dashed border-[#7FE9FF]/20 bg-[#06101D]/40 select-none"><div class="flex items-center gap-3"><span class="font-handwriting text-2xl text-[#FFD84D] tracking-wide">cette page existe en deux exemplaires : une pour vous, une pour la loupe</span><span class="text-[#FFD84D] font-mono-code text-sm animate-pulse">✍ ⤹</span></div><span class="font-mono-code text-[10px] text-[#FFD84D]/70 bg-[#FFD84D]/10 border border-[#FFD84D]/30 px-2 py-0.5 rounded">#hero-note</span></div>
+<!-- CRITICAL RESERVED BUFFER: Exact 120px viewport footer gap -->
+<!-- Preserves clean clearance for the bottom floating dock HUD ("◎ 7 / 24 · Rayons X · Ouvrir la loupe") -->
+<div aria-hidden="true" class="w-full h-[120px] pointer-events-none select-none flex-shrink-0"></div>
+</div>
+</div></main>
+</body></html>

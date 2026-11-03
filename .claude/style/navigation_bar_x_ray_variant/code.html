@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigation X-Ray — Baptiste Nodon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Caveat:wght@500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --color-xray-bg: #06101D;
+      --color-xray-grid: rgba(127, 233, 255, 0.08);
+      --color-xray-line: #7FE9FF;
+      --color-xray-note: #FFD84D;
+      --color-xray-highlight: #FF5BD0;
+      --color-xray-text: #CFE9F2;
+      --color-xray-dim: rgba(127, 233, 255, 0.35);
+    }
+    body {
+      background-color: var(--color-xray-bg);
+      background-image: 
+        linear-gradient(to right, var(--color-xray-grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--color-xray-grid) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--color-xray-text);
+      font-family: 'Inter Tight', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-serif-display {
+      font-family: 'Instrument Serif', Georgia, serif;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .font-handwriting {
+      font-family: 'Caveat', cursive;
+    }
+    /* X-ray cyan outline styling for wordmark & headers */
+    .xray-outline-text {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--color-xray-line);
+      text-shadow: 0 0 10px rgba(127, 233, 255, 0.25);
+    }
+  </style>
+</head>
+<body class="relative selection:bg-[#FF5BD0] selection:text-[#06101D]">
+  <!-- Sticky Navigation Bar (X-RAY Variant: Identical layout & dimensions to Surface) -->
+  <header class="sticky top-0 z-50 w-full bg-[#06101D]/90 backdrop-blur-md border-b border-[rgba(127,233,255,0.22)] transition-colors">
+    <div class="max-w-[1200px] mx-auto px-7 sm:px-14 h-20 flex items-center justify-between">
+      
+      <!-- Left: Wordmark & REVEALED X-ray mono chip in the reserved empty space -->
+      <div class="flex flex-col justify-center">
+        <a href="#accueil" class="group inline-flex items-baseline gap-2 transition-colors">
+          <span class="font-serif-display text-2xl tracking-tight font-normal xray-outline-text">Baptiste Nodon</span>
+          <!-- Radar pulse node in place of the green status dot -->
+          <span class="relative flex h-2 w-2 transform translate-y-[-2px]">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7FE9FF] opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-[#7FE9FF]"></span>
+          </span>
+        </a>
+        
+        <!-- X-ray Version Chip: Occupies the exact 18px reserved space below wordmark -->
+        <div class="h-[18px] w-auto mt-0.5 flex items-center gap-1.5">
+          <span class="inline-flex items-center px-1.5 py-0.5 rounded-[4px] bg-[#06101D] border border-[#7FE9FF]/60 font-mono-code text-[10px] text-[#7FE9FF] tracking-wider leading-none shadow-[0_0_8px_rgba(127,233,255,0.25)]">
+            v2.0 · Angular 21 · zoneless
+          </span>
+        </div>
+      </div>
+
+      <!-- Center / Anchor Links (Cyan outline / technical HUD style, identical spacing) -->
+      <nav class="hidden md:flex items-center gap-7 lg:gap-8 font-mono-code text-[12px] tracking-[0.08em] uppercase text-[#7FE9FF]/70">
+        <a href="#profil" class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all">
+          <span class="text-[#FF5BD0] mr-1">01.</span>Profil
+        </a>
+        <a href="#parcours" class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all">
+          <span class="text-[#FF5BD0] mr-1">02.</span>Parcours
+        </a>
+        <a href="#realisations" class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all">
+          <span class="text-[#FF5BD0] mr-1">03.</span>Réalisations
+        </a>
+        <a href="#competences" class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all">
+          <span class="text-[#FF5BD0] mr-1">04.</span>Compétences
+        </a>
+        <a href="#formation" class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all">
+          <span class="text-[#FF5BD0] mr-1">05.</span>Formation
+        </a>
+        <a href="#contact" class="py-1 px-1.5 border border-[#7FE9FF]/30 rounded-[4px] text-[#7FE9FF] hover:border-[#7FE9FF] hover:shadow-[0_0_8px_rgba(127,233,255,0.4)] transition-all">
+          <span class="text-[#FF5BD0] mr-1">06.</span>Contact
+        </a>
+      </nav>
+
+      <!-- Right: X-ray LinkedIn Pill with cyan outline and coordinates badge -->
+      <div class="flex items-center gap-3">
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" 
+           class="inline-flex items-center gap-1.5 font-mono-code text-[12px] tracking-[0.06em] text-[#7FE9FF] px-3.5 py-1.5 rounded-full border border-[#7FE9FF] hover:bg-[#7FE9FF]/10 hover:shadow-[0_0_12px_rgba(127,233,255,0.35)] transition-all">
+          <span>LinkedIn</span>
+          <span class="text-xs text-[#FF5BD0]">↗</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Blueprint Contextual Workspace & HUD Annotations -->
+  <main class="max-w-[1200px] mx-auto px-7 sm:px-14 py-20 sm:py-28 relative">
+    
+    <!-- Handwritten note in yellow Caveat -->
+    <div class="absolute right-14 top-8 hidden lg:flex items-center gap-2 text-[#FFD84D] font-handwriting text-2xl transform rotate-[-4deg]">
+      <span>↖ chip d'architecture injecté ici</span>
+    </div>
+
+    <div class="border-b border-[rgba(127,233,255,0.2)] pb-12 mb-16">
+      <div class="flex items-center gap-3 font-mono-code text-xs text-[#7FE9FF] tracking-[0.08em] mb-4">
+        <span class="px-2 py-0.5 rounded-[4px] bg-[#06101D] border border-[#7FE9FF]">X-RAY BLUEPRINT LAYER</span>
+        <span class="text-[#FF5BD0]">●</span>
+        <span class="text-[#CFE9F2]/70">Calque technique sous-jacent révélé par la loupe</span>
+      </div>
+      <h1 class="font-serif-display text-5xl sm:text-7xl font-normal leading-[0.95] xray-outline-text max-w-4xl tracking-tight">
+        Conception d’architectures logicielles & interfaces soignées.
+      </h1>
+      <p class="mt-6 font-sans text-lg text-[#CFE9F2]/80 max-w-2xl leading-relaxed">
+        Structure géométrique strictement superposable à la version Surface. Les coordonnées, marges, espacements et hauteurs sont identiques au pixel près.
+      </p>
+    </div>
+
+    <!-- Technical Specs Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="p-6 rounded-[10px] bg-[#06101D] border border-[rgba(127,233,255,0.25)] relative">
+        <div class="font-mono-code text-[11px] uppercase tracking-wider text-[#7FE9FF] mb-1">01 / Tracé Cyan (X-ray line)</div>
+        <div class="font-serif-display text-xl text-[#7FE9FF] xray-outline-text">Stroke: 1px #7FE9FF</div>
+        <p class="text-sm text-[#CFE9F2]/70 mt-2">Le wordmark et les liens adoptent les contours filaires blueprint caractéristiques.</p>
+      </div>
+      <div class="p-6 rounded-[10px] bg-[#06101D] border border-[rgba(127,233,255,0.25)] relative">
+        <div class="font-mono-code text-[11px] uppercase tracking-wider text-[#FF5BD0] mb-1">02 / Architecture Reveal</div>
+        <div class="font-mono-code text-sm text-[#7FE9FF]">v2.0 · Angular 21 · zoneless</div>
+        <p class="text-sm text-[#CFE9F2]/70 mt-2">Chip monospace visible dans l'espace réservé au millimètre sous le nom de Baptiste.</p>
+      </div>
+      <div class="p-6 rounded-[10px] bg-[#06101D] border border-[rgba(127,233,255,0.25)] relative">
+        <div class="font-mono-code text-[11px] uppercase tracking-wider text-[#FFD84D] mb-1">03 / Grille & Alignement</div>
+        <div class="font-mono-code text-sm text-[#7FE9FF]">Grid: 24px · Height: 80px</div>
+        <p class="text-sm text-[#CFE9F2]/70 mt-2">Parfaite superposition optique avec la barre Surface lors du passage de la loupe.</p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
