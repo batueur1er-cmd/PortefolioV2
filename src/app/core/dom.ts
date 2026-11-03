@@ -33,3 +33,12 @@ export function offsetWithin(element: HTMLElement, ancestor: HTMLElement): Point
   }
   return { x, y };
 }
+
+/** Le localStorage de la fenêtre, ou null quand le navigateur le refuse (navigation privée stricte). */
+export function safeStorage(win: Window | null): Storage | null {
+  try {
+    return win?.localStorage ?? null;
+  } catch {
+    return null;
+  }
+}

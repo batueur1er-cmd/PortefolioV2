@@ -14,18 +14,18 @@ main:focus {
 /* Rayons X : on ne change que la palette et le fond. Le quadrillage part du coin de la page,
    il tombe donc au même endroit dans toutes les fenêtres. */
 :host(.xray) {
-  --paper: #06101d;
-  --paper-2: #0a1a2c;
-  --ink: #7fe9ff;
-  --muted: rgba(127, 233, 255, 0.64);
-  --accent: #ff5bd0;
-  --line: rgba(127, 233, 255, 0.24);
+  --paper: var(--xbg);
+  --paper-2: var(--xbg-2);
+  --ink: var(--xl);
+  --muted: color-mix(in srgb, var(--xl) 64%, transparent);
+  --accent: var(--xp);
+  --line: color-mix(in srgb, var(--xl) 24%, transparent);
   color-scheme: dark;
   background-image:
-    linear-gradient(rgba(127, 233, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(127, 233, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(rgba(127, 233, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(127, 233, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--xl) 8%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--xl) 8%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--xl) 3%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--xl) 3%, transparent) 1px, transparent 1px);
   background-size:
     120px 120px,
     120px 120px,

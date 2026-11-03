@@ -1,6 +1,7 @@
 import { DOCUMENT, Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { safeStorage } from './dom';
 import { SECRETS, SECRET_BY_ID, SECRET_IDS, SecretDef } from './secrets.catalog';
 import { WindowBus } from './window-bus';
 
@@ -84,13 +85,5 @@ export class SecretsStore {
     } catch {
       // Stockage indisponible (navigation privée stricte) : la partie dure le temps de la session.
     }
-  }
-}
-
-function safeStorage(win: Window | null): Storage | null {
-  try {
-    return win?.localStorage ?? null;
-  } catch {
-    return null;
   }
 }

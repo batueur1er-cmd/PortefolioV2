@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+
+import { ThemeStore } from './core/theme.store';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +9,7 @@ import { RouterOutlet } from '@angular/router';
   template: '<router-outlet />',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class App {}
+export class App {
+  // Instancié dès le démarrage, dans le portfolio comme dans la loupe, pour appliquer le thème.
+  protected readonly theme = inject(ThemeStore);
+}

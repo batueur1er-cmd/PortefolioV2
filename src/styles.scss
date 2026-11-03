@@ -4,22 +4,7 @@
  * jamais la mise en page, pour que la loupe reste alignée au pixel près.
  */
 
-:root {
-  --paper: #f1ece3;
-  --paper-2: #e7dfd2;
-  --ink: #15120f;
-  --muted: #625b52;
-  --accent: #b5320f;
-  --line: rgba(21, 18, 15, 0.14);
-  --xbg: #06101d;
-  --xl: #7fe9ff;
-  --xn: #ffd84d;
-  --xp: #ff5bd0;
-  --serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
-  --sans: 'Inter Tight Variable', system-ui, sans-serif;
-  --mono: 'JetBrains Mono Variable', ui-monospace, Consolas, monospace;
-  --hand: 'Caveat Variable', 'Segoe Print', cursive;
-}
+/* Les couleurs, typographies et formes sont dans src/styles/themes/. */
 
 *,
 *::before,
@@ -131,7 +116,7 @@ a {
 
 /* Les étiquettes « inspecteur » qui décrivent la structure de la page. */
 .xray [data-x] {
-  outline: 1px dashed rgba(127, 233, 255, 0.22);
+  outline: 1px dashed color-mix(in srgb, var(--xl) 22%, transparent);
   outline-offset: 6px;
 }
 
@@ -142,7 +127,7 @@ a {
   top: -22px;
   font: 400 10px/1 var(--mono);
   letter-spacing: 0.06em;
-  color: rgba(127, 233, 255, 0.55);
+  color: color-mix(in srgb, var(--xl) 55%, transparent);
   white-space: nowrap;
   pointer-events: none;
 }
@@ -174,7 +159,7 @@ a {
   font: 400 11.5px/1.5 var(--mono);
   color: var(--xl);
   background: var(--xbg);
-  border: 1px solid rgba(127, 233, 255, 0.55);
+  border: 1px solid color-mix(in srgb, var(--xl) 55%, transparent);
   border-radius: 3px;
   padding: 6px 10px;
   white-space: nowrap;
@@ -184,8 +169,8 @@ a {
   margin: 0;
   font: 400 12px/1.6 var(--mono);
   color: var(--xp);
-  background: rgba(6, 16, 29, 0.92);
-  border: 1px solid rgba(255, 91, 208, 0.45);
+  background: color-mix(in srgb, var(--xbg) 92%, transparent);
+  border: 1px solid color-mix(in srgb, var(--xp) 45%, transparent);
   border-radius: 3px;
   padding: 10px 14px;
   white-space: pre;
@@ -200,7 +185,7 @@ a {
   color: var(--xp);
   border: 2px solid var(--xp);
   padding: 10px 14px;
-  background: rgba(6, 16, 29, 0.6);
+  background: color-mix(in srgb, var(--xbg) 60%, transparent);
   transform: rotate(var(--r, 7deg));
 }
 
@@ -209,7 +194,7 @@ a {
   font: 400 12px/1.6 var(--mono);
   color: var(--xl);
   background: var(--xbg);
-  border: 1px dashed rgba(127, 233, 255, 0.5);
+  border: 1px dashed color-mix(in srgb, var(--xl) 50%, transparent);
   padding: 14px 16px;
 }
 

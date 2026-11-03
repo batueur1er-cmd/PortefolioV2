@@ -1,0 +1,61 @@
+/*
+ * Thème « Papier », le thème par défaut. C'est le seul fichier à modifier pour changer le
+ * style du site : chaque composant lit ces variables, aucun ne contient de couleur en dur.
+ * Les transparences sont dérivées avec color-mix(), elles suivent donc la couleur de base.
+ *
+ * Pour créer un autre thème : copie ce fichier, remplace `:root` par
+ * `:root[data-theme='mon-theme']`, ajoute-le dans `index.scss` et dans `core/themes.ts`.
+ */
+:root {
+  color-scheme: light;
+
+  /* ---------- Surface : le portfolio tel qu'on le voit ---------- */
+  --paper: #f1ece3; /* fond de page */
+  --paper-2: #e7dfd2; /* fond secondaire : étiquettes, bandeaux */
+  --ink: #15120f; /* texte et titres */
+  --muted: #625b52; /* texte secondaire, dates (contraste AA sur --paper) */
+  --accent: #b5320f; /* couleur unique : index de section, liens, focus, sphère */
+  --on-accent: #ffffff;
+  --line: color-mix(in srgb, var(--ink) 14%, transparent); /* filets de séparation */
+  --ok: #23874f; /* pastille « en alternance » */
+  --glass: color-mix(in srgb, #ffffff 78%, transparent); /* boutons flottants */
+
+  /* ---------- Rayons X : ce que révèle la loupe ---------- */
+  --xbg: #06101d; /* fond plan d'architecte */
+  --xbg-2: #0b1726; /* fond secondaire, bouton principal */
+  --xl: #7fe9ff; /* contours, schémas, HUD */
+  --xn: #ffd84d; /* notes manuscrites, progression */
+  --xp: #ff5bd0; /* tampons, surlignages */
+  --xtext: #e3f8ff; /* texte courant sur fond rayons X */
+
+  /* ---------- Illustrations des réalisations ---------- */
+  --art-forest: #1f4d45;
+  --art-forest-2: #12302b;
+  --art-night: #2a3a52;
+  --art-night-2: #0f1724;
+  --art-sand: #e3d8c8;
+  --art-sheet: #f8f4ee;
+  --art-mist: #d9e2ec;
+  --art-teal: #7fd1c7;
+  --art-gold: #f0b35a;
+  --art-flame: #e8441c;
+
+  /* ---------- Singularité (écran final) ---------- */
+  --void: #03020a;
+  --void-text: #e1d7ff;
+  --void-glow: #ffaa50;
+  --void-light: #ffe9d0;
+
+  /* ---------- Typographies ---------- */
+  --serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Tight Variable', system-ui, sans-serif;
+  --mono: 'JetBrains Mono Variable', ui-monospace, Consolas, monospace;
+  --hand: 'Caveat Variable', 'Segoe Print', cursive;
+
+  /* ---------- Formes ---------- */
+  --radius-s: 3px;
+  --radius-m: 6px;
+  --radius-l: 10px;
+  --radius-pill: 99px;
+  --shadow-float: 0 16px 40px color-mix(in srgb, var(--xbg) 30%, transparent);
+}

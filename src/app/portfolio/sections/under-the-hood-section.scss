@@ -50,7 +50,7 @@
   margin-top: 56px;
   border: 1px dashed var(--line);
   border-radius: 6px;
-  background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(21, 18, 15, 0.025) 14px 28px);
+  background: repeating-linear-gradient(135deg, transparent 0 14px, color-mix(in srgb, var(--ink) 2.5%, transparent) 14px 28px);
 }
 
 .vault-label {

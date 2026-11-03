@@ -59,6 +59,26 @@ réalisations, compétences, formation, contact, et les coulisses révélées pa
 compteurs (mois en entreprise, jours d'alternance, distances sur la carte, graphe des
 compétences) sont recalculés à partir de ces données.
 
+## Changer le style
+
+Toutes les couleurs, typographies, rayons et ombres sont des variables CSS rangées dans
+[`src/styles/themes/`](src/styles/themes/). Aucun composant ne contient de couleur en dur, et les
+transparences sont calculées avec `color-mix()` à partir des couleurs de base.
+
+- **Modifier le thème actuel** : édite [`_papier.scss`](src/styles/themes/_papier.scss). Chaque
+  variable y est commentée (fond, encre, accent, palette des rayons X, illustrations…).
+- **Ajouter un thème** : copie `_nuit.scss` sous un autre nom, change le sélecteur
+  `:root[data-theme='…']`, ajoute-le dans `index.scss` et dans
+  [`core/themes.ts`](src/app/core/themes.ts). Il apparaît alors dans le bouton de thème du dock.
+- **Tester un thème** : `http://localhost:4200/?theme=nuit` force un thème sans l'enregistrer.
+- **Changer de police** : installe-la avec Fontsource, ajoute son CSS dans `angular.json`
+  (`styles`), puis modifie `--serif`, `--sans`, `--mono` ou `--hand`.
+
+Le thème choisi est enregistré et partagé avec la fenêtre loupe, qui doit afficher la même palette.
+Après avoir modifié `angular.json`, relance `npm start`.
+
+## Ajouter un secret
+
 Pour ajouter un secret : déclare-le dans `src/app/core/secrets.catalog.ts`, puis pose
 `appSecret="son-id"` sur un élément du gabarit, positionné en absolu dans un espace libre.
 Le test `portfolio-page.spec.ts` vérifie que catalogue et gabarits restent synchronisés.

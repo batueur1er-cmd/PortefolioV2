@@ -3,7 +3,7 @@
   inset: 0;
   z-index: 50;
   pointer-events: none;
-  color: #7fe9ff;
+  color: var(--xl);
   font: 500 10px/1 var(--mono);
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -18,7 +18,7 @@ p {
   inset: 0;
   box-shadow:
     inset 0 0 90px 12px rgba(0, 0, 0, 0.7),
-    inset 0 0 0 1px rgba(127, 233, 255, 0.45);
+    inset 0 0 0 1px color-mix(in srgb, var(--xl) 45%, transparent);
 }
 
 .scan {
@@ -26,7 +26,7 @@ p {
   left: 0;
   right: 0;
   height: 90px;
-  background: linear-gradient(transparent, rgba(127, 233, 255, 0.07), transparent);
+  background: linear-gradient(transparent, color-mix(in srgb, var(--xl) 7%, transparent), transparent);
   animation: scan 4.5s linear infinite;
 }
 
@@ -43,7 +43,7 @@ p {
   position: absolute;
   width: 20px;
   height: 20px;
-  border: 2px solid #7fe9ff;
+  border: 2px solid var(--xl);
 }
 
 .tl {
@@ -82,8 +82,8 @@ p {
   height: 64px;
   transform: translate(-50%, -50%);
   background:
-    linear-gradient(#7fe9ff, #7fe9ff) center / 1px 22px no-repeat,
-    linear-gradient(#7fe9ff, #7fe9ff) center / 22px 1px no-repeat;
+    linear-gradient(var(--xl), var(--xl)) center / 1px 22px no-repeat,
+    linear-gradient(var(--xl), var(--xl)) center / 22px 1px no-repeat;
   opacity: 0.85;
 }
 
@@ -100,14 +100,14 @@ p {
 }
 
 .track {
-  stroke: rgba(127, 233, 255, 0.15);
+  stroke: color-mix(in srgb, var(--xl) 15%, transparent);
 }
 
 .bar {
-  stroke: #ffd84d;
+  stroke: var(--xn);
   stroke-dasharray: 100;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 6px #ffd84d);
+  filter: drop-shadow(0 0 6px var(--xn));
 }
 
 .top-left {
@@ -118,7 +118,7 @@ p {
 
 .top-left em {
   font-style: normal;
-  color: #ff5bd0;
+  color: var(--xp);
 }
 
 .top-right {
@@ -139,7 +139,7 @@ p {
 
 .bars i {
   width: 4px;
-  background: rgba(127, 233, 255, 0.2);
+  background: color-mix(in srgb, var(--xl) 20%, transparent);
   transition: background 0.15s;
 }
 
@@ -150,8 +150,8 @@ p {
 .bars i:nth-child(5) { height: 14px; }
 
 .bars i.on {
-  background: #ffd84d;
-  box-shadow: 0 0 6px #ffd84d;
+  background: var(--xn);
+  box-shadow: 0 0 6px var(--xn);
 }
 
 .bottom-left {
@@ -165,9 +165,9 @@ p {
   bottom: 11px;
   right: 34px;
   padding: 6px 8px;
-  border: 1px solid rgba(127, 233, 255, 0.35);
+  border: 1px solid color-mix(in srgb, var(--xl) 35%, transparent);
   border-radius: 99px;
-  background: rgba(6, 16, 29, 0.7);
+  background: color-mix(in srgb, var(--xbg) 70%, transparent);
   color: inherit;
   font: inherit;
   letter-spacing: inherit;
@@ -191,8 +191,8 @@ p {
   left: 50%;
   transform: translateX(-50%);
   padding: 8px 12px;
-  background: #ffd84d;
-  color: #06101d;
+  background: var(--xn);
+  color: var(--xbg);
   white-space: nowrap;
 }
 
@@ -213,7 +213,7 @@ p {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(6, 16, 29, 0.9);
+  background: color-mix(in srgb, var(--xbg) 90%, transparent);
   text-align: center;
   line-height: 2;
 }

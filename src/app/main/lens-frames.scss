@@ -10,18 +10,18 @@
   left: 0;
   top: 0;
   border-radius: 6px;
-  border: 1px solid rgba(127, 233, 255, 0.5);
+  border: 1px solid color-mix(in srgb, var(--xl) 50%, transparent);
   box-shadow:
-    0 0 0 6px rgba(127, 233, 255, 0.08),
-    0 0 60px rgba(127, 233, 255, 0.35);
+    0 0 0 6px color-mix(in srgb, var(--xl) 8%, transparent),
+    0 0 60px color-mix(in srgb, var(--xl) 35%, transparent);
   transition:
     border-color 0.3s,
     box-shadow 0.3s;
 }
 
 .frame.on {
-  border-color: rgba(127, 233, 255, 0.95);
+  border-color: color-mix(in srgb, var(--xl) 95%, transparent);
   box-shadow:
-    0 0 0 8px rgba(127, 233, 255, 0.14),
-    0 0 90px rgba(127, 233, 255, 0.6);
+    0 0 0 8px color-mix(in srgb, var(--xl) 14%, transparent),
+    0 0 90px color-mix(in srgb, var(--xl) 60%, transparent);
 }

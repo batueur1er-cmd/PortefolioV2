@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 
 import { SecretsStore } from '../core/secrets.store';
+import { ThemeStore } from '../core/theme.store';
 import { SecretsPanel } from './secrets-panel';
 
 /** Les commandes flottantes : loupes, rayons X, progression et singularité. */
@@ -17,6 +18,14 @@ import { SecretsPanel } from './secrets-panel';
       >
         <span class="ring" [style.--p]="store.progress()" aria-hidden="true"></span>
         {{ store.count() }}/{{ store.total }}
+      </button>
+      <button
+        type="button"
+        class="pill"
+        [attr.aria-label]="'Thème : ' + theme.def().label + '. Changer de thème'"
+        (click)="theme.next()"
+      >
+        <span class="swatch" aria-hidden="true"></span> {{ theme.def().label }}
       </button>
       <button type="button" class="pill" [attr.aria-pressed]="xrayView()" (click)="toggleXray.emit()">
         Rayons X
@@ -49,4 +58,5 @@ export class ControlDock {
   readonly openSingularity = output<void>();
 
   protected readonly store = inject(SecretsStore);
+  protected readonly theme = inject(ThemeStore);
 }

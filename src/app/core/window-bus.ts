@@ -40,7 +40,8 @@ export type BusCommand =
   | { readonly type: 'scroll'; readonly target: string; readonly dy: number }
   | { readonly type: 'found'; readonly ids: readonly string[] }
   | { readonly type: 'reset' }
-  | { readonly type: 'singularity'; readonly open: boolean };
+  | { readonly type: 'singularity'; readonly open: boolean }
+  | { readonly type: 'theme'; readonly id: string };
 
 export const isMain = (p: WindowPresence): p is MainPresence => p.kind === 'main';
 export const isLens = (p: WindowPresence): p is LensPresence => p.kind === 'lens';

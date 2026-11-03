@@ -36,7 +36,7 @@
 }
 
 .summary s {
-  color: rgba(127, 233, 255, 0.78);
+  color: color-mix(in srgb, var(--xl) 78%, transparent);
   text-decoration-color: var(--xp);
   text-decoration-thickness: 2px;
 }

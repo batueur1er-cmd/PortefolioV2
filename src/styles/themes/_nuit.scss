@@ -1,0 +1,19 @@
+/*
+ * Thème « Nuit », un exemple de second thème. Il ne redéfinit que ce qui change : le reste
+ * (rayons X, illustrations, typographies) vient du thème par défaut.
+ */
+:root[data-theme='nuit'] {
+  color-scheme: dark;
+
+  --paper: #14161b;
+  --paper-2: #1e2129;
+  --ink: #ece7df;
+  --muted: #a39c92;
+  --accent: #ff7a45;
+  --on-accent: #14161b;
+  --ok: #4cc27a;
+  --glass: color-mix(in srgb, var(--paper-2) 82%, transparent);
+
+  --art-sand: #2a2e38;
+  --art-sheet: #3a3f4b;
+}
