@@ -173,3 +173,55 @@
     display: flex;
   }
 }
+
+/* ---------- Lien vers la page du projet ---------- */
+
+.title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Toute la carte est cliquable, sans imbriquer de liens. */
+.title-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+.title-link:focus-visible {
+  outline: none;
+}
+
+.card:has(.title-link:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.case {
+  margin: 2px 0 14px;
+  font: 600 11px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.case span {
+  position: static;
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.card:hover .case span {
+  transform: translateX(4px);
+}
+
+/* Le lien du dépôt reste cliquable au-dessus du lien de carte. */
+.repo {
+  position: relative;
+  z-index: 4;
+}
+
+:host-context(.xray) .case {
+  color: var(--xl);
+}

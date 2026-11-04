@@ -1,0 +1,17 @@
+/*
+ * Fenêtres Angular Material (la liste « Tous les projets »). Aucun thème Material n'est chargé :
+ * on branche ses jetons sur les variables du thème du site, donc le mode nuit suit tout seul.
+ */
+.projects-dialog-panel {
+  --mat-dialog-container-color: var(--paper);
+  --mat-dialog-container-shape: 20px;
+  --mat-dialog-container-elevation-shadow: 0 30px 80px color-mix(in srgb, #000 35%, transparent);
+  --mat-dialog-subhead-color: var(--ink);
+  --mat-dialog-supporting-text-color: var(--ink);
+  --mat-dialog-content-padding: 8px 28px 28px;
+}
+
+.cdk-overlay-backdrop.cdk-overlay-dark-backdrop {
+  background: color-mix(in srgb, var(--ink) 45%, transparent);
+  backdrop-filter: blur(4px);
+}

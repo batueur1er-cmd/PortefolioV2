@@ -48,8 +48,8 @@ export class ScrollWords {
   protected readonly lit = computed(() => {
     const { top, height } = this.box();
     const vh = this.stage.vh();
-    const start = top - vh * 0.75;
-    const end = top + height - vh * 0.35;
+    const start = top - vh * 0.95; // début : le haut du texte entre dans l’écran (1 = tout en bas)
+    const end = top + height - vh * 0.65; // fin : plus le nombre est grand, plus tout est noir tôt
     const t = (this.stage.scrollY() - start) / Math.max(1, end - start);
     return Math.round(Math.min(1, Math.max(0, t)) * this.words().length);
   });

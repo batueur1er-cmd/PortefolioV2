@@ -1,4 +1,8 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+
+import { PROFILE } from '@domain/profile/profile.data';
+import { PROJECTS_ON_PAGE } from '@domain/profile/projects';
 
 import { TODAY } from '@core/time/time';
 import { SECRETS } from '@features/secrets/data/secrets.catalog';
@@ -8,7 +12,7 @@ import { PortfolioPage } from './portfolio-page';
 describe('PortfolioPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{ provide: TODAY, useValue: new Date(2026, 10, 3) }],
+      providers: [provideRouter([]), { provide: TODAY, useValue: new Date(2026, 10, 3) }],
     });
   });
 
@@ -53,5 +57,13 @@ describe('PortfolioPage', () => {
     const element = await render('surface');
     const labels = Array.from(element.querySelectorAll<HTMLElement>('[data-section]'), (el) => el.dataset['label']);
     expect(labels).toEqual(['Accueil', 'Profil', 'Parcours', 'Réalisations', 'Compétences', 'Formation', 'Sous le capot', 'Contact']);
+  });
+
+  it('ne montre que les premières réalisations, les autres derrière un bouton', async () => {
+    const element = await render('surface');
+    expect(element.querySelectorAll('app-project-card').length).toBe(PROJECTS_ON_PAGE);
+    const more = element.querySelector('.more-btn');
+    expect(more?.textContent).toContain(`${PROFILE.projects.length - PROJECTS_ON_PAGE} autres projets`);
+    expect(element.querySelector('app-project-card a')?.getAttribute('href')).toBe(`/projets/${PROFILE.projects[0].id}`);
   });
 });

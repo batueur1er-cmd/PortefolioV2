@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { Project } from '@domain/profile/profile.model';
+import { projectLink } from '@domain/profile/projects';
 import { TiltDirective } from '@shared/motion/tilt.directive';
 import { TagList } from '@shared/ui/tag-list';
 
@@ -14,7 +16,7 @@ export interface ProjectView extends Project {
 /** Une réalisation : illustration animée, contexte, points marquants, technologies. */
 @Component({
   selector: 'app-project-card',
-  imports: [ProjectArt, TagList, TiltDirective],
+  imports: [ProjectArt, TagList, TiltDirective, RouterLink],
   template: `
     <article class="card" appTilt="4" [attr.data-x]="'article · visuel ' + project().visual">
       <div class="frame">
@@ -33,13 +35,16 @@ export interface ProjectView extends Project {
             <span>{{ year }}</span>
           }
         </p>
-        <h3 class="title">{{ project().title }}</h3>
+        <h3 class="title">
+          <a class="title-link" [routerLink]="link(project().id)">{{ project().title }}</a>
+        </h3>
         <p class="summary">{{ project().summary }}</p>
         <ul class="highlights">
           @for (line of project().highlights; track line) {
             <li>{{ line }}</li>
           }
         </ul>
+        <p class="case" aria-hidden="true">Voir le projet <span>→</span></p>
         <div class="foot">
           <app-tag-list [tags]="project().skillLabels" />
           @if (project().repo; as repo) {
@@ -58,4 +63,5 @@ export interface ProjectView extends Project {
 export class ProjectCard {
   readonly project = input.required<ProjectView>();
   readonly number = input(1);
+  protected readonly link = projectLink;
 }

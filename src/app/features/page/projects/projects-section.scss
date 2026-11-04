@@ -27,3 +27,49 @@
     grid-column: auto;
   }
 }
+
+/* ---------- Bouton « autres projets » ---------- */
+
+.more {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(26px, 3.2cqi, 44px);
+}
+
+.more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink);
+  font: 600 12px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+
+.more-btn span {
+  transition: transform 0.3s;
+}
+
+.more-btn:hover,
+.more-btn:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.more-btn:hover span {
+  transform: translateX(4px);
+}
+
+:host-context(.xray) .more-btn {
+  border-color: var(--xl);
+  background: transparent;
+  color: var(--xl);
+}

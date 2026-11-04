@@ -1,0 +1,306 @@
+/* Page hors loupe : elle n'a pas de copie à garder alignée, mais garde les mêmes variables. */
+:host {
+  display: block;
+  min-height: 100vh;
+  container: page / inline-size;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+/* ---------- Barre du haut ---------- */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.bar-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 72px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.monogram {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  font: 600 11px/1 var(--mono);
+}
+
+.brand-name {
+  font: 400 24px/1 var(--serif);
+}
+
+.back {
+  font: 600 11px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: var(--radius-pill);
+  transition:
+    background 0.25s,
+    color 0.25s;
+}
+
+.back:hover,
+.back:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ---------- En-tête du projet ---------- */
+
+.page {
+  padding-top: clamp(40px, 7cqi, 96px);
+  padding-bottom: 140px;
+  outline: none;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+}
+
+.index {
+  color: var(--accent);
+}
+
+.rule {
+  width: 40px;
+  height: 1px;
+  background: currentColor;
+}
+
+.year::before {
+  content: '· ';
+}
+
+.title {
+  margin: 0;
+  font: 400 clamp(48px, 9cqi, 124px) / 0.95 var(--serif);
+  letter-spacing: -0.02em;
+  animation: rise 0.8s 0.08s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+}
+
+.summary {
+  max-width: 720px;
+  margin: 26px 0 0;
+  font: 400 clamp(18px, 1.8cqi, 22px) / 1.5 var(--sans);
+  color: var(--muted);
+  animation: rise 0.8s 0.16s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+}
+
+/* ---------- Ce que j'ai fait + stack ---------- */
+
+.facts {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: clamp(28px, 5cqi, 72px);
+  margin-top: clamp(48px, 6cqi, 84px);
+  padding-top: 34px;
+  border-top: 1px solid var(--line);
+}
+
+.label {
+  margin: 0 0 18px;
+  font: 600 11px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.highlights {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: h;
+}
+
+.highlights li {
+  position: relative;
+  padding: 16px 0 16px 46px;
+  border-bottom: 1px solid var(--line);
+  font-size: 17px;
+  line-height: 1.5;
+  counter-increment: h;
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+  animation-delay: calc(0.25s + var(--i, 0) * 70ms);
+}
+
+.highlights li::before {
+  content: counter(h, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 19px;
+  font: 600 11px/1 var(--mono);
+  color: var(--accent);
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.repo {
+  align-self: flex-start;
+  display: inline-flex;
+  gap: 8px;
+  padding: 13px 22px;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-pill);
+  font: 600 11px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    background 0.25s,
+    color 0.25s;
+}
+
+.repo:hover,
+.repo:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ---------- Captures ---------- */
+
+.gallery {
+  margin-top: clamp(56px, 7cqi, 96px);
+}
+
+.shots {
+  display: grid;
+  gap: clamp(18px, 2.4cqi, 30px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shot {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-2);
+  box-shadow: 0 24px 60px color-mix(in srgb, var(--ink) 10%, transparent);
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+  animation-delay: calc(0.3s + min(var(--i, 0), 3) * 90ms);
+}
+
+.shot img {
+  object-fit: contain;
+  object-position: top center;
+}
+
+/* ---------- Précédent / suivant ---------- */
+
+.pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: clamp(64px, 8cqi, 110px);
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    border-color 0.3s,
+    transform 0.3s;
+}
+
+.step:hover,
+.step:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.next {
+  grid-column: 2;
+  text-align: right;
+}
+
+.dir {
+  font: 600 10.5px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.step-title {
+  font: 400 clamp(22px, 2.4cqi, 30px) / 1.1 var(--serif);
+}
+
+.missing .repo {
+  margin-top: 30px;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@container page (max-width: 760px) {
+  .facts {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-name {
+    display: none;
+  }
+
+  .pager {
+    grid-template-columns: 1fr;
+  }
+
+  .next {
+    grid-column: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+  }
+}

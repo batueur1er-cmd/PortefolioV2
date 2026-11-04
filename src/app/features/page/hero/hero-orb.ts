@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ElementRef, afterNextRender, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ElementRef, afterNextRender, inject, signal } from '@angular/core';
 
 import { PageContext } from '../page-context';
 
@@ -10,9 +10,18 @@ import { PageContext } from '../page-context';
   selector: 'app-hero-orb',
   template: `
     <div class="sphere surface-only" aria-hidden="true">
+      <img class="photo" src="me/baptiste.png" alt="" width="1024" height="1024" fetchpriority="high" />
       <span class="ring r1"></span>
       <span class="ring r2"></span>
       <span class="shine"></span>
+    </div>
+    <!-- Rayons X : la photo du chat. Dépose-la dans public/me/chat.jpg. -->
+    <div class="xv cat" aria-hidden="true">
+      @if (!catMissing()) {
+        <img src="me/chat.jpg" alt="" (error)="catMissing.set(true)" />
+      } @else {
+        <span>photo du chat<br />public/me/chat.jpg</span>
+      }
     </div>
     <svg class="xv wire plan" viewBox="0 0 320 320" aria-hidden="true">
       <circle cx="160" cy="160" r="150" />
@@ -33,6 +42,8 @@ import { PageContext } from '../page-context';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroOrb {
+  protected readonly catMissing = signal(false);
+
   constructor() {
     const page = inject(PageContext);
     const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
@@ -49,10 +60,13 @@ export class HeroOrb {
         cancelAnimationFrame(frame);
         frame = requestAnimationFrame(() => {
           const rect = host.getBoundingClientRect();
+          // Hors de l'écran, la sphère ne bouge pas : sinon l'écart devient énorme et elle s'envole.
+          if (rect.bottom < 0 || rect.top > win.innerHeight) return;
+          const clamp = (v: number) => Math.max(-0.5, Math.min(0.5, v));
           const dx = (e.clientX - (rect.left + rect.width / 2)) / win.innerWidth;
           const dy = (e.clientY - (rect.top + rect.height / 2)) / win.innerHeight;
-          host.style.setProperty('--px', dx.toFixed(3));
-          host.style.setProperty('--py', dy.toFixed(3));
+          host.style.setProperty('--px', clamp(dx).toFixed(3));
+          host.style.setProperty('--py', clamp(dy).toFixed(3));
         });
       };
       doc.addEventListener('pointermove', onMove, { passive: true });

@@ -20,6 +20,7 @@ const FEATURE_DEPS = {
   page: ['secrets'],
   lens: ['page', 'secrets'],
   singularity: [],
+  project: [],
 };
 
 const files = walk(ROOT).filter((f) => f.endsWith('.ts'));

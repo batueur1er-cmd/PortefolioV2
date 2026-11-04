@@ -31,6 +31,7 @@
               }
             ],
             "styles": [
+              "@angular/cdk/overlay-prebuilt.css",
               "@fontsource/instrument-serif/400.css",
               "@fontsource/instrument-serif/400-italic.css",
               "@fontsource-variable/inter-tight/index.css",

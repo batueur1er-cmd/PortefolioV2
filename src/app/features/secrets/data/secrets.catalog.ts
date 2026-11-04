@@ -1,4 +1,5 @@
 import { PROFILE } from '@domain/profile/profile.data';
+import { PROJECTS_ON_PAGE } from '@domain/profile/projects';
 
 export type SectionId =
   | 'accueil'
@@ -51,7 +52,8 @@ export const SECRETS: readonly SecretDef[] = [
   { id: 'about-facts', label: 'Le calcul des mois sur le terrain', section: 'profil' },
   ...PROFILE.experiences.map((e) => ({ id: `exp-${e.id}`, label: e.secretLabel, section: 'parcours' as const })),
   { id: 'exp-map', label: 'La carte du parcours', section: 'parcours' },
-  ...PROFILE.projects.map((p) => ({ id: `proj-${p.id}`, label: p.secretLabel, section: 'realisations' as const })),
+  // Seules les réalisations affichées sur la page portent un secret.
+  ...PROFILE.projects.slice(0, PROJECTS_ON_PAGE).map((p) => ({ id: `proj-${p.id}`, label: p.secretLabel, section: 'realisations' as const })),
   { id: 'skills-graph', label: 'Le graphe des compétences', section: 'competences' },
   { id: 'skills-linkedin', label: 'Le top 3 LinkedIn', section: 'competences' },
   { id: 'skills-pix', label: 'Le tampon PIX', section: 'competences' },

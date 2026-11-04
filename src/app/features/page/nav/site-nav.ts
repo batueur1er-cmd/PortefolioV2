@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, VERSION, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, VERSION, afterNextRender, computed, inject } from '@angular/core';
 
 import { PROFILE } from '@domain/profile/profile.data';
 import { SecretDirective } from '@features/secrets/secret.directive';
@@ -18,14 +18,14 @@ const SPY_LINE = 0.35;
   template: `
     <nav class="nav" data-x="&lt;app-site-nav&gt; · position: sticky" aria-label="Navigation principale">
       <div class="wrap bar">
-        <a class="brand" href="#accueil">
+        <a class="brand" href="#accueil" (click)="go($event, 'accueil')">
           <span class="monogram" aria-hidden="true">BN</span>
           <span class="brand-name">{{ fullName }}</span>
         </a>
         <ul class="links">
           @for (link of links; track link.id) {
             <li>
-              <a [href]="'#' + link.id" [class.active]="active() === link.id" [attr.aria-current]="active() === link.id ? 'true' : null">
+              <a [href]="'#' + link.id" (click)="go($event, link.id)" [class.active]="active() === link.id" [attr.aria-current]="active() === link.id ? 'true' : null">
                 <span class="num" aria-hidden="true">{{ link.num }}</span>{{ link.label }}
               </a>
             </li>
@@ -41,6 +41,36 @@ const SPY_LINE = 0.35;
 })
 export class SiteNav {
   private readonly stage = inject(ScrollStage);
+  private readonly doc = inject(DOCUMENT);
+
+  constructor() {
+    // Arrivée avec une ancre dans l'adresse (#contact…) : on y va une fois la page dessinée.
+    afterNextRender(() => {
+      const id = this.doc.location.hash.slice(1);
+      if (id) setTimeout(() => this.scrollTo(id, 'auto'), 60);
+    });
+  }
+
+  /** Défile en douceur jusqu'à la section, sous la barre, et met l'adresse à jour. */
+  protected go(event: MouseEvent, id: string): void {
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.button !== 0) return;
+    event.preventDefault();
+    this.scrollTo(id, 'smooth');
+    this.doc.defaultView?.history.replaceState(null, '', '#' + id);
+  }
+
+  private scrollTo(id: string, behavior: ScrollBehavior): void {
+    const win = this.doc.defaultView;
+    const target = this.doc.getElementById(id);
+    if (!win || !target) return;
+    const bar = (this.doc.querySelector('.nav') as HTMLElement | null)?.offsetHeight ?? 0;
+    const top = id === 'accueil' ? 0 : target.getBoundingClientRect().top + win.scrollY - bar;
+    const reduced = win.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    win.scrollTo({ top, behavior: reduced ? 'auto' : behavior });
+    // Le focus suit, pour le clavier et les lecteurs d'écran, sans refaire défiler.
+    target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+  }
   protected readonly fullName = `${PROFILE.firstName} ${PROFILE.lastName}`;
   protected readonly angularMajor = VERSION.major;
   protected readonly links = [
