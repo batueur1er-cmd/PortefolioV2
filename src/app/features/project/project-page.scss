@@ -31,12 +31,18 @@
   backdrop-filter: blur(12px);
 }
 
+/* Hauteur de la barre, réservée aussi dans la copie de la loupe. */
+.bar,
+main {
+  --bar-h: 80px;
+}
+
 .bar-in {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  height: 80px;
+  height: var(--bar-h);
 }
 
 .brand {
@@ -565,6 +571,11 @@
     height: 64px;
   }
 
+  .bar,
+  main {
+    --bar-h: 64px;
+  }
+
   .brand-text {
     display: none;
   }
@@ -612,6 +623,12 @@
 
 /* Pas de position collante dans une autre fenêtre : la barre est recalée sur le défilement.
    Le positionnement de l'hôte reste celui de la loupe (fixe, au coin de la fenêtre). */
+/* La barre sort du flux : on lui garde sa place, sinon tout remonte de sa hauteur. */
+:host(.remote) main {
+  /* + 1 px : la bordure basse de la barre. */
+  margin-top: calc(var(--bar-h) + 1px);
+}
+
 :host(.remote) .bar {
   position: absolute;
   top: var(--sy, 0px);
