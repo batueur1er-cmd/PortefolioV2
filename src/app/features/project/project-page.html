@@ -1,0 +1,157 @@
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" routerLink="/">
+      <span class="monogram" aria-hidden="true">BN</span>
+      <span class="brand-text">
+        <span class="brand-name">{{ fullName }}</span>
+        <span class="brand-sub">Portfolio</span>
+      </span>
+    </a>
+    <a class="back" routerLink="/" fragment="realisations">
+      <span aria-hidden="true">←</span>
+      <span class="back-long">Toutes les réalisations</span>
+      <span class="back-short">Réalisations</span>
+    </a>
+  </div>
+</header>
+
+@if (project(); as p) {
+  <main id="contenu" tabindex="-1">
+    <!-- En-tête -->
+    <section class="wrap intro">
+      <p class="kicker">
+        <span class="index">{{ number() }}</span>
+        <span class="rule" aria-hidden="true"></span>
+        <span>{{ p.context }}</span>
+        @if (p.year; as year) {
+          <span class="badge">{{ year }}</span>
+        }
+      </p>
+      <h1 class="title">{{ p.title }}</h1>
+      <p class="summary">{{ p.summary }}</p>
+      <ul class="chips">
+        <li class="chip"><span class="chip-key">Contexte</span>{{ p.context }}</li>
+        <li class="chip"><span class="chip-key">Stack</span><span class="chip-accent">{{ stackLine() }}</span></li>
+      </ul>
+    </section>
+
+    <!-- Capture principale, posée sur un bandeau -->
+    @if (hero(); as image) {
+      <section class="hero" aria-label="Capture principale">
+        <div class="band" aria-hidden="true"></div>
+        <figure class="wrap hero-in">
+          <div class="frame">
+            <div class="chrome" aria-hidden="true">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="chrome-label">{{ p.title }}</span>
+            </div>
+            <div class="shot shot-hero">
+              <img [ngSrc]="image.src" [alt]="image.alt" fill priority sizes="(max-width: 1200px) 100vw, 75vw" />
+            </div>
+          </div>
+          <figcaption class="caption">
+            <span>{{ image.alt }}</span>
+            @if (gallery().length) {
+              <span class="caption-count">{{ pad(1) }} / {{ pad(gallery().length + 1) }}</span>
+            }
+          </figcaption>
+        </figure>
+      </section>
+    }
+
+    <!-- Ce que j'ai fait + stack -->
+    <section class="wrap facts">
+      <div class="done" aria-labelledby="fait">
+        <h2 id="fait" class="label">Ce que j'ai fait</h2>
+        <ol class="steps">
+          @for (line of p.highlights; track line) {
+            <li class="step" [style.--i]="$index">
+              <span class="step-num">{{ pad($index + 1) }}</span>
+              <span class="step-text">{{ line }}</span>
+            </li>
+          }
+        </ol>
+      </div>
+      <aside class="stack" aria-labelledby="stack">
+        <h2 id="stack" class="stack-title">Stack</h2>
+        @for (group of stackGroups(); track group.label) {
+          <p class="stack-group">{{ group.label }}</p>
+          <ul class="tags">
+            @for (tag of group.tags; track tag) {
+              <li>{{ tag }}</li>
+            }
+          </ul>
+        }
+        @if (p.repo; as repo) {
+          <a class="repo" [href]="repo" target="_blank" rel="noopener">
+            Voir le dépôt GitHub <span aria-hidden="true">↗</span>
+            <span class="sr-only">(nouvel onglet)</span>
+          </a>
+        }
+      </aside>
+    </section>
+
+    <!-- Les autres captures -->
+    @if (gallery().length) {
+      <section class="wrap gallery" aria-labelledby="captures">
+        <div class="gallery-head">
+          <h2 id="captures" class="label">Captures</h2>
+          <span class="gallery-count">{{ gallery().length + 1 }} vues</span>
+        </div>
+        <ul class="shots">
+          @for (image of gallery(); track image.src) {
+            <li class="tile" [class.wide]="$index % 3 === 0">
+              <div class="frame">
+                <div class="chrome" aria-hidden="true">
+                  <span class="dots"><i></i><i></i><i></i></span>
+                  <span class="chrome-label">{{ pad($index + 2) }}</span>
+                </div>
+                <div class="shot">
+                  <img [ngSrc]="image.src" [alt]="image.alt" fill sizes="(max-width: 760px) 100vw, 50vw" />
+                </div>
+              </div>
+              <p class="caption">
+                <span class="caption-num">{{ pad($index + 2) }}.</span>
+                {{ image.alt }}
+              </p>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    <!-- Projets voisins -->
+    <nav class="wrap pager" aria-label="Autres projets">
+      <p class="label">Navigation projets</p>
+      <div class="pager-grid">
+        @if (previous(); as prev) {
+          <a class="neighbour prev" [routerLink]="link(prev.id)">
+            <span class="dir">← Précédent</span>
+            <span class="neighbour-title">{{ prev.title }}</span>
+            <span class="neighbour-summary">{{ prev.summary }}</span>
+          </a>
+        } @else {
+          <span class="neighbour-empty" aria-hidden="true"></span>
+        }
+        @if (next(); as nxt) {
+          <a class="neighbour next" [routerLink]="link(nxt.id)">
+            <span class="dir">Suivant →</span>
+            <span class="neighbour-title">{{ nxt.title }}</span>
+            <span class="neighbour-summary">{{ nxt.summary }}</span>
+          </a>
+        }
+      </div>
+    </nav>
+  </main>
+} @else {
+  <main id="contenu" tabindex="-1" class="wrap intro">
+    <h1 class="title">Projet introuvable</h1>
+    <p class="summary">Ce projet n'existe pas, ou plus sous cette adresse.</p>
+    <a class="repo" routerLink="/" fragment="realisations">← Revenir aux réalisations</a>
+  </main>
+}
+
+<footer class="wrap foot">
+  <span class="foot-name">{{ fullName }}</span>
+  <span>© {{ year }}</span>
+</footer>

@@ -1,4 +1,8 @@
-/* Page hors loupe : elle n'a pas de copie à garder alignée, mais garde les mêmes variables. */
+/*
+ * Page projet, d'après la maquette Stitch « tude_de_cas_drive_en_laravel ». Mêmes variables de
+ * thème que l'accueil : le mode nuit suit tout seul. La maquette mobile ne sert que pour la mise
+ * en page (ses couleurs n'étaient pas celles du site).
+ */
 :host {
   display: block;
   min-height: 100vh;
@@ -8,6 +12,14 @@
   font-family: var(--sans);
 }
 
+.label {
+  margin: 0 0 22px;
+  font: 600 11px/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
 /* ---------- Barre du haut ---------- */
 
 .bar {
@@ -15,8 +27,8 @@
   top: 0;
   z-index: 10;
   border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--paper) 86%, transparent);
-  backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--paper) 85%, transparent);
+  backdrop-filter: blur(12px);
 }
 
 .bar-in {
@@ -24,7 +36,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  height: 72px;
+  height: 80px;
 }
 
 .brand {
@@ -40,140 +52,354 @@
   place-items: center;
   width: 40px;
   height: 40px;
-  border: 1px solid var(--ink);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
   border-radius: 50%;
+  background: var(--paper-2);
   font: 600 11px/1 var(--mono);
+  color: var(--accent);
+  transition:
+    transform 0.3s,
+    border-color 0.3s;
+}
+
+.brand:hover .monogram {
+  transform: scale(1.05);
+  border-color: var(--accent);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
 }
 
 .brand-name {
   font: 400 24px/1 var(--serif);
+  transition: color 0.25s;
+}
+
+.brand:hover .brand-name {
+  color: var(--accent);
+}
+
+.brand-sub {
+  margin-top: 2px;
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .back {
-  font: 600 11px/1 var(--mono);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--paper) 60%, transparent);
+  font: 500 11px/1 var(--mono);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink);
   text-decoration: none;
-  padding: 10px 14px;
-  border-radius: var(--radius-pill);
   transition:
-    background 0.25s,
+    border-color 0.25s,
     color 0.25s;
 }
 
 .back:hover,
 .back:focus-visible {
-  background: var(--ink);
-  color: var(--paper);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
 }
 
-/* ---------- En-tête du projet ---------- */
+.back-short {
+  display: none;
+}
 
-.page {
-  padding-top: clamp(40px, 7cqi, 96px);
-  padding-bottom: 140px;
-  outline: none;
+/* ---------- En-tête ---------- */
+
+.intro {
+  padding-top: clamp(48px, 7cqi, 96px);
+  padding-bottom: 56px;
 }
 
 .kicker {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  margin: 0 0 18px;
-  font: 500 11px/1 var(--mono);
-  letter-spacing: 0.14em;
+  margin: 0 0 24px;
+  font: 600 12px/1 var(--mono);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--accent);
   animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.1, 1) both;
 }
 
-.index {
-  color: var(--accent);
-}
-
 .rule {
-  width: 40px;
+  width: 32px;
   height: 1px;
-  background: currentColor;
+  background: color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
-.year::before {
-  content: '· ';
+.badge {
+  padding: 4px 10px;
+  border: 1px solid color-mix(in srgb, var(--ok) 30%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--ok) 8%, var(--paper));
+  font-size: 10.5px;
+  color: var(--ok);
 }
 
 .title {
-  margin: 0;
-  font: 400 clamp(48px, 9cqi, 124px) / 0.95 var(--serif);
+  margin: 0 0 30px;
+  font: 400 clamp(56px, 8.7cqi, 104px) / 0.95 var(--serif);
   letter-spacing: -0.02em;
-  animation: rise 0.8s 0.08s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+  text-wrap: balance;
+  animation: rise 0.8s 0.06s cubic-bezier(0.2, 0.7, 0.1, 1) both;
 }
 
 .summary {
-  max-width: 720px;
-  margin: 26px 0 0;
-  font: 400 clamp(18px, 1.8cqi, 22px) / 1.5 var(--sans);
+  max-width: 760px;
+  margin: 0 0 38px;
+  font: 400 clamp(19px, 1.9cqi, 24px) / 1.5 var(--sans);
   color: var(--muted);
-  animation: rise 0.8s 0.16s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+  text-wrap: balance;
+  animation: rise 0.8s 0.12s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  animation: rise 0.8s 0.18s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--paper) 50%, #fff);
+  font: 500 12px/1.3 var(--mono);
+  color: var(--ink);
+}
+
+.chip-key {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.chip-key::after {
+  content: ' :';
+}
+
+.chip-accent {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ---------- Capture principale sur son bandeau ---------- */
+
+.hero {
+  position: relative;
+  padding: 24px 0 clamp(72px, 8cqi, 112px);
+}
+
+.band {
+  position: absolute;
+  inset: 96px 0 0;
+  border-block: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
+  background: var(--paper-2);
+}
+
+.hero-in {
+  position: relative;
+  margin-block: 0;
+  animation: rise 0.9s 0.22s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+}
+
+.frame {
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--paper) 40%, #fff);
+  box-shadow:
+    0 24px 60px -12px color-mix(in srgb, var(--ink) 14%, transparent),
+    0 12px 24px -8px color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.hero .frame {
+  border-radius: 18px;
+}
+
+.chrome {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 40px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper-2) 50%, var(--paper));
+}
+
+.dots {
+  display: inline-flex;
+  gap: 7px;
+}
+
+.dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.dots i:first-child {
+  background: color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.chrome-label {
+  overflow: hidden;
+  font: 500 11px/1 var(--mono);
+  color: var(--muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.shot {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--paper-2);
+}
+
+.shot-hero {
+  aspect-ratio: 16 / 9;
+}
+
+.shot img {
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+
+.frame:hover .shot img {
+  transform: scale(1.02);
+}
+
+.caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 14px 4px 0;
+  font: 400 13px/1.5 var(--sans);
+  color: var(--muted);
+}
+
+.caption-count {
+  font: 600 11px/1.5 var(--mono);
+  letter-spacing: 0.1em;
+  color: var(--accent);
 }
 
 /* ---------- Ce que j'ai fait + stack ---------- */
 
 .facts {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-  gap: clamp(28px, 5cqi, 72px);
-  margin-top: clamp(48px, 6cqi, 84px);
-  padding-top: 34px;
-  border-top: 1px solid var(--line);
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+  gap: clamp(32px, 6cqi, 88px);
+  align-items: start;
+  padding-top: clamp(24px, 3cqi, 40px);
+  padding-bottom: clamp(72px, 8cqi, 112px);
 }
 
-.label {
-  margin: 0 0 18px;
-  font: 600 11px/1 var(--mono);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.highlights {
+.steps {
   margin: 0;
   padding: 0;
   list-style: none;
-  counter-reset: h;
 }
 
-.highlights li {
-  position: relative;
-  padding: 16px 0 16px 46px;
+.step {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 8px;
+  padding: 20px 0;
   border-bottom: 1px solid var(--line);
-  font-size: 17px;
-  line-height: 1.5;
-  counter-increment: h;
   animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.1, 1) both;
-  animation-delay: calc(0.25s + var(--i, 0) * 70ms);
+  animation-delay: calc(0.3s + var(--i, 0) * 70ms);
 }
 
-.highlights li::before {
-  content: counter(h, decimal-leading-zero);
-  position: absolute;
-  left: 0;
-  top: 19px;
-  font: 600 11px/1 var(--mono);
+.step:first-child {
+  border-top: 1px solid var(--line);
+}
+
+.step-num {
+  padding-top: 4px;
+  font: 600 12px/1 var(--mono);
   color: var(--accent);
 }
 
-.side {
+.step-text {
+  font: 400 17px/1.55 var(--sans);
+}
+
+.stack {
+  position: sticky;
+  top: 104px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--paper) 40%, #fff);
+  box-shadow: 0 20px 35px -8px color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.stack-title {
+  margin: 0 0 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+  font: 400 26px/1 var(--serif);
+}
+
+.stack-group {
+  margin: 16px 0 8px;
+  font: 600 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tags {
   display: flex;
-  flex-direction: column;
-  gap: 26px;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tags li {
+  padding: 6px 11px;
+  border: 1px solid color-mix(in srgb, var(--accent) 14%, transparent);
+  border-radius: var(--radius-pill);
+  background: var(--paper-2);
+  font: 500 11px/1.2 var(--mono);
+  color: var(--accent);
 }
 
 .repo {
-  align-self: flex-start;
-  display: inline-flex;
+  display: flex;
+  justify-content: center;
   gap: 8px;
-  padding: 13px 22px;
+  margin-top: 24px;
+  padding: 14px 22px;
   border: 1px solid var(--ink);
   border-radius: var(--radius-pill);
   font: 600 11px/1 var(--mono);
@@ -192,86 +418,132 @@
   color: var(--paper);
 }
 
-/* ---------- Captures ---------- */
+/* ---------- Galerie ---------- */
 
 .gallery {
-  margin-top: clamp(56px, 7cqi, 96px);
+  padding-top: clamp(48px, 6cqi, 80px);
+  padding-bottom: clamp(72px, 8cqi, 112px);
+  border-top: 1px solid var(--line);
+}
+
+.gallery-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.gallery-count {
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .shots {
   display: grid;
-  gap: clamp(18px, 2.4cqi, 30px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(22px, 3cqi, 40px);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.shot {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--paper-2);
-  box-shadow: 0 24px 60px color-mix(in srgb, var(--ink) 10%, transparent);
-  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.1, 1) both;
-  animation-delay: calc(0.3s + min(var(--i, 0), 3) * 90ms);
+.tile.wide {
+  grid-column: 1 / -1;
 }
 
-.shot img {
-  object-fit: contain;
-  object-position: top center;
+.tile.wide .shot {
+  aspect-ratio: 16 / 8;
 }
 
-/* ---------- Précédent / suivant ---------- */
+.caption-num {
+  margin-right: 6px;
+  font: 600 12px/1.5 var(--mono);
+  color: var(--accent);
+}
+
+.tile .caption {
+  justify-content: flex-start;
+  gap: 0;
+}
+
+/* ---------- Projets voisins ---------- */
 
 .pager {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-top: clamp(64px, 8cqi, 110px);
-  padding-top: 30px;
+  padding-top: clamp(48px, 6cqi, 80px);
+  padding-bottom: clamp(56px, 7cqi, 96px);
   border-top: 1px solid var(--line);
 }
 
-.step {
+.pager-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.neighbour {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 20px 22px;
+  gap: 10px;
+  padding: 26px 28px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--paper) 40%, #fff);
   color: var(--ink);
   text-decoration: none;
   transition:
     border-color 0.3s,
-    transform 0.3s;
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
-.step:hover,
-.step:focus-visible {
+.neighbour:hover,
+.neighbour:focus-visible {
   border-color: var(--accent);
   transform: translateY(-2px);
+  box-shadow: 0 20px 35px -8px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .next {
   grid-column: 2;
-  text-align: right;
 }
 
 .dir {
   font: 600 10.5px/1 var(--mono);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
 }
 
-.step-title {
-  font: 400 clamp(22px, 2.4cqi, 30px) / 1.1 var(--serif);
+.neighbour-title {
+  font: 400 clamp(26px, 2.8cqi, 36px) / 1.05 var(--serif);
 }
 
-.missing .repo {
-  margin-top: 30px;
+.neighbour-summary {
+  font: 400 14px/1.5 var(--sans);
+  color: var(--muted);
+}
+
+/* ---------- Pied de page ---------- */
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 28px;
+  padding-bottom: 110px;
+  border-top: 1px solid var(--line);
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.foot-name {
+  font: 400 20px/1 var(--serif);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
 }
 
 @keyframes rise {
@@ -281,26 +553,69 @@
   }
 }
 
-@container page (max-width: 760px) {
+/* ---------- Mobile : mise en page de la maquette mobile, couleurs du site ---------- */
+
+@container page (max-width: 860px) {
   .facts {
     grid-template-columns: 1fr;
   }
 
-  .brand-name {
+  .stack {
+    position: static;
+  }
+}
+
+@container page (max-width: 640px) {
+  .bar-in {
+    height: 64px;
+  }
+
+  .brand-text {
     display: none;
   }
 
-  .pager {
+  .back-long {
+    display: none;
+  }
+
+  .back-short {
+    display: inline;
+  }
+
+  .band {
+    inset: 48px 0 0;
+  }
+
+  .shots,
+  .pager-grid {
     grid-template-columns: 1fr;
+  }
+
+  .tile.wide .shot {
+    aspect-ratio: 16 / 10;
   }
 
   .next {
     grid-column: auto;
+  }
+
+  .neighbour-summary {
+    display: none;
+  }
+
+  .neighbour {
+    padding: 20px 22px;
+  }
+
+  .caption {
+    flex-direction: column;
+    gap: 4px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
+    transition: none !important;
   }
 }

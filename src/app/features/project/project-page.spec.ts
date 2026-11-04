@@ -19,7 +19,7 @@ describe('ProjectPage', () => {
     const project = PROFILE.projects.find((p) => p.images?.length)!;
     const element = await render(project.id);
     expect(element.querySelector('h1')?.textContent).toContain(project.title);
-    expect(element.querySelectorAll('.highlights li').length).toBe(project.highlights.length);
+    expect(element.querySelectorAll('.step').length).toBe(project.highlights.length);
     expect(element.querySelectorAll('.shot img').length).toBe(project.images!.length);
   });
 
