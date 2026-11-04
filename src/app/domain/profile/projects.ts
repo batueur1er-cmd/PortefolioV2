@@ -2,7 +2,8 @@ import { PROFILE } from './profile.data';
 import { Project } from './profile.model';
 
 /** Nombre de réalisations montrées sur la page ; les autres sont dans la fenêtre « Tous les projets ». */
-export const PROJECTS_ON_PAGE = 3;
+// Remplit exactement deux lignes de la grille de 3 colonnes : le projet mis en avant compte double.
+export const PROJECTS_ON_PAGE = 5;
 
 const SKILL_LABELS = new Map(PROFILE.skills.map((s) => [s.id, s.label]));
 
