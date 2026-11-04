@@ -113,6 +113,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
       [muted]="muted()"
       [toast]="toast()"
       (toggleSound)="toggleSound()"
+      (resetZoom)="zoom.set(1)"
     />
   `,
   styleUrl: './lens-view.scss',

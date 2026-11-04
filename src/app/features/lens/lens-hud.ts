@@ -25,6 +25,8 @@ export class LensHud {
   readonly toast = input<string | null>(null);
 
   readonly toggleSound = output<void>();
+  /** Clic sur le facteur de zoom : retour à ×1. */
+  readonly resetZoom = output<void>();
 
   protected readonly bars = [0, 1, 2, 3, 4];
   protected readonly zoomLabel = computed(() => this.zoom().toFixed(1).replace('.', ','));

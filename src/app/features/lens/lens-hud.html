@@ -12,7 +12,7 @@
   </svg>
 </div>
 
-<p class="top-left">Révélateur · <em>×{{ zoomLabel() }}</em></p>
+<p class="top-left">Révélateur · <button type="button" class="zoom-reset" title="Revenir à ×1,0" aria-label="Zoom ×{{ zoomLabel() }}, revenir à ×1,0" (click)="resetZoom.emit()">×{{ zoomLabel() }}</button></p>
 
 @if (section(); as name) {
   <p class="where" aria-live="polite">§ {{ name }}</p>

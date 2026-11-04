@@ -138,9 +138,26 @@ p {
   left: 40px;
 }
 
-.top-left em {
-  font-style: normal;
+.zoom-reset {
+  pointer-events: auto;
+  margin: -4px 0;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-s);
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
   color: var(--xp);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.zoom-reset:hover,
+.zoom-reset:focus-visible {
+  border-color: color-mix(in srgb, var(--xp) 60%, transparent);
+  background: color-mix(in srgb, var(--xp) 12%, transparent);
 }
 
 .where {
