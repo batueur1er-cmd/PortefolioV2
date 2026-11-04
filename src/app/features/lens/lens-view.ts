@@ -38,6 +38,10 @@ import { LensHud, LensState } from './lens-hud';
 /** Distance (px) en deçà de laquelle le détecteur commence à réagir. */
 const DETECTOR_RANGE = 700;
 
+/** Zoom de la loupe : de x0,5 (vue d'ensemble) à x3. */
+const MIN_ZOOM = 0.5;
+const MAX_ZOOM = 3;
+
 /** Zone du portfolio, en pixels écran. */
 const mainRect = (m: MainPresence): Rect => ({
   x: m.origin.x,
@@ -303,7 +307,7 @@ export class LensView {
     const raw = e.deltaY || e.deltaX;
     const delta = raw * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? win.innerHeight : 1);
     if (e.shiftKey || e.ctrlKey || e.altKey) {
-      this.zoom.update((z) => clamp(z * Math.exp(-delta * 0.0015), 1, 3));
+      this.zoom.update((z) => clamp(z * Math.exp(-delta * 0.0015), MIN_ZOOM, MAX_ZOOM));
     } else if (this.targetId) {
       // La molette fait défiler le portfolio sous la loupe.
       this.bus.send({ type: 'scroll', target: this.targetId, dy: delta / this.ratio });
@@ -315,10 +319,10 @@ export class LensView {
     switch (e.key) {
       case '+':
       case '=':
-        this.zoom.update((z) => clamp(z * 1.15, 1, 3));
+        this.zoom.update((z) => clamp(z * 1.15, MIN_ZOOM, MAX_ZOOM));
         break;
       case '-':
-        this.zoom.update((z) => clamp(z / 1.15, 1, 3));
+        this.zoom.update((z) => clamp(z / 1.15, MIN_ZOOM, MAX_ZOOM));
         break;
       case '0':
         this.zoom.set(1);
