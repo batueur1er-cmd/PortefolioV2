@@ -22,6 +22,7 @@ import {
   intersect,
   lensTransform,
   overlapArea,
+  pageZoom,
 } from '@core/geometry/geometry';
 import { MainPresence, OverlayPresence, WindowBus, isMain } from '@core/sync/window-bus';
 import { PortfolioPage } from '@features/page/portfolio-page';
@@ -37,7 +38,13 @@ import { LensHud, LensState } from './lens-hud';
 /** Distance (px) en deçà de laquelle le détecteur commence à réagir. */
 const DETECTOR_RANGE = 700;
 
-const mainRect = (m: MainPresence): Rect => ({ x: m.origin.x, y: m.origin.y, w: m.layoutWidth, h: m.viewport.h });
+/** Zone du portfolio, en pixels écran. */
+const mainRect = (m: MainPresence): Rect => ({
+  x: m.origin.x,
+  y: m.origin.y,
+  w: m.layoutWidth * m.pageZoom,
+  h: m.viewport.h * m.pageZoom,
+});
 
 const round2 = (value: number): number => Math.round(value * 100) / 100;
 
@@ -52,6 +59,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
     a.scale === b.scale &&
     a.opacity === b.opacity &&
     a.contentHeight === b.contentHeight &&
+    a.contentTop === b.contentTop &&
     a.scrollTop === b.scrollTop);
 
 /**
@@ -80,6 +88,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
         <app-projects-mirror
           [scrollTop]="o.scrollTop"
           [contentHeight]="o.contentHeight"
+          [contentTop]="o.contentTop"
           [style.left.px]="o.cx - o.w / 2"
           [style.top.px]="o.cy - o.h / 2"
           [style.width.px]="o.w"
@@ -132,6 +141,8 @@ export class LensView {
   private readonly scanner = new ScanEngine();
   private readonly audio = new GeigerAudio();
   private targetId: string | null = null;
+  /** Taille d'un pixel du portfolio visé, en pixels de la loupe (zooms navigateur différents). */
+  private ratio = 1;
   private frame = 0;
   private toastTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -167,8 +178,10 @@ export class LensView {
 
   private tick(win: Window, dt: number): void {
     const now = Date.now();
-    const origin = contentOrigin(win);
-    const viewport: Rect = { x: origin.x, y: origin.y, w: win.innerWidth, h: win.innerHeight };
+    const zoom = pageZoom(win);
+    const origin = contentOrigin(win, zoom);
+    // En pixels écran, pour comparer avec les autres fenêtres.
+    const viewport: Rect = { x: origin.x, y: origin.y, w: win.innerWidth * zoom, h: win.innerHeight * zoom };
 
     // Le portfolio visé est celui que la loupe recouvre le plus.
     const mains = [...this.bus.windows.snapshot(now).values()].filter(isMain);
@@ -190,8 +203,9 @@ export class LensView {
       id: this.bus.id,
       t: now,
       origin,
-      viewport: { w: viewport.w, h: viewport.h },
+      viewport: { w: win.innerWidth, h: win.innerHeight },
       small: this.roles.small(),
+      pageZoom: zoom,
       zoom: this.zoom(),
       target: this.targetId,
       section: this.section(),
@@ -207,21 +221,19 @@ export class LensView {
     this.pageWidth.set(shown.layoutWidth);
     this.vh.set(shown.viewport.h);
     this.scrollY.set(Math.round(shown.scroll.y));
-    const pivot: Point = { x: viewport.w / 2, y: viewport.h / 2 };
-    const offset: Point = {
-      x: shown.origin.x - origin.x - shown.scroll.x,
-      y: shown.origin.y - origin.y - shown.scroll.y,
-    };
-    this.pageRef().nativeElement.style.transform = lensTransform(offset, pivot, this.zoom());
+    // Tout est ramené aux pixels CSS de la loupe : écarts écran divisés par son zoom navigateur,
+    // pixels du portfolio multipliés par le rapport des deux zooms.
+    const k = shown.pageZoom / zoom;
+    this.ratio = k;
+    const pivot: Point = { x: win.innerWidth / 2, y: win.innerHeight / 2 };
+    const gap: Point = { x: (shown.origin.x - origin.x) / zoom, y: (shown.origin.y - origin.y) / zoom };
+    const offset: Point = { x: gap.x - shown.scroll.x * k, y: gap.y - shown.scroll.y * k };
+    this.pageRef().nativeElement.style.transform = lensTransform(offset, pivot, this.zoom(), k);
 
     // La modale est fixe dans la fenêtre portfolio : même décalage, sans le défilement.
     this.overlay.set(shown.overlay ?? null);
     this.mainSize.set({ w: shown.layoutWidth, h: shown.viewport.h });
-    this.overlayLayer().nativeElement.style.transform = lensTransform(
-      { x: shown.origin.x - origin.x, y: shown.origin.y - origin.y },
-      pivot,
-      this.zoom(),
-    );
+    this.overlayLayer().nativeElement.style.transform = lensTransform(gap, pivot, this.zoom(), k);
 
     if (!best) {
       this.strength.set(0);
@@ -230,10 +242,15 @@ export class LensView {
     }
     // La détection mesure le DOM : une image sur deux suffit largement.
     if (++this.frame % 2) return;
-    if (this.frame % 20 === 0) this.section.set(this.sectionAt(pivot.y - offset.y));
+    if (this.frame % 20 === 0) this.section.set(this.sectionAt((pivot.y - offset.y) / k));
     const zone = intersect(
-      { x: 0, y: 0, w: viewport.w, h: viewport.h },
-      { x: best.origin.x - origin.x, y: best.origin.y - origin.y, w: best.layoutWidth, h: best.viewport.h },
+      { x: 0, y: 0, w: win.innerWidth, h: win.innerHeight },
+      {
+        x: (best.origin.x - origin.x) / zoom,
+        y: (best.origin.y - origin.y) / zoom,
+        w: best.layoutWidth * (best.pageZoom / zoom),
+        h: best.viewport.h * (best.pageZoom / zoom),
+      },
     );
     this.scan(zone, pivot, dt * 2);
   }
@@ -289,7 +306,7 @@ export class LensView {
       this.zoom.update((z) => clamp(z * Math.exp(-delta * 0.0015), 1, 3));
     } else if (this.targetId) {
       // La molette fait défiler le portfolio sous la loupe.
-      this.bus.send({ type: 'scroll', target: this.targetId, dy: delta });
+      this.bus.send({ type: 'scroll', target: this.targetId, dy: delta / this.ratio });
     }
   }
 

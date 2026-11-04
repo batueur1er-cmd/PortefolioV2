@@ -1,4 +1,35 @@
-import { circleCoverage, contentOrigin, coverage, distanceToRect, intersect, lensTransform, overlapArea } from './geometry';
+import {
+  circleCoverage,
+  contentOrigin,
+  coverage,
+  distanceToRect,
+  intersect,
+  lensTransform,
+  overlapArea,
+  pageZoom,
+} from './geometry';
+
+describe('zoom du navigateur', () => {
+  const win = (outerWidth: number, innerWidth: number) => ({
+    screenX: 0,
+    screenY: 0,
+    outerWidth,
+    outerHeight: 900,
+    innerWidth,
+    innerHeight: 780,
+  });
+
+  it('retrouve le niveau de zoom malgré la bordure de fenêtre', () => {
+    expect(pageZoom(win(1216, 1200))).toBe(1);
+    expect(pageZoom(win(1336, 1200))).toBe(1.1);
+    expect(pageZoom(win(1216, 1351))).toBe(0.9);
+  });
+
+  it('calcule le coin du contenu en pixels écran avec un zoom', () => {
+    // Zoom 110 % : 1200 px CSS occupent 1320 px écran, bordure de 8 px de chaque côté.
+    expect(contentOrigin({ ...win(1336, 1200), screenX: 100, screenY: 50 }, 1.1).x).toBe(108);
+  });
+});
 
 describe('geometry', () => {
   it('intersecte deux rectangles', () => {

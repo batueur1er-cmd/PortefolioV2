@@ -90,10 +90,28 @@ export const fromDomRect = (r: DOMRectReadOnly): Rect => ({
   h: r.height,
 });
 
+/** Niveaux de zoom proposés par les navigateurs (Ctrl + molette, Ctrl + +). */
+const ZOOM_LEVELS = [0.25, 0.33, 0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5];
+
+/**
+ * Zoom du navigateur sur la page. Les positions de fenêtre (`screenX`, `outerWidth`) sont en pixels
+ * écran, mais `innerWidth` est en pixels CSS : leur rapport donne le zoom, à la bordure près. On
+ * garde le plus grand niveau qui laisse une bordure positive (les niveaux sont bien plus espacés
+ * que l'épaisseur d'une bordure).
+ */
+export function pageZoom(w: WindowMetrics): number {
+  if (w.innerWidth <= 0 || w.outerWidth <= 0) return 1;
+  let zoom = ZOOM_LEVELS[0];
+  for (const level of ZOOM_LEVELS) {
+    if (w.outerWidth - w.innerWidth * level >= -2) zoom = level;
+  }
+  return zoom;
+}
+
 /** Coin haut-gauche de la zone de contenu, en pixels écran (bordures et barres du navigateur déduites). */
-export function contentOrigin(w: WindowMetrics): Point {
-  const border = Math.max(0, (w.outerWidth - w.innerWidth) / 2);
-  const top = Math.max(0, w.outerHeight - w.innerHeight - border);
+export function contentOrigin(w: WindowMetrics, zoom = pageZoom(w)): Point {
+  const border = Math.max(0, (w.outerWidth - w.innerWidth * zoom) / 2);
+  const top = Math.max(0, w.outerHeight - w.innerHeight * zoom - border);
   return { x: w.screenX + border, y: w.screenY + top };
 }
 
@@ -101,9 +119,11 @@ export function contentOrigin(w: WindowMetrics): Point {
  * Transformation CSS qui pose la page du portfolio sous la loupe : décalage de l'écart entre
  * les deux fenêtres (défilement compris), puis zoom centré sur `pivot`.
  */
-export function lensTransform(offset: Point, pivot: Point, zoom: number): string {
+export function lensTransform(offset: Point, pivot: Point, zoom: number, base = 1): string {
   return (
     `translate(${pivot.x}px, ${pivot.y}px) scale(${zoom}) ` +
-    `translate(${offset.x - pivot.x}px, ${offset.y - pivot.y}px)`
+    `translate(${offset.x - pivot.x}px, ${offset.y - pivot.y}px)` +
+    // `base` : rapport des zooms navigateur des deux fenêtres (1 quand ils sont égaux).
+    (base === 1 ? '' : ` scale(${base})`)
   );
 }

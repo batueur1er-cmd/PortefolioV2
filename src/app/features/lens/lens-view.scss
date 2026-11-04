@@ -36,5 +36,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  background: color-mix(in srgb, var(--xbg) 60%, transparent);
+  background: color-mix(in srgb, var(--xbg) 55%, transparent);
+  /* Comme sur le portfolio : la page derrière la fenêtre est floutée. */
+  backdrop-filter: blur(6px);
 }

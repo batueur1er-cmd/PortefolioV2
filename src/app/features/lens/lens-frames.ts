@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 
 import { FrameLoop } from '@core/dom/frame-loop';
-import { contentOrigin } from '@core/geometry/geometry';
+import { contentOrigin, pageZoom } from '@core/geometry/geometry';
 import { WindowBus, isLens } from '@core/sync/window-bus';
 
 /** Halo lumineux autour de chaque fenêtre loupe posée sur ce portfolio. */
@@ -38,14 +38,17 @@ export class LensFrames {
       const win = this.doc.defaultView;
       if (!win) return;
       const stop = this.frames.add(() => {
-        const origin = contentOrigin(win);
+        const zoom = pageZoom(win);
+        const origin = contentOrigin(win, zoom);
         const peers = this.bus.windows.snapshot();
         for (const frame of Array.from(this.host.querySelectorAll<HTMLElement>('.frame'))) {
           const lens = peers.get(frame.dataset['lens'] ?? '');
           if (!lens || !isLens(lens)) continue;
-          frame.style.transform = `translate(${lens.origin.x - origin.x}px, ${lens.origin.y - origin.y}px)`;
-          frame.style.width = `${lens.viewport.w}px`;
-          frame.style.height = `${lens.viewport.h}px`;
+          // Écart en pixels écran, ramené aux pixels CSS de cette fenêtre.
+          const k = lens.pageZoom / zoom;
+          frame.style.transform = `translate(${(lens.origin.x - origin.x) / zoom}px, ${(lens.origin.y - origin.y) / zoom}px)`;
+          frame.style.width = `${lens.viewport.w * k}px`;
+          frame.style.height = `${lens.viewport.h * k}px`;
           frame.classList.toggle('on', lens.target === this.bus.id);
           const tag = frame.firstElementChild as HTMLElement | null;
           const label = lens.section ? `loupe · ${lens.section}` : 'loupe';

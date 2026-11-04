@@ -11,7 +11,7 @@ import { ProjectsList } from './projects-list';
   selector: 'app-projects-mirror',
   imports: [ProjectsList],
   template: `
-    <header class="head">
+    <header class="head" [style.height.px]="contentTop()">
       <p class="kicker">Réalisations · suite <span class="tag">&lt;mat-dialog&gt;</span></p>
       <h2 class="title">Les autres projets</h2>
       <span class="close" aria-hidden="true">×</span>
@@ -33,6 +33,8 @@ export class ProjectsMirror {
   readonly scrollTop = input(0);
   /** Hauteur visible de la liste dans la vraie fenêtre. */
   readonly contentHeight = input<number | null>(null);
+  /** Hauteur de l'en-tête dans la vraie fenêtre : la liste commence au même niveau. */
+  readonly contentTop = input<number | null>(null);
 
   protected readonly projects = OTHER_PROJECTS;
   protected readonly firstNumber = OTHERS_FIRST_NUMBER;

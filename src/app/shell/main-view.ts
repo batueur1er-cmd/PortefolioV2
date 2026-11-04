@@ -12,7 +12,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FrameLoop } from '@core/dom/frame-loop';
-import { contentOrigin } from '@core/geometry/geometry';
+import { contentOrigin, pageZoom } from '@core/geometry/geometry';
 import { BusCommand, OverlayPresence, WindowBus } from '@core/sync/window-bus';
 import { WindowRoleStore } from '@features/lens/data/window-role.store';
 import { LensFrames } from '@features/lens/lens-frames';
@@ -79,19 +79,21 @@ export class MainView {
       win.addEventListener('scroll', onScroll, { passive: true });
 
       // Chaque image, la fenêtre annonce où elle est, sa taille et son défilement.
-      const stop = this.frames.add(() =>
+      const stop = this.frames.add(() => {
+        const zoom = pageZoom(win);
         this.bus.windows.publish({
           kind: 'main',
           id: this.bus.id,
           t: Date.now(),
-          origin: contentOrigin(win),
+          origin: contentOrigin(win, zoom),
+          pageZoom: zoom,
           viewport: { w: win.innerWidth, h: win.innerHeight },
           small: this.roles.small(),
           layoutWidth: this.doc.documentElement.clientWidth,
           scroll: { x: win.scrollX, y: win.scrollY },
           overlay: this.measureOverlay(),
-        }),
-      );
+        });
+      });
       destroyRef.onDestroy(() => {
         stop();
         cancelAnimationFrame(pending);
@@ -116,6 +118,7 @@ export class MainView {
       scale: Math.round((rect.width / surface.offsetWidth) * 1000) / 1000,
       opacity: container ? Math.round(Number(getComputedStyle(container).opacity) * 100) / 100 : 1,
       contentHeight: content?.clientHeight ?? 0,
+      contentTop: content ? Math.round(content.getBoundingClientRect().top - rect.top) : 0,
       scrollTop: Math.round(content?.scrollTop ?? 0),
     };
   }

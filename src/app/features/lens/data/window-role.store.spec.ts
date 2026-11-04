@@ -10,6 +10,7 @@ const peer = (small: boolean): MainPresence => ({
   origin: { x: 0, y: 0 },
   viewport: small ? { w: 480, h: 380 } : { w: 1440, h: 900 },
   small,
+  pageZoom: 1,
   layoutWidth: small ? 480 : 1440,
   scroll: { x: 0, y: 0 },
 });

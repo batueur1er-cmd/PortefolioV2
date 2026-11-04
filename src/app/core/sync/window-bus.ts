@@ -14,6 +14,8 @@ interface WindowBase extends PresenceState {
   readonly viewport: Size;
   /** Assez petite pour servir de loupe (voir `isLensSized`). */
   readonly small: boolean;
+  /** Zoom du navigateur : 1 pixel CSS de cette fenêtre vaut `pageZoom` pixels écran. */
+  readonly pageZoom: number;
 }
 
 /**
@@ -33,6 +35,8 @@ export interface OverlayPresence {
   readonly opacity: number;
   /** Zone qui défile dans le panneau : sa hauteur visible et son défilement. */
   readonly contentHeight: number;
+  /** Haut de cette zone dans le panneau (sous l'en-tête). */
+  readonly contentTop: number;
   readonly scrollTop: number;
 }
 
