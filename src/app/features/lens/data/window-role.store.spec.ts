@@ -13,6 +13,7 @@ const peer = (small: boolean): MainPresence => ({
   pageZoom: 1,
   layoutWidth: small ? 480 : 1440,
   scroll: { x: 0, y: 0 },
+  route: '/',
 });
 
 describe('rôle de la fenêtre', () => {

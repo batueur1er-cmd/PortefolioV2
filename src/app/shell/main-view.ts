@@ -91,6 +91,7 @@ export class MainView {
           small: this.roles.small(),
           layoutWidth: this.doc.documentElement.clientWidth,
           scroll: { x: win.scrollX, y: win.scrollY },
+          route: '/',
           overlay: this.measureOverlay(),
         });
       });

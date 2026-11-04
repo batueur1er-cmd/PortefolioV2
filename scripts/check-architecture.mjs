@@ -18,7 +18,7 @@ const ALIASES = { '@core/': 'core/', '@domain/': 'domain/', '@shared/': 'shared/
 const FEATURE_DEPS = {
   secrets: [],
   page: ['secrets'],
-  lens: ['page', 'secrets'],
+  lens: ['page', 'secrets', 'project'],
   singularity: [],
   project: [],
 };

@@ -1,10 +1,18 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, inject, input } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { FrameLoop } from '@core/dom/frame-loop';
+import { contentOrigin, pageZoom } from '@core/geometry/geometry';
+import { WindowBus } from '@core/sync/window-bus';
+import { WindowRoleStore } from '@features/lens/data/window-role.store';
 import { ProjectPage } from '@features/project/project-page';
 
 import { ControlDock } from './control-dock';
 
-/** La fenêtre d'une page projet : la page et le bouton mode nuit. Pas de loupe ici. */
+/**
+ * La fenêtre d'une page projet : la page et le bouton mode nuit. Elle annonce, comme l'accueil,
+ * sa position et son défilement, avec son adresse : une loupe posée dessus suit le changement de page.
+ */
 @Component({
   selector: 'app-project-shell',
   imports: [ProjectPage, ControlDock],
@@ -16,4 +24,42 @@ import { ControlDock } from './control-dock';
 })
 export class ProjectShell {
   readonly id = input.required<string>();
+
+  constructor() {
+    const bus = inject(WindowBus);
+    const roles = inject(WindowRoleStore);
+    const frames = inject(FrameLoop);
+    const doc = inject(DOCUMENT);
+    const destroyRef = inject(DestroyRef);
+    bus.role.set('main');
+
+    // La molette d'une loupe posée dessus fait défiler cette page.
+    bus.commands$.pipe(takeUntilDestroyed()).subscribe((command) => {
+      if (command.type === 'scroll' && command.target === bus.id) {
+        doc.defaultView?.scrollBy({ top: command.dy, behavior: 'instant' });
+      }
+    });
+
+    afterNextRender(() => {
+      const win = doc.defaultView;
+      if (!win) return;
+      const stop = frames.add(() => {
+        const zoom = pageZoom(win);
+        bus.windows.publish({
+          kind: 'main',
+          id: bus.id,
+          t: Date.now(),
+          origin: contentOrigin(win, zoom),
+          pageZoom: zoom,
+          viewport: { w: win.innerWidth, h: win.innerHeight },
+          small: roles.small(),
+          layoutWidth: doc.documentElement.clientWidth,
+          scroll: { x: win.scrollX, y: win.scrollY },
+          route: `/projets/${this.id()}`,
+          overlay: null,
+        });
+      });
+      destroyRef.onDestroy(stop);
+    });
+  }
 }

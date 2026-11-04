@@ -1,4 +1,4 @@
-import { Signal } from '@angular/core';
+import { Signal, signal } from '@angular/core';
 
 export type RevealMode = 'surface' | 'xray';
 
@@ -12,4 +12,18 @@ export abstract class SecretHost {
   abstract readonly mode: Signal<RevealMode>;
   abstract register(id: string, element: Element): void;
   abstract unregister(id: string, element: Element): void;
+}
+
+/**
+ * Registre pour un affichage hors de la page (la fenêtre « Autres projets », sa copie dans la
+ * loupe) : les secrets s'y dessinent, mais ne comptent pas dans la chasse.
+ */
+export class DisplayOnlySecretHost extends SecretHost {
+  readonly mode = signal<RevealMode>('surface').asReadonly();
+  register(): void {
+    // Rien à enregistrer : ces secrets-là ne se trouvent pas.
+  }
+  unregister(): void {
+    // Idem.
+  }
 }

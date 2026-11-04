@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { RouterLink } from '@angular/router';
 
 import { projectLink } from '@domain/profile/projects';
+import { DisplayOnlySecretHost, SecretHost } from '@features/secrets/secret-host';
 import { TagList } from '@shared/ui/tag-list';
 
+import { ProjectArt } from './project-art';
 import { ProjectView } from './project-card';
 
 /**
@@ -12,16 +14,19 @@ import { ProjectView } from './project-card';
  */
 @Component({
   selector: 'app-projects-list',
-  imports: [RouterLink, TagList],
+  imports: [RouterLink, TagList, ProjectArt],
+  providers: [{ provide: SecretHost, useClass: DisplayOnlySecretHost }],
   template: `
     <ul class="list">
       @for (project of projects(); track project.id) {
         <li class="item" [style.--i]="$index">
           <a class="thumb" [routerLink]="link(project.id)" (click)="picked.emit()" tabindex="-1" aria-hidden="true">
-            @if (project.images?.[0]; as image) {
-              <img class="surface-only" [src]="image.src" alt="" loading="lazy" />
-            }
-            <span class="initial">{{ project.title.charAt(0) }}</span>
+            <app-project-art
+              [visual]="project.visual"
+              [images]="project.images ?? []"
+              [secretId]="project.secretId"
+              [secret]="project.secret"
+            />
             <span class="num">{{ pad($index + firstNumber()) }}</span>
           </a>
           <div class="body">

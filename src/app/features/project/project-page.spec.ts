@@ -33,4 +33,18 @@ describe('ProjectPage', () => {
     const element = await render('inconnu');
     expect(element.querySelector('h1')?.textContent).toContain('introuvable');
   });
+
+  it('sait se dessiner en copie rayons X pour une loupe', async () => {
+    const fixture = TestBed.createComponent(ProjectPage);
+    fixture.componentRef.setInput('id', PROFILE.projects[0].id);
+    fixture.componentRef.setInput('mode', 'xray');
+    fixture.componentRef.setInput('decorative', true);
+    fixture.componentRef.setInput('scrollY', 240);
+    await fixture.whenStable();
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.classList).toContain('xray');
+    expect(host.classList).toContain('remote');
+    expect(host.hasAttribute('inert')).toBe(true);
+    expect(host.style.getPropertyValue('--sy')).toBe('240px');
+  });
 });

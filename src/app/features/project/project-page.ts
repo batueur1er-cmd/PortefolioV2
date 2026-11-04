@@ -24,10 +24,23 @@ const pad = (n: number): string => String(n).padStart(2, '0');
   templateUrl: './project-page.html',
   styleUrl: './project-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.xray]': "mode() === 'xray'",
+    '[class.remote]': 'decorative()',
+    '[attr.inert]': "decorative() ? '' : null",
+    '[attr.aria-hidden]': "decorative() ? 'true' : null",
+    '[style.--sy.px]': 'scrollY()',
+  },
 })
 export class ProjectPage {
   /** Identifiant du projet, lu dans l'adresse `/projets/:id`. */
   readonly id = input.required<string>();
+  /** « xray » : la copie affichée par une loupe posée sur cette page. */
+  readonly mode = input<'surface' | 'xray'>('surface');
+  /** Copie dans une loupe : ni titre de fenêtre, ni interactions. */
+  readonly decorative = input(false);
+  /** Défilement de la vraie page, pour recaler la barre du haut dans la copie. */
+  readonly scrollY = input(0);
 
   protected readonly fullName = `${PROFILE.firstName} ${PROFILE.lastName}`;
   protected readonly year = inject(TODAY).getFullYear();
@@ -69,6 +82,7 @@ export class ProjectPage {
   constructor() {
     const title = inject(Title);
     effect(() => {
+      if (this.decorative()) return;
       const p = this.project();
       title.setTitle(p ? `${p.title} — ${this.fullName}` : `Projet introuvable — ${this.fullName}`);
     });

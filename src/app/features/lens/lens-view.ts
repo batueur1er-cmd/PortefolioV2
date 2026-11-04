@@ -27,7 +27,9 @@ import {
 import { MainPresence, OverlayPresence, WindowBus, isMain } from '@core/sync/window-bus';
 import { PortfolioPage } from '@features/page/portfolio-page';
 import { ProjectsMirror } from '@features/page/projects/projects-mirror';
+import { ProjectPage } from '@features/project/project-page';
 import { SCAN_COVERAGE, ScanEngine } from '@features/secrets/data/scan-engine';
+import { PROFILE } from '@domain/profile/profile.data';
 import { SECRET_BY_ID } from '@features/secrets/data/secrets.catalog';
 import { SecretsStore } from '@features/secrets/data/secrets.store';
 
@@ -49,6 +51,8 @@ const mainRect = (m: MainPresence): Rect => ({
   w: m.layoutWidth * m.pageZoom,
   h: m.viewport.h * m.pageZoom,
 });
+
+const PROJECT_TITLES = new Map(PROFILE.projects.map((p) => [p.id, p.title]));
 
 const round2 = (value: number): number => Math.round(value * 100) / 100;
 
@@ -72,7 +76,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
  */
 @Component({
   selector: 'app-lens-view',
-  imports: [PortfolioPage, LensHud, ProjectsMirror],
+  imports: [PortfolioPage, LensHud, ProjectsMirror, ProjectPage],
   template: `
     <app-portfolio-page
       class="lens-page"
@@ -83,8 +87,21 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
       [vh]="vh()"
       [scrollY]="scrollY()"
       [style.width.px]="pageWidth()"
-      [class.hidden]="state() === 'searching'"
+      [class.hidden]="state() === 'searching' || projectId() !== null"
     />
+    <!-- Le portfolio visé est sur une page projet : la loupe affiche la copie de cette page. -->
+    @if (projectId(); as id) {
+      <app-project-page
+        #projectCopy
+        class="lens-page"
+        mode="xray"
+        [id]="id"
+        [decorative]="true"
+        [scrollY]="scrollY()"
+        [style.width.px]="pageWidth()"
+        [class.hidden]="state() === 'searching'"
+      />
+    }
     <!-- Ce que le portfolio a ouvert par-dessus sa page, recopié en rayons X. -->
     <div class="overlay-layer" #overlayLayer [class.hidden]="state() === 'searching'" aria-hidden="true">
       @if (overlay(); as o) {
@@ -128,6 +145,9 @@ export class LensView {
   private readonly page = viewChild.required(PortfolioPage);
   private readonly pageRef = viewChild.required(PortfolioPage, { read: ElementRef<HTMLElement> });
   private readonly overlayLayer = viewChild.required<ElementRef<HTMLElement>>('overlayLayer');
+  private readonly projectCopy = viewChild('projectCopy', { read: ElementRef<HTMLElement> });
+  /** Projet affiché par le portfolio visé, ou null s'il est sur l'accueil. */
+  protected readonly projectId = signal<string | null>(null);
 
   protected readonly zoom = signal(1);
   protected readonly vh = signal(800);
@@ -223,6 +243,8 @@ export class LensView {
       return;
     }
 
+    const project = /^\/projets\/([^/?#]+)/.exec(shown.route ?? '/')?.[1] ?? null;
+    this.projectId.set(project);
     this.pageWidth.set(shown.layoutWidth);
     this.vh.set(shown.viewport.h);
     this.scrollY.set(Math.round(shown.scroll.y));
@@ -233,14 +255,19 @@ export class LensView {
     const pivot: Point = { x: win.innerWidth / 2, y: win.innerHeight / 2 };
     const gap: Point = { x: (shown.origin.x - origin.x) / zoom, y: (shown.origin.y - origin.y) / zoom };
     const offset: Point = { x: gap.x - shown.scroll.x * k, y: gap.y - shown.scroll.y * k };
-    this.pageRef().nativeElement.style.transform = lensTransform(offset, pivot, this.zoom(), k);
+    const transform = lensTransform(offset, pivot, this.zoom(), k);
+    this.pageRef().nativeElement.style.transform = transform;
+    const copy = this.projectCopy()?.nativeElement;
+    if (copy) copy.style.transform = transform;
 
     // La modale est fixe dans la fenêtre portfolio : même décalage, sans le défilement.
     this.overlay.set(shown.overlay ?? null);
     this.mainSize.set({ w: shown.layoutWidth, h: shown.viewport.h });
     this.overlayLayer().nativeElement.style.transform = lensTransform(gap, pivot, this.zoom(), k);
 
-    if (!best) {
+    // Pas de secrets sur les pages projet : la loupe ne fait que montrer leur plan.
+    if (!best || project) {
+      if (project && this.frame++ % 20 === 0) this.section.set(PROJECT_TITLES.get(project) ?? null);
       this.strength.set(0);
       this.progress.set(0);
       return;

@@ -46,6 +46,8 @@ export interface MainPresence extends WindowBase {
   /** Largeur de mise en page (sans la barre de défilement) : la loupe s'y cale. */
   readonly layoutWidth: number;
   readonly scroll: Point;
+  /** Page affichée : « / » pour l'accueil, « /projets/drive » pour une page projet. */
+  readonly route: string;
   /** Fenêtre modale ouverte, s'il y en a une. */
   readonly overlay?: OverlayPresence | null;
 }

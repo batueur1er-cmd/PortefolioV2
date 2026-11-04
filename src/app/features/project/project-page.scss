@@ -352,8 +352,6 @@
 }
 
 .stack {
-  position: sticky;
-  top: 104px;
   padding: 26px;
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -560,9 +558,6 @@
     grid-template-columns: 1fr;
   }
 
-  .stack {
-    position: static;
-  }
 }
 
 @container page (max-width: 640px) {
@@ -611,6 +606,150 @@
     flex-direction: column;
     gap: 4px;
   }
+}
+
+/* ---------- Copie dans une loupe ---------- */
+
+/* Pas de position collante dans une autre fenêtre : la barre est recalée sur le défilement. */
+:host(.remote) {
+  position: relative;
+}
+
+:host(.remote) .bar {
+  position: absolute;
+  top: var(--sy, 0px);
+  left: 0;
+  right: 0;
+  backdrop-filter: none;
+}
+
+:host(.remote) *,
+:host(.remote) *::before {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ---------- Rayons X : le plan de la page, mêmes positions, autres couleurs ---------- */
+
+:host(.xray) {
+  background:
+    linear-gradient(color-mix(in srgb, var(--xl) 5%, transparent) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, color-mix(in srgb, var(--xl) 5%, transparent) 1px, transparent 1px) 0 0 / 32px 32px,
+    var(--xbg);
+  color: var(--xtext);
+}
+
+:host(.xray) .bar {
+  border-color: color-mix(in srgb, var(--xl) 30%, transparent);
+  background: color-mix(in srgb, var(--xbg) 92%, transparent);
+}
+
+:host(.xray) .brand,
+:host(.xray) .title,
+:host(.xray) .step-text,
+:host(.xray) .stack-title,
+:host(.xray) .neighbour,
+:host(.xray) .foot-name,
+:host(.xray) .back,
+:host(.xray) .repo,
+:host(.xray) .chip {
+  color: var(--xtext);
+}
+
+:host(.xray) .summary,
+:host(.xray) .brand-sub,
+:host(.xray) .caption,
+:host(.xray) .neighbour-summary,
+:host(.xray) .stack-group,
+:host(.xray) .chip-key,
+:host(.xray) .gallery-count,
+:host(.xray) .foot {
+  color: color-mix(in srgb, var(--xtext) 65%, transparent);
+}
+
+:host(.xray) .label,
+:host(.xray) .kicker,
+:host(.xray) .step-num,
+:host(.xray) .dir,
+:host(.xray) .caption-num,
+:host(.xray) .caption-count,
+:host(.xray) .chip-accent,
+:host(.xray) .monogram {
+  color: var(--xl);
+}
+
+:host(.xray) .title {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--xp);
+}
+
+:host(.xray) .monogram,
+:host(.xray) .chip,
+:host(.xray) .back,
+:host(.xray) .tags li,
+:host(.xray) .badge {
+  border-color: color-mix(in srgb, var(--xl) 45%, transparent);
+  background: transparent;
+}
+
+:host(.xray) .badge,
+:host(.xray) .tags li {
+  color: var(--xn);
+}
+
+:host(.xray) .repo {
+  border-color: var(--xl);
+}
+
+:host(.xray) .band {
+  border-color: color-mix(in srgb, var(--xl) 25%, transparent);
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 12px,
+    color-mix(in srgb, var(--xl) 7%, transparent) 12px 13px
+  );
+}
+
+:host(.xray) .frame,
+:host(.xray) .stack,
+:host(.xray) .neighbour {
+  border: 1px dashed color-mix(in srgb, var(--xl) 60%, transparent);
+  background: color-mix(in srgb, var(--xbg-2) 80%, transparent);
+  box-shadow: none;
+}
+
+:host(.xray) .chrome {
+  border-color: color-mix(in srgb, var(--xl) 30%, transparent);
+  background: transparent;
+}
+
+:host(.xray) .chrome-label {
+  color: var(--xl);
+}
+
+:host(.xray) .dots i {
+  background: color-mix(in srgb, var(--xl) 40%, transparent);
+}
+
+/* Les captures deviennent leur cadre de mise en page. */
+:host(.xray) .shot {
+  background:
+    linear-gradient(to top right, transparent calc(50% - 0.5px), color-mix(in srgb, var(--xl) 35%, transparent) 50%, transparent calc(50% + 0.5px)),
+    linear-gradient(to top left, transparent calc(50% - 0.5px), color-mix(in srgb, var(--xl) 35%, transparent) 50%, transparent calc(50% + 0.5px));
+}
+
+:host(.xray) .shot img {
+  opacity: 0.12;
+  filter: grayscale(1);
+}
+
+:host(.xray) .step,
+:host(.xray) .stack-title,
+:host(.xray) .gallery,
+:host(.xray) .pager,
+:host(.xray) .foot,
+:host(.xray) .facts {
+  border-color: color-mix(in srgb, var(--xl) 25%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
