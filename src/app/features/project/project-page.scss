@@ -610,11 +610,8 @@
 
 /* ---------- Copie dans une loupe ---------- */
 
-/* Pas de position collante dans une autre fenêtre : la barre est recalée sur le défilement. */
-:host(.remote) {
-  position: relative;
-}
-
+/* Pas de position collante dans une autre fenêtre : la barre est recalée sur le défilement.
+   Le positionnement de l'hôte reste celui de la loupe (fixe, au coin de la fenêtre). */
 :host(.remote) .bar {
   position: absolute;
   top: var(--sy, 0px);
