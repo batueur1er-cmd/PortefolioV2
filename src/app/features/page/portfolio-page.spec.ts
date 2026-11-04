@@ -62,8 +62,9 @@ describe('PortfolioPage', () => {
   it('ne montre que les premières réalisations, les autres derrière un bouton', async () => {
     const element = await render('surface');
     expect(element.querySelectorAll('app-project-card').length).toBe(PROJECTS_ON_PAGE);
-    const more = element.querySelector('.more-btn');
-    expect(more?.textContent).toContain(`${PROFILE.projects.length - PROJECTS_ON_PAGE} autres projets`);
+    expect(element.querySelector('.more-btn .n-wide')?.textContent).toBe(`${PROFILE.projects.length - PROJECTS_ON_PAGE}`);
+    // Sur mobile, une seule carte reste : le bouton compte tous les autres.
+    expect(element.querySelector('.more-btn .n-narrow')?.textContent).toBe(`${PROFILE.projects.length - 1}`);
     expect(element.querySelector('app-project-card a')?.getAttribute('href')).toBe(`/projets/${PROFILE.projects[0].id}`);
   });
 });

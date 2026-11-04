@@ -23,6 +23,19 @@
     grid-template-columns: 1fr;
   }
 
+  /* Sur mobile, un seul projet ; les autres sont dans la fenêtre « Autres projets ». */
+  .grid > :nth-child(n + 2) {
+    display: none;
+  }
+
+  .n-wide {
+    display: none;
+  }
+
+  .n-narrow {
+    display: inline;
+  }
+
   .grid > .featured {
     grid-column: auto;
   }
@@ -72,4 +85,8 @@
   border-color: var(--xl);
   background: transparent;
   color: var(--xl);
+}
+
+.n-narrow {
+  display: none;
 }
