@@ -28,8 +28,8 @@ Demandée par Baptiste, elle vaut pour toute la suite du projet :
 - Le message commence par **une note très simple et humaine**, une phrase qui dit ce qui change
   comme on le raconterait à quelqu'un, sans préfixe ni jargon. Suit une ligne vide, puis **une
   liste de détails** concrets (3 à 8 puces), puis la ligne d'attribution habituelle.
-- Sur `main`, crée d'abord une branche `feature/<sujet>`. Ne pousse pas et ne fusionne pas dans
-  `main` sans qu'on te le demande.
+- Tout se fait **directement sur `main`** (choix de Baptiste) : pas de branche de feature.
+  Ne pousse pas sans qu'on te le demande.
 - Le détail, avec des exemples : skill `commit-feature`.
 
 ## Architecture

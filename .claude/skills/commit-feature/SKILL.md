@@ -13,8 +13,8 @@ fusion dans `main` : pour ceux-là, demande d'abord.
 
 1. La feature est **finie** : tout ce qui a été demandé est fait, `npm test -- --watch=false` et
    `npx ng build` passent (skill `verifier-le-portfolio`). Sinon, termine ou dis ce qui manque.
-2. **Branche** : `git branch --show-current`. Sur `main`, crée d'abord une branche
-   `git switch -c feature/<sujet-court>`. Sur une branche de feature, commite dessus.
+2. **Branche** : `git branch --show-current` doit afficher `main`. On commite directement sur
+   `main`, sans branche de feature (choix de Baptiste).
 3. **Ce qui part dans le commit** : `git status --short`. N'ajoute que les fichiers de la feature
    (`git add <chemins>`), jamais `dist/`, ni un secret, ni un fichier que Baptiste modifie en
    parallèle sans rapport avec la feature : s'il y en a, laisse-les et signale-les.
