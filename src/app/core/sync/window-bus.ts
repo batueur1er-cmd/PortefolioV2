@@ -78,6 +78,8 @@ export type BusCommand =
   | { readonly type: 'scroll'; readonly target: string; readonly dy: number }
   | { readonly type: 'found'; readonly ids: readonly string[] }
   | { readonly type: 'reset' }
+  /** Une fenêtre qui s'ouvre demande aux autres les secrets déjà trouvés. */
+  | { readonly type: 'secrets-sync' }
   | { readonly type: 'singularity'; readonly open: boolean }
   | { readonly type: 'theme'; readonly id: string };
 

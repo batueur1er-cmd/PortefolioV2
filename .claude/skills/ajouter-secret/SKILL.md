@@ -17,7 +17,7 @@ Dans `src/app/features/secrets/data/secrets.catalog.ts`, ajoute une entrée à `
 { id: '<section>-<nom>', label: 'Ce que la notification affiche une fois trouvé', section: '<SectionId>' },
 ```
 
-- L'identifiant est stable : il est enregistré dans le localStorage des visiteurs.
+- L'identifiant est stable : les fenêtres ouvertes se l'échangent sur le bus (rien n'est enregistré, recharger relance la chasse).
 - Les secrets d'expériences et de projets sont générés à partir du profil (`exp-<id>`, `proj-<id>`,
   champs `secret` et `secretLabel` de `profile.data.ts`) : pour ceux-là, ne touche pas au catalogue.
 - Le total, le compteur de la loupe et le seuil de la singularité suivent tout seuls.
