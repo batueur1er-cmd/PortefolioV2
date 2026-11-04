@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 import { Clock } from '@core/time/clock';
 import { ProjectImage, ProjectVisual } from '@domain/profile/profile.model';
 import { SecretDirective } from '@features/secrets/secret.directive';
-import { WindowGesture } from '@shared/ui/window-gesture';
 
 /** Durée d'affichage de chaque capture du diaporama, en ms. */
 const SLIDE_MS = 4000;
@@ -16,7 +15,7 @@ const SLIDE_MS = 4000;
  */
 @Component({
   selector: 'app-project-art',
-  imports: [SecretDirective, WindowGesture, NgOptimizedImage],
+  imports: [SecretDirective, NgOptimizedImage],
   templateUrl: './project-art.html',
   styleUrl: './project-art.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

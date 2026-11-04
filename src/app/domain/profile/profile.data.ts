@@ -254,20 +254,6 @@ export const PROFILE: Profile = {
       secret: 'schéma de principe · Windows ⇄ Linux',
       secretLabel: 'Le schéma réseau',
     },
-    {
-      id: 'site',
-      title: 'Portfolio v2',
-      context: 'Projet personnel',
-      year: '2026',
-      summary:
-        "Ce site : un portfolio Angular qui se lit à deux fenêtres. Rétrécissez-en une, posez-la sur l'autre : " +
-        'elle devient une loupe à rayons X.',
-      highlights: ['Angular 21 sans zone.js', 'Synchronisation multi-fenêtres', 'Architecture en couches et en features'],
-      skills: ['angular', 'typescript', 'html-css', 'clean-archi'],
-      visual: 'site',
-      secret: '2 fenêtres · 1 page · 0 serveur',
-      secretLabel: 'Le plan de ce site',
-    },
   ],
 
   skillGroups: [

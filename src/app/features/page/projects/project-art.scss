@@ -481,17 +481,6 @@ span {
   animation-delay: var(--clock, 0ms);
 }
 
-/* ---------- Ce site : deux fenêtres, une loupe ---------- */
-
-:host(.art-site) .surface {
-  background: var(--art-sand);
-}
-
-.gesture {
-  position: absolute;
-  inset: 14% 16%;
-}
-
 /* ---------- Animations ---------- */
 
 @keyframes hover-y {
