@@ -16,12 +16,34 @@ interface WindowBase extends PresenceState {
   readonly small: boolean;
 }
 
+/**
+ * Une fenêtre modale ouverte par-dessus le portfolio (par exemple « Tous les projets »), pour que
+ * la loupe en affiche la copie. Coordonnées relatives au coin haut gauche du contenu.
+ */
+export interface OverlayPresence {
+  readonly id: string;
+  /** Centre du panneau. */
+  readonly cx: number;
+  readonly cy: number;
+  /** Taille de mise en page du panneau, avant l'animation d'ouverture. */
+  readonly w: number;
+  readonly h: number;
+  /** Échelle de l'animation d'ouverture (1 une fois ouverte). */
+  readonly scale: number;
+  readonly opacity: number;
+  /** Zone qui défile dans le panneau : sa hauteur visible et son défilement. */
+  readonly contentHeight: number;
+  readonly scrollTop: number;
+}
+
 /** Une fenêtre qui affiche le portfolio. */
 export interface MainPresence extends WindowBase {
   readonly kind: 'main';
   /** Largeur de mise en page (sans la barre de défilement) : la loupe s'y cale. */
   readonly layoutWidth: number;
   readonly scroll: Point;
+  /** Fenêtre modale ouverte, s'il y en a une. */
+  readonly overlay?: OverlayPresence | null;
 }
 
 /** Une fenêtre loupe. */

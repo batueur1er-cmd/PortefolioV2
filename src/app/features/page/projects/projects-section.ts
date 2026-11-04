@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { PROFILE } from '@domain/profile/profile.data';
-import { PROJECTS_ON_PAGE, skillLabelsOf } from '@domain/profile/projects';
 import { RevealDirective } from '@shared/motion/reveal.directive';
 import { SectionHeader } from '@shared/ui/section-header';
 
 import { PageContext } from '../page-context';
-import { ProjectCard, ProjectView } from './project-card';
-import { ProjectsDialog, ProjectsDialogData } from './projects-dialog';
+import { ProjectCard } from './project-card';
+import { OTHERS_FIRST_NUMBER, OTHER_PROJECTS, PROJECT_VIEWS, SHOWN_PROJECTS } from './project-views';
+import { PROJECTS_DIALOG_PANEL, ProjectsDialog, ProjectsDialogData } from './projects-dialog';
 
 /**
  * Les réalisations : les premières sur la page, les autres dans une fenêtre « Tous les projets »
@@ -59,19 +59,15 @@ export class ProjectsSection {
   protected readonly page = inject(PageContext);
   private readonly dialog = inject(MatDialog);
   protected readonly headline = PROFILE.headlines.realisations;
-  protected readonly all: readonly ProjectView[] = PROFILE.projects.map((project) => ({
-    ...project,
-    secretId: `proj-${project.id}`,
-    skillLabels: skillLabelsOf(project.skills),
-  }));
-  protected readonly shown = this.all.slice(0, PROJECTS_ON_PAGE);
-  protected readonly others = this.all.slice(PROJECTS_ON_PAGE);
+  protected readonly all = PROJECT_VIEWS;
+  protected readonly shown = SHOWN_PROJECTS;
+  protected readonly others = OTHER_PROJECTS;
 
   protected openOthers(): void {
     if (this.page.decorative()) return;
     this.dialog.open<ProjectsDialog, ProjectsDialogData>(ProjectsDialog, {
-      data: { projects: this.others, firstNumber: PROJECTS_ON_PAGE + 1 },
-      panelClass: 'projects-dialog-panel',
+      data: { projects: this.others, firstNumber: OTHERS_FIRST_NUMBER },
+      panelClass: PROJECTS_DIALOG_PANEL,
       width: '960px',
       maxWidth: 'calc(100vw - 32px)',
       autoFocus: 'dialog',

@@ -15,3 +15,26 @@
 .lens-page.hidden {
   opacity: 0;
 }
+
+/* La couche des modales du portfolio : même repère que sa fenêtre, sans le défilement. */
+.overlay-layer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.overlay-layer.hidden {
+  opacity: 0;
+}
+
+.overlay-backdrop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: color-mix(in srgb, var(--xbg) 60%, transparent);
+}
