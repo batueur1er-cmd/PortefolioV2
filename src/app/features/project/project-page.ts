@@ -7,6 +7,8 @@ import { TODAY } from '@core/time/time';
 import { PROFILE } from '@domain/profile/profile.data';
 import { projectById, projectLink } from '@domain/profile/projects';
 
+import { SiteBackstage } from './site/site-backstage';
+
 const SKILLS = new Map(PROFILE.skills.map((s) => [s.id, s]));
 
 const pad = (n: number): string => String(n).padStart(2, '0');
@@ -18,7 +20,7 @@ const pad = (n: number): string => String(n).padStart(2, '0');
  */
 @Component({
   selector: 'app-project-page',
-  imports: [RouterLink, NgOptimizedImage],
+  imports: [RouterLink, NgOptimizedImage, SiteBackstage],
   templateUrl: './project-page.html',
   styleUrl: './project-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

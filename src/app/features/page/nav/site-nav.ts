@@ -78,7 +78,7 @@ export class SiteNav {
     { id: 'parcours', num: '02', label: 'Parcours' },
     { id: 'realisations', num: '03', label: 'Réalisations' },
     { id: 'competences', num: '04', label: 'Compétences' },
-    { id: 'contact', num: '07', label: 'Contact' },
+    { id: 'contact', num: '06', label: 'Contact' },
   ] as const;
 
   /** Progression de lecture, de 0 à 1. */

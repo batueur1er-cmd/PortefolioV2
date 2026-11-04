@@ -1,24 +1,16 @@
-<section
-  class="wrap sec"
-  data-section="coulisses"
-  data-label="Sous le capot"
-  [attr.id]="page.anchor('coulisses')"
-  [attr.aria-labelledby]="page.anchor('coulisses-titre')"
->
-  <app-section-header
-    index="06"
-    name="Sous le capot"
-    [title]="headline.title"
-    [intro]="headline.intro ?? null"
-    [titleId]="page.anchor('coulisses-titre')"
-  />
+<section class="backstage" aria-labelledby="capot">
+  <p class="label">Sous le capot</p>
+  <h2 id="capot" class="title">{{ headline.title }}</h2>
+  @if (headline.intro) {
+    <p class="intro">{{ headline.intro }}</p>
+  }
 
   <div class="grid">
-    <div class="text" appReveal>
+    <div class="text">
       <p>
-        La page que vous lisez existe en deux exemplaires : une version de surface, et une version « rayons X »
-        qui ne se montre qu'à travers une loupe. Les deux sont rendues par le même composant ; la seconde ne change
-        que des couleurs et des contours, jamais la mise en page.
+        La page d'accueil existe en deux exemplaires : une version de surface, et une version « rayons X » qui ne se
+        montre qu'à travers une loupe. Les deux sont rendues par le même composant ; la seconde ne change que des
+        couleurs et des contours, jamais la mise en page.
       </p>
       <p>
         Chaque fenêtre ouverte sur le site annonce sa position, sa taille et son défilement soixante fois par seconde.
@@ -28,15 +20,15 @@
     </div>
     <ul class="specs">
       @for (spec of specs; track spec.label) {
-        <li [appReveal]="$index * 90">
-          <app-count-up class="num" [value]="spec.value" />
+        <li>
+          <span class="num">{{ spec.value }}</span>
           <span>{{ spec.label }}</span>
         </li>
       }
     </ul>
   </div>
 
-  <div class="howto" appReveal data-x="mode d'emploi · aucun bouton">
+  <div class="howto">
     <app-window-gesture class="howto-art" />
     <ol class="steps">
       <li>
@@ -48,17 +40,16 @@
         <span>Sous {{ lensSize }}, elle bascule d'elle-même en loupe.</span>
       </li>
       <li>
-        <b>Posez-la par-dessus</b>
-        <span>Elle voit à travers celle-ci. Molette pour faire défiler, Maj + molette pour zoomer.</span>
+        <b>Posez-la par-dessus l'accueil</b>
+        <span>Elle voit à travers. Molette pour faire défiler, Maj + molette pour zoomer.</span>
       </li>
     </ol>
   </div>
 
-  <div class="vault" data-x="zone confidentielle">
-    <p class="vault-label surface-only"><span class="lock" aria-hidden="true"></span>Zone confidentielle — loupe requise</p>
-
-    <figure class="diagram" appSecret="hood-diagram">
-      <svg class="wire" viewBox="0 0 640 250" aria-hidden="true">
+  <!-- Le plan de la synchronisation, en rayons X -->
+  <div class="plan">
+    <figure class="diagram">
+      <svg viewBox="0 0 640 250" role="img" aria-label="Schéma : la fenêtre portfolio et la loupe échangent leur position et leur défilement">
         <rect x="10" y="30" width="240" height="170" rx="8" />
         <line x1="10" y1="54" x2="250" y2="54" />
         <text x="22" y="47">PORTFOLIO · grande fenêtre</text>
@@ -79,17 +70,17 @@
         <text x="250" y="238">BroadcastChannel « pv2 » · ~60 Hz · même origine</text>
       </svg>
     </figure>
-
-    <pre class="code formula" appSecret="hood-code">// la loupe décale la page
+    <div class="plan-side">
+      <pre class="formula">// la loupe décale la page
 // de l'écart entre les deux fenêtres
 translate(
   portfolio.x − loupe.x − scrollX,
   portfolio.y − loupe.y − scrollY
 ) scale(zoom)</pre>
-
-    <p class="panel live" appSecret="hood-live">
-      <span class="panel-title">En direct</span><br />
-      {{ mains() }} fenêtre(s) portfolio · {{ lenses() }} loupe(s) connectée(s)
-    </p>
+      <p class="live">
+        <span class="live-title">En direct</span>
+        {{ mains() }} fenêtre(s) portfolio · {{ lenses() }} loupe(s) connectée(s)
+      </p>
+    </div>
   </div>
 </section>

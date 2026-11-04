@@ -8,7 +8,6 @@ export type SectionId =
   | 'realisations'
   | 'competences'
   | 'formation'
-  | 'coulisses'
   | 'contact';
 
 export interface SecretDef {
@@ -24,7 +23,6 @@ export const SECTION_ORDER: readonly SectionId[] = [
   'realisations',
   'competences',
   'formation',
-  'coulisses',
   'contact',
 ];
 
@@ -35,7 +33,6 @@ export const SECTION_LABELS: Readonly<Record<SectionId, string>> = {
   realisations: 'Réalisations',
   competences: 'Compétences',
   formation: 'Formation',
-  coulisses: 'Sous le capot',
   contact: 'Contact',
 };
 
@@ -60,9 +57,6 @@ export const SECRETS: readonly SecretDef[] = [
   { id: 'edu-chain', label: 'Le BTS et le Bachelor enchaînés', section: 'formation' },
   { id: 'edu-decoder', label: "Le décodeur d'acronymes", section: 'formation' },
   { id: 'edu-span', label: 'Les années de formation', section: 'formation' },
-  { id: 'hood-diagram', label: 'Le schéma de synchronisation', section: 'coulisses' },
-  { id: 'hood-code', label: 'La formule de la loupe', section: 'coulisses' },
-  { id: 'hood-live', label: 'Les fenêtres connectées en direct', section: 'coulisses' },
   { id: 'contact-score', label: 'Le score à mentionner', section: 'contact' },
   { id: 'footer-made', label: 'La signature du site', section: 'contact' },
 ];

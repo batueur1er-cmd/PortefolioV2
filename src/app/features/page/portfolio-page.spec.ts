@@ -56,7 +56,7 @@ describe('PortfolioPage', () => {
   it('repère chaque section pour la loupe', async () => {
     const element = await render('surface');
     const labels = Array.from(element.querySelectorAll<HTMLElement>('[data-section]'), (el) => el.dataset['label']);
-    expect(labels).toEqual(['Accueil', 'Profil', 'Parcours', 'Réalisations', 'Compétences', 'Formation', 'Sous le capot', 'Contact']);
+    expect(labels).toEqual(['Accueil', 'Profil', 'Parcours', 'Réalisations', 'Compétences', 'Formation', 'Contact']);
   });
 
   it('ne montre que les premières réalisations, les autres derrière un bouton', async () => {

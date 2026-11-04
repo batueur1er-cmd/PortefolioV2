@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -25,7 +26,7 @@ import { HeroOrb } from './hero-orb';
 
 @Component({
   selector: 'app-hero-section',
-  imports: [SecretDirective, SplitText, Marquee, MagneticDirective, HeroOrb, WindowGesture],
+  imports: [SecretDirective, SplitText, Marquee, MagneticDirective, HeroOrb, WindowGesture, RouterLink],
   templateUrl: './hero-section.html',
   styleUrl: './hero-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

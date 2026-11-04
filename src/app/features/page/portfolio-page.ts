@@ -17,7 +17,6 @@ import { SecretHost } from '@features/secrets/secret-host';
 import { ScrollStage } from '@shared/motion/scroll-stage';
 
 import { AboutSection } from './about/about-section';
-import { BackstageSection } from './backstage/backstage-section';
 import { ContactSection } from './contact/contact-section';
 import { EducationSection } from './education/education-section';
 import { ExperienceSection } from './experience/experience-section';
@@ -42,7 +41,6 @@ import { SkillsSection } from './skills/skills-section';
     ProjectsSection,
     SkillsSection,
     EducationSection,
-    BackstageSection,
     ContactSection,
   ],
   providers: [
@@ -59,7 +57,6 @@ import { SkillsSection } from './skills/skills-section';
       <app-projects-section />
       <app-skills-section />
       <app-education-section />
-      <app-backstage-section />
       <app-contact-section />
     </main>
   `,

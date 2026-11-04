@@ -91,6 +91,11 @@
       </aside>
     </section>
 
+    <!-- Le projet « ce site » raconte en plus comment il est construit -->
+    @if (p.id === 'site') {
+      <app-site-backstage class="wrap" />
+    }
+
     <!-- Les autres captures -->
     @if (gallery().length) {
       <section class="wrap gallery" aria-labelledby="captures">
