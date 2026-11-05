@@ -31,14 +31,13 @@ import { ScanSparkles } from '@features/secrets/ui/scan-sparkles';
 import { SingularityOverlay } from '@features/singularity/singularity-overlay';
 
 import { ControlDock } from '../control-dock/control-dock';
-import { CursorAura } from '../cursor-aura/cursor-aura';
 
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 
 /** La fenêtre portfolio : la page en surface, et tout ce qui permet de la percer à jour. */
 @Component({
   selector: 'app-main-view',
-  imports: [PortfolioPage, LensFrames, ControlDock, FoundToast, SingularityOverlay, CursorAura, ScanSparkles, AchievementToast, TerminalOverlay, SeasonDecor, LensTip],
+  imports: [PortfolioPage, LensFrames, ControlDock, FoundToast, SingularityOverlay, ScanSparkles, AchievementToast, TerminalOverlay, SeasonDecor, LensTip],
   templateUrl: './main-view.html',
   styleUrl: './main-view.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

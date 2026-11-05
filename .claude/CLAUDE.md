@@ -29,8 +29,9 @@ Demandée par Baptiste, elle vaut pour toute la suite du projet :
 - Le message commence par **une note très simple et humaine**, une phrase qui dit ce qui change
   comme on le raconterait à quelqu'un, sans préfixe ni jargon. Suit une ligne vide, puis **une
   liste de détails** concrets (3 à 8 puces), puis la ligne d'attribution habituelle.
-- Tout se fait **directement sur `main`** (choix de Baptiste) : pas de branche de feature.
-  Ne pousse pas sans qu'on te le demande.
+- On travaille et on commite sur **`dev`** (choix de Baptiste), sans branche de feature.
+  **`main` = le site en ligne** : chaque push sur `main` le publie sur GitHub Pages
+  (`.github/workflows/pages.yml`). Fusionner `dev` dans `main` et pousser, seulement à la demande.
 - Le détail, avec des exemples : skill `commit-feature`.
 
 ## Architecture
@@ -41,7 +42,7 @@ src/app/
 ├── domain/    profile/ (contenu), career/, geo/, skills/ : TypeScript pur, testé
 ├── shared/    motion/ (apparitions, compteurs, effets) et ui/ (en-tête de section, bandeau…)
 ├── features/  page/ (la page et ses sections), secrets/, lens/ (loupe), singularity/
-└── shell/     racine de chaque fenêtre : bascule portfolio ↔ loupe, bouton mode nuit, curseur
+└── shell/     racine de chaque fenêtre : bascule portfolio ↔ loupe, bouton mode nuit
 ```
 
 - `core` → `core` ; `domain` → `core`, `domain` ; `shared` → `core`, `shared` ;
