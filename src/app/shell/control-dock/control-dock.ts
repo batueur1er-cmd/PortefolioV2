@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 
 import { MotionPreference } from '@core/dom/motion-preference';
 import { ThemeStore } from '@core/theme/theme.store';
+import { AchievementsStore } from '@features/achievements/data/achievements.store';
 
 /**
  * Les boutons flottants : version simple et mode nuit. La loupe, elle, n'a pas de bouton : elle
@@ -15,7 +16,7 @@ import { ThemeStore } from '@core/theme/theme.store';
       class="pill"
       [attr.aria-pressed]="motion.simple()"
       title="Lecture rapide, sans animations"
-      (click)="motion.toggle()"
+      (click)="toggleSimple()"
     >
       <span class="icon lines" [class.on]="motion.simple()" aria-hidden="true"></span>
       <span class="text">Version simple</span>
@@ -32,6 +33,13 @@ export class ControlDock {
   private readonly theme = inject(ThemeStore);
   protected readonly motion = inject(MotionPreference);
   protected readonly night = computed(() => this.theme.theme() === 'nuit');
+
+  private readonly achievements = inject(AchievementsStore);
+
+  protected toggleSimple(): void {
+    this.motion.toggle();
+    if (this.motion.simple()) this.achievements.unlock('version-simple');
+  }
 
   protected toggle(): void {
     this.theme.set(this.night() ? 'clair' : 'nuit');

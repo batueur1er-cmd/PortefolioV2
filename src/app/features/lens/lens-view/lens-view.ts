@@ -5,6 +5,7 @@ import {
   DestroyRef,
   ElementRef,
   afterNextRender,
+  effect,
   inject,
   signal,
   viewChild,
@@ -32,6 +33,8 @@ import { SCAN_COVERAGE, ScanEngine } from '@features/secrets/data/scan-engine';
 import { PROFILE } from '@domain/profile/profile.data';
 import { SECRET_BY_ID } from '@features/secrets/data/secrets.catalog';
 import { SecretsStore } from '@features/secrets/data/secrets.store';
+import { AchievementsStore } from '@features/achievements/data/achievements.store';
+import { ThemeStore } from '@core/theme/theme.store';
 
 import { WindowRoleStore } from '../data/window-role.store';
 import { GeigerAudio } from '../geiger-audio';
@@ -43,6 +46,7 @@ const DETECTOR_RANGE = 700;
 /** Zoom de la loupe : de x0,5 (vue d'ensemble) à x3. */
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 3;
+const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 
 /** Zone du portfolio, en pixels écran. */
 const mainRect = (m: MainPresence): Rect => ({
@@ -167,6 +171,8 @@ export class LensView {
   private scanElement: HTMLElement | null = null;
   private scanFocus: string | null = null;
   private scanProgress = 0;
+  private konamiIndex = 0;
+  private unlockOnKonami: (key: string) => void = () => undefined;
   private readonly audio = new GeigerAudio();
   private targetId: string | null = null;
   /** Taille d'un pixel du portfolio visé, en pixels de la loupe (zooms navigateur différents). */
@@ -177,6 +183,7 @@ export class LensView {
   constructor() {
     this.doc.documentElement.classList.add('lens-mode');
     const destroyRef = inject(DestroyRef);
+    this.watchAchievements();
 
     afterNextRender(() => {
       const win = this.doc.defaultView;
@@ -365,7 +372,34 @@ export class LensView {
     }
   }
 
+  /** Les succès propres à la loupe, et l'annonce de tous les succès dans son viseur. */
+  private watchAchievements(): void {
+    const achievements = inject(AchievementsStore);
+    const theme = inject(ThemeStore);
+    effect(() => {
+      const zoom = this.zoom();
+      if (zoom >= MAX_ZOOM - 0.001 || zoom <= MIN_ZOOM + 0.001) achievements.unlock('zoom-extreme');
+    });
+    effect(() => {
+      if (theme.theme() === 'nuit') achievements.unlock('nuit-rayons-x');
+    });
+    effect(() => {
+      const event = achievements.lastUnlocked();
+      if (event) this.showToast(`Succès débloqué · ${event.def.label}`);
+    });
+    this.unlockOnKonami = (key) => {
+      const k = key.length === 1 ? key.toLowerCase() : key;
+      if (k === KONAMI[this.konamiIndex]) this.konamiIndex++;
+      else this.konamiIndex = k === KONAMI[0] ? 1 : 0;
+      if (this.konamiIndex === KONAMI.length) {
+        this.konamiIndex = 0;
+        achievements.unlock('konami-loupe');
+      }
+    };
+  }
+
   private onKey(e: KeyboardEvent, win: Window): void {
+    this.unlockOnKonami(e.key);
     const page = win.innerHeight * 0.8;
     switch (e.key) {
       case '+':

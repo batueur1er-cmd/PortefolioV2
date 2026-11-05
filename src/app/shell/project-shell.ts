@@ -9,6 +9,8 @@ import { metaFor, seoTags } from '@domain/profile/seo';
 import { projectLink } from '@domain/profile/projects';
 import { WindowRoleStore } from '@features/lens/data/window-role.store';
 import { ProjectPage } from '@features/project/project-page';
+import { AchievementsStore } from '@features/achievements/data/achievements.store';
+import { AchievementToast } from '@features/achievements/ui/achievement-toast';
 
 import { ControlDock } from './control-dock/control-dock';
 
@@ -18,10 +20,11 @@ import { ControlDock } from './control-dock/control-dock';
  */
 @Component({
   selector: 'app-project-shell',
-  imports: [ProjectPage, ControlDock],
+  imports: [ProjectPage, ControlDock, AchievementToast],
   template: `
     <app-project-page [id]="id()" />
     <app-control-dock />
+    <app-achievement-toast />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -37,6 +40,8 @@ export class ProjectShell {
     bus.role.set('main');
 
     const seo = inject(Seo);
+    const achievements = inject(AchievementsStore);
+    effect(() => achievements.visitProject(this.id()));
     effect(() => {
       const path = projectLink(this.id());
       const meta = metaFor(path);

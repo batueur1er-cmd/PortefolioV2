@@ -5,6 +5,8 @@ import { TODAY } from '@core/time/time';
 import { CvContent, CvEntry, cvContent } from '@domain/profile/cv';
 import { PROFILE } from '@domain/profile/profile.data';
 
+import { AchievementsStore } from '@features/achievements/data/achievements.store';
+
 /* Mise en page A4, en millimètres. */
 const PAGE_W = 210;
 const PAGE_H = 297;
@@ -29,6 +31,7 @@ export interface Palette {
 export class CvDownload {
   private readonly doc = inject(DOCUMENT);
   private readonly today = inject(TODAY);
+  private readonly achievements = inject(AchievementsStore);
   readonly busy = signal(false);
 
   async download(): Promise<void> {
@@ -40,6 +43,7 @@ export class CvDownload {
       const content = cvContent(PROFILE, this.today);
       renderCv(pdf, content, this.palette());
       pdf.save(content.fileName);
+      this.achievements.unlock('cv');
     } finally {
       this.busy.set(false);
     }

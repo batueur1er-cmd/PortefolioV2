@@ -85,7 +85,9 @@ export type BusCommand =
   | { readonly type: 'singularity'; readonly open: boolean }
   | { readonly type: 'theme'; readonly id: string }
   /** Version simple, sans effets, activée ou coupée. */
-  | { readonly type: 'simple'; readonly on: boolean };
+  | { readonly type: 'simple'; readonly on: boolean }
+  /** Un succès caché vient d'être débloqué. */
+  | { readonly type: 'achievement'; readonly id: string };
 
 export const isMain = (p: WindowPresence): p is MainPresence => p.kind === 'main';
 export const isLens = (p: WindowPresence): p is LensPresence => p.kind === 'lens';

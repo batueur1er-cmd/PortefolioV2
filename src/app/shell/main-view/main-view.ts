@@ -20,6 +20,9 @@ import { PortfolioPage } from '@features/page/portfolio-page';
 import { PROJECTS_DIALOG_PANEL } from '@features/page/projects/projects-dialog/projects-dialog';
 import { SecretsStore } from '@features/secrets/data/secrets.store';
 import { FoundToast } from '@features/secrets/ui/found-toast';
+import { AchievementsStore } from '@features/achievements/data/achievements.store';
+import { AchievementToast } from '@features/achievements/ui/achievement-toast';
+import { ThemeStore } from '@core/theme/theme.store';
 import { ScanSparkles } from '@features/secrets/ui/scan-sparkles';
 import { SingularityOverlay } from '@features/singularity/singularity-overlay';
 
@@ -31,7 +34,7 @@ const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'Ar
 /** La fenêtre portfolio : la page en surface, et tout ce qui permet de la percer à jour. */
 @Component({
   selector: 'app-main-view',
-  imports: [PortfolioPage, LensFrames, ControlDock, FoundToast, SingularityOverlay, CursorAura, ScanSparkles],
+  imports: [PortfolioPage, LensFrames, ControlDock, FoundToast, SingularityOverlay, CursorAura, ScanSparkles, AchievementToast],
   templateUrl: './main-view.html',
   styleUrl: './main-view.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +49,7 @@ export class MainView {
 
   protected readonly store = inject(SecretsStore);
   private readonly bus = inject(WindowBus);
+  private readonly achievements = inject(AchievementsStore);
   private readonly roles = inject(WindowRoleStore);
   private readonly frames = inject(FrameLoop);
   private readonly doc = inject(DOCUMENT);
@@ -62,6 +66,7 @@ export class MainView {
     this.bus.commands$.pipe(takeUntilDestroyed()).subscribe((command) => this.onCommand(command));
     this.watchLenses();
     this.watchCompletion();
+    this.watchAchievements();
 
     afterNextRender(() => {
       const win = this.win;
@@ -131,6 +136,7 @@ export class MainView {
 
   protected setSingularity(open: boolean, broadcast: boolean): void {
     this.singularityOpen.set(open);
+    if (open) this.achievements.unlock('singularite');
     if (broadcast) this.bus.send({ type: 'singularity', open });
   }
 
@@ -153,6 +159,20 @@ export class MainView {
       const complete = this.store.complete();
       if (complete && !before) setTimeout(() => this.setSingularity(true, true), 1600);
       before = complete;
+    });
+  }
+
+  /** Les succès qui se voient depuis le portfolio : fenêtres, mode nuit sous la loupe, secrets. */
+  private watchAchievements(): void {
+    const theme = inject(ThemeStore);
+    effect(() => {
+      const lenses = this.bus.otherLenses();
+      if (this.bus.otherMains() + lenses + 1 >= 3) this.achievements.unlock('trois-fenetres');
+      if (lenses > 0 && theme.theme() === 'nuit') this.achievements.unlock('nuit-rayons-x');
+    });
+    effect(() => {
+      if (this.store.count() >= 1) this.achievements.unlock('premier-secret');
+      if (this.store.complete()) this.achievements.unlock('tous-les-secrets');
     });
   }
 
