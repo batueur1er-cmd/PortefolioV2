@@ -1,0 +1,32 @@
+# Vérifie chaque push et chaque pull request : architecture, tests unitaires, build,
+# puis les tests de bout en bout (deux vraies fenêtres) et l'audit d'accessibilité.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Architecture et tests unitaires
+        run: npm test -- --watch=false
+      - name: Build de production et balises SEO
+        run: npm run build
+      - name: Navigateur pour les tests de bout en bout
+        run: npx playwright install --with-deps chromium
+      - name: Tests de bout en bout et audit d'accessibilité
+        run: npm run e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: rapport-playwright
+          path: playwright-report
