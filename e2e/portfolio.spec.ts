@@ -16,6 +16,15 @@ test.describe('portfolio', () => {
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /Argus/);
   });
 
+  test('une page projet montre son schéma et le compte pour « Lecteur de plans »', async ({ page }) => {
+    await page.goto('/projets/argus');
+    const blueprint = page.locator('.blueprint');
+    await blueprint.scrollIntoViewIfNeeded();
+    await expect(blueprint.locator('svg text').first()).toBeVisible();
+    await expect(blueprint.locator('figcaption')).toContainText('3 tiers');
+    await expect.poll(() => page.evaluate(() => localStorage.getItem('pv2.schemas-seen'))).toContain('argus');
+  });
+
   test('télécharge le CV en PDF', async ({ page }) => {
     await page.goto('/');
     const download = page.waitForEvent('download');

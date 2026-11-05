@@ -83,13 +83,26 @@
           </ul>
         }
         @if (p.repo; as repo) {
-          <a class="repo" [href]="repo" target="_blank" rel="noopener">
+          <a class="repo" [href]="repo" target="_blank" rel="noopener" (click)="openedRepo()">
             Voir le dépôt GitHub <span aria-hidden="true">↗</span>
             <span class="sr-only">(nouvel onglet)</span>
           </a>
         }
       </aside>
     </section>
+
+    <!-- Le plan de principe, celui que la loupe révèle sur la carte du projet -->
+    @if (schema()) {
+      <section class="wrap schema" aria-labelledby="schema-titre">
+        <h2 id="schema-titre" class="label">Schéma de principe</h2>
+        <figure #blueprint class="blueprint">
+          <div class="blueprint-art">
+            <app-project-schema [visual]="p.visual" [reserveTop]="false" />
+          </div>
+          <figcaption class="blueprint-caption">{{ p.secret }}</figcaption>
+        </figure>
+      </section>
+    }
 
     <!-- Le projet « ce site » raconte en plus comment il est construit -->
     @if (p.id === 'site') {

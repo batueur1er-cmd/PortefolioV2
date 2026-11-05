@@ -1,10 +1,22 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DOCUMENT,
+  ElementRef,
+  computed,
+  effect,
+  inject,
+  input,
+  viewChild,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { TODAY } from '@core/time/time';
 import { PROFILE } from '@domain/profile/profile.data';
 import { projectById, projectLink } from '@domain/profile/projects';
+import { AchievementsStore } from '@features/achievements/data/achievements.store';
+import { ProjectSchema, hasSchema } from '@shared/ui/project-schema/project-schema';
 
 import { SiteBackstage } from './site/site-backstage';
 
@@ -19,7 +31,7 @@ const pad = (n: number): string => String(n).padStart(2, '0');
  */
 @Component({
   selector: 'app-project-page',
-  imports: [RouterLink, NgOptimizedImage, SiteBackstage],
+  imports: [RouterLink, NgOptimizedImage, SiteBackstage, ProjectSchema],
   templateUrl: './project-page.html',
   styleUrl: './project-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,4 +89,35 @@ export class ProjectPage {
   /** Première capture en grand, les autres dans la galerie. */
   protected readonly hero = computed(() => this.project()?.images?.[0]);
   protected readonly gallery = computed(() => this.project()?.images?.slice(1) ?? []);
+
+  /** Le projet a-t-il un plan de principe dessiné ? */
+  protected readonly schema = computed(() => hasSchema(this.project()?.visual));
+
+  private readonly achievements = inject(AchievementsStore);
+  private readonly blueprint = viewChild<ElementRef<HTMLElement>>('blueprint');
+
+  constructor() {
+    // Un schéma vu en entier compte pour « Lecteur de plans » (pas dans les copies de la loupe).
+    const win = inject(DOCUMENT).defaultView;
+    effect((onCleanup) => {
+      const element = this.blueprint()?.nativeElement;
+      const id = this.id();
+      if (!element || this.decorative() || !win || typeof win.IntersectionObserver === 'undefined') return;
+      const observer = new win.IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            this.achievements.seeSchema(id);
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.6 },
+      );
+      observer.observe(element);
+      onCleanup(() => observer.disconnect());
+    });
+  }
+
+  protected openedRepo(): void {
+    if (!this.decorative()) this.achievements.unlock('code-ouvert');
+  }
 }

@@ -82,7 +82,9 @@
   font: 600 24px/1.05 var(--hand);
   color: var(--xn);
   transform: rotate(var(--r, -3deg));
-  white-space: nowrap;
+  /* Sur une ligne tant que ça tient, à la ligne plutôt que de sortir de son bloc. */
+  width: max-content;
+  max-width: 100%;
 }
 
 .chip {
@@ -92,10 +94,15 @@
   border: 1px solid color-mix(in srgb, var(--xl) 55%, transparent);
   border-radius: var(--radius-s);
   padding: 6px 10px;
-  white-space: nowrap;
+  width: max-content;
+  max-width: 100%;
 }
 
 .code {
+  /* Le code reste dans son emplacement : les lignes trop longues passent à la ligne. */
+  max-width: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   margin: 0;
   font: 400 12px/1.6 var(--mono);
   color: var(--xp);
@@ -103,7 +110,6 @@
   border: 1px solid color-mix(in srgb, var(--xp) 45%, transparent);
   border-radius: var(--radius-s);
   padding: 10px 14px;
-  white-space: pre;
 }
 
 .stamp {

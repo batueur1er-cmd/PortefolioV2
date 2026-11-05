@@ -18,6 +18,9 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   { id: 'cv', label: 'Recruteur averti', hint: 'Télécharger le CV.' },
   { id: 'version-simple', label: 'Droit au but', hint: 'Essayer la version simple.' },
   { id: 'terminal', label: 'Sous le capot', hint: 'Ouvrir le terminal caché.' },
+  { id: 'tour-complet', label: 'Tour complet', hint: 'Visiter toutes les pages projet.' },
+  { id: 'lecteur-de-plans', label: 'Lecteur de plans', hint: 'Regarder le schéma de principe de chaque projet qui en a un.' },
+  { id: 'code-ouvert', label: 'Code ouvert', hint: 'Ouvrir un dépôt GitHub depuis une page projet.' },
 ];
 
 export const ACHIEVEMENT_BY_ID: ReadonlyMap<string, AchievementDef> = new Map(ACHIEVEMENTS.map((a) => [a.id, a]));

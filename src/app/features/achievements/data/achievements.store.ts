@@ -2,12 +2,19 @@ import { DOCUMENT, Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { safeStorage } from '@core/dom/dom';
+import { PROFILE } from '@domain/profile/profile.data';
+import { SCHEMA_VISUALS } from '@shared/ui/project-schema/project-schema';
 import { WindowBus } from '@core/sync/window-bus';
 
 import { ACHIEVEMENTS, ACHIEVEMENT_BY_ID, AchievementDef, EXPLORER_PAGES } from './achievements.catalog';
 
 const STORAGE_KEY = 'pv2.achievements';
 const VISITED_KEY = 'pv2.projects-seen';
+const SCHEMAS_KEY = 'pv2.schemas-seen';
+
+const ALL_PROJECTS = PROFILE.projects.map((p) => p.id);
+/** Les projets dont la page montre un schéma de principe. */
+const SCHEMA_PROJECTS = PROFILE.projects.filter((p) => SCHEMA_VISUALS.includes(p.visual)).map((p) => p.id);
 
 export interface UnlockEvent {
   readonly def: AchievementDef;
@@ -46,11 +53,25 @@ export class AchievementsStore {
 
   /** Note la visite d'une page projet ; la troisième différente débloque « Explorateur ». */
   visitProject(id: string): void {
-    const seen = this.read(VISITED_KEY);
-    if (seen.has(id)) return;
-    seen.add(id);
-    this.write(VISITED_KEY, seen);
+    const seen = this.remember(VISITED_KEY, id);
     if (seen.size >= EXPLORER_PAGES) this.unlock('explorateur');
+    if (ALL_PROJECTS.every((p) => seen.has(p))) this.unlock('tour-complet');
+  }
+
+  /** Note un schéma de principe vu sur une page projet ; tous vus débloquent « Lecteur de plans ». */
+  seeSchema(id: string): void {
+    const seen = this.remember(SCHEMAS_KEY, id);
+    if (SCHEMA_PROJECTS.every((p) => seen.has(p))) this.unlock('lecteur-de-plans');
+  }
+
+  /** Ajoute un identifiant à une liste gardée dans le navigateur, et la renvoie. */
+  private remember(key: string, id: string): Set<string> {
+    const seen = this.read(key);
+    if (!seen.has(id)) {
+      seen.add(id);
+      this.write(key, seen);
+    }
+    return seen;
   }
 
   private add(id: string, broadcast: boolean): void {

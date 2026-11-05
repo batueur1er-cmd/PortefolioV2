@@ -85,7 +85,7 @@
 }
 
 /* Le plan tient toujours dans le cadre, quelle que soit sa proportion. */
-.wire {
+.wire-box {
   position: absolute;
   left: 14px;
   top: 14px;
@@ -96,6 +96,8 @@
 .art-chip {
   left: 12px;
   top: 12px;
+  /* Une légende longue passe à la ligne plutôt que de sortir du cadre. */
+  max-width: calc(100% - 24px);
   z-index: 1;
 }
 
