@@ -33,6 +33,7 @@ import { SCAN_COVERAGE, ScanEngine } from '@features/secrets/data/scan-engine';
 import { PROFILE } from '@domain/profile/profile.data';
 import { SECRET_BY_ID } from '@features/secrets/data/secrets.catalog';
 import { SecretsStore } from '@features/secrets/data/secrets.store';
+import { ScanSparkles } from '@features/secrets/ui/scan-sparkles';
 import { AchievementsStore } from '@features/achievements/data/achievements.store';
 import { ThemeStore } from '@core/theme/theme.store';
 import { SingularityOverlay } from '@features/singularity/singularity-overlay';
@@ -82,7 +83,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
  */
 @Component({
   selector: 'app-lens-view',
-  imports: [PortfolioPage, LensHud, ProjectsMirror, ProjectPage, SingularityOverlay],
+  imports: [PortfolioPage, LensHud, ProjectsMirror, ProjectPage, SingularityOverlay, ScanSparkles],
   template: `
     <app-portfolio-page
       class="lens-page"
@@ -138,6 +139,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
       (toggleSound)="toggleSound()"
       (resetZoom)="zoom.set(1)"
     />
+    <app-scan-sparkles mode="reticle" [progress]="progress()" />
     <!-- Tous les secrets trouvés : la loupe devient elle aussi un trou noir, à côté du portfolio. -->
     @defer (when singularityOpen()) {
       @if (singularityOpen()) {

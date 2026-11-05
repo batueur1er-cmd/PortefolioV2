@@ -1,8 +1,19 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ElementRef, afterNextRender, effect, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DOCUMENT,
+  DestroyRef,
+  ElementRef,
+  afterNextRender,
+  effect,
+  inject,
+  input,
+} from '@angular/core';
 
 import { FrameLoop } from '@core/dom/frame-loop';
 import { MotionPreference } from '@core/dom/motion-preference';
-import { WindowBus, isLens } from '@core/sync/window-bus';
+import { contentOrigin, pageZoom } from '@core/geometry/geometry';
+import { LensPresence, WindowBus, isLens } from '@core/sync/window-bus';
 
 import { SecretsStore } from '../data/secrets.store';
 
@@ -25,12 +36,17 @@ interface Box {
   readonly h: number;
 }
 
-const MAX_SPARKS = 420;
+/**
+ * - `frame` (portfolio) : les paillettes jaillissent des bords de la fenêtre loupe posée dessus.
+ * - `reticle` (loupe) : elles tournent autour du viseur.
+ */
+export type SparkleMode = 'frame' | 'reticle';
+
+const MAX_SPARKS = 520;
 
 /**
- * Des paillettes sur le portfolio, à l'endroit qu'une loupe est en train d'analyser : elles
- * s'intensifient pendant les 4 secondes de l'analyse, puis éclatent quand le secret est trouvé.
- * Un simple canevas fixe par-dessus la page, sans effet sur la mise en page.
+ * Des paillettes autour du scanner pendant les 4 secondes d'une analyse, qui s'intensifient avec
+ * elle, puis un éclat quand le secret est trouvé. Un simple canevas fixe, sans effet sur la page.
  */
 @Component({
   selector: 'app-scan-sparkles',
@@ -45,18 +61,28 @@ const MAX_SPARKS = 420;
       pointer-events: none;
       z-index: 40;
     }
+    :host(.reticle),
+    :host(.reticle) canvas {
+      z-index: 55;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '[class.reticle]': "mode() === 'reticle'" },
 })
 export class ScanSparkles {
+  readonly mode = input<SparkleMode>('frame');
+  /** Avancement de l'analyse (mode `reticle`), de 0 à 1. */
+  readonly progress = input(0);
+
   private readonly bus = inject(WindowBus);
   private readonly store = inject(SecretsStore);
   private readonly doc = inject(DOCUMENT);
   private readonly motion = inject(MotionPreference);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly sparks: Spark[] = [];
-  /** Dernière position connue de chaque secret analysé, pour l'éclat final. */
-  private readonly boxes = new Map<string, Box>();
+  /** Dernière zone d'émission, pour l'éclat final. */
+  private last: Box | null = null;
+  private lastAt = 0;
   private colors = ['#ffd84d'];
   private budget = 0;
   private dirty = false;
@@ -65,11 +91,11 @@ export class ScanSparkles {
     const frames = inject(FrameLoop);
     const destroyRef = inject(DestroyRef);
 
-    // Secret trouvé par la loupe : un éclat de paillettes à sa place.
+    // Secret trouvé : un éclat de paillettes depuis le scanner.
     effect(() => {
       const event = this.store.lastFound();
-      const box = event && this.boxes.get(event.def.id);
-      if (box && !this.motion.reduced()) this.burst(box);
+      // Seulement si l'analyse vient de se terminer ici : pas d'éclat sur une vieille position.
+      if (event && this.last && performance.now() - this.lastAt < 800 && !this.motion.reduced()) this.burst(this.last);
     });
 
     afterNextRender(() => {
@@ -85,7 +111,7 @@ export class ScanSparkles {
           this.readColors(win);
         }
         if (this.motion.reduced()) this.sparks.length = 0;
-        else this.emit(dt);
+        else this.emit(win, dt);
         this.draw(ctx, canvas, win, dt);
       });
       destroyRef.onDestroy(stop);
@@ -94,49 +120,92 @@ export class ScanSparkles {
 
   private readColors(win: Window): void {
     const style = win.getComputedStyle(this.doc.documentElement);
-    const list = ['--accent', '--accent-2', '--art-gold', '--xn']
-      .map((name) => style.getPropertyValue(name).trim())
-      .filter(Boolean);
+    const names = this.mode() === 'reticle' ? ['--xn', '--xl', '--xp'] : ['--accent', '--accent-2', '--art-gold', '--xn'];
+    const list = names.map((name) => style.getPropertyValue(name).trim()).filter(Boolean);
     if (list.length) this.colors = list;
   }
 
-  /** Paillettes autour du secret qu'une loupe posée sur cette fenêtre analyse. */
-  private emit(dt: number): void {
-    let scan: { readonly id: string; readonly progress: number } | null = null;
-    for (const state of this.bus.windows.snapshot().values()) {
-      if (isLens(state) && state.target === this.bus.id && state.scan) scan = state.scan;
-    }
+  private emit(win: Window, dt: number): void {
+    const scan = this.mode() === 'reticle' ? this.reticleScan(win) : this.frameScan(win);
     if (!scan) return;
-    const element = this.doc.querySelector(`app-portfolio-page [data-secret="${scan.id}"]`);
-    if (!element) return;
-    const rect = element.getBoundingClientRect();
-    const box = { x: rect.left, y: rect.top, w: rect.width, h: rect.height };
-    this.boxes.set(scan.id, box);
-    this.budget += (dt / 1000) * (25 + scan.progress * 160);
+    this.last = scan.box;
+    this.lastAt = performance.now();
+    this.budget += (dt / 1000) * (40 + scan.progress * 220);
     while (this.budget >= 1) {
       this.budget--;
-      this.spawn(box, scan.progress, false);
+      this.spawn(scan.box, scan.progress, false);
     }
+  }
+
+  /** Portfolio : la fenêtre loupe qui analyse un secret de cette page, en pixels CSS d'ici. */
+  private frameScan(win: Window): { box: Box; progress: number } | null {
+    let lens: LensPresence | null = null;
+    for (const state of this.bus.windows.snapshot().values()) {
+      if (isLens(state) && state.target === this.bus.id && state.scan) lens = state;
+    }
+    if (!lens?.scan) return null;
+    const zoom = pageZoom(win);
+    const origin = contentOrigin(win, zoom);
+    const k = lens.pageZoom / zoom;
+    return {
+      box: {
+        x: (lens.origin.x - origin.x) / zoom,
+        y: (lens.origin.y - origin.y) / zoom,
+        w: lens.viewport.w * k,
+        h: lens.viewport.h * k,
+      },
+      progress: lens.scan.progress,
+    };
+  }
+
+  /** Loupe : un cercle autour du viseur, qui grandit avec l'analyse. */
+  private reticleScan(win: Window): { box: Box; progress: number } | null {
+    const progress = this.progress();
+    if (progress <= 0) return null;
+    const r = 44 + progress * 34;
+    return { box: { x: win.innerWidth / 2 - r, y: win.innerHeight / 2 - r, w: r * 2, h: r * 2 }, progress };
   }
 
   private burst(box: Box): void {
-    for (let i = 0; i < 120; i++) this.spawn(box, 1, true);
+    for (let i = 0; i < 160; i++) this.spawn(box, 1, true);
   }
 
+  /** Une paillette sur le pourtour de la zone (cadre ou cercle), lancée vers l'extérieur. */
   private spawn(box: Box, power: number, burst: boolean): void {
     if (this.sparks.length >= MAX_SPARKS) this.sparks.shift();
-    const pad = 18 + power * 22;
-    const angle = Math.random() * Math.PI * 2;
-    const speed = burst ? 80 + Math.random() * 260 : 10 + Math.random() * 40;
-    const max = burst ? 900 + Math.random() * 900 : 700 + Math.random() * 900;
+    const cx = box.x + box.w / 2;
+    const cy = box.y + box.h / 2;
+    let x: number;
+    let y: number;
+    let nx: number;
+    let ny: number;
+    if (this.mode() === 'reticle') {
+      const a = Math.random() * Math.PI * 2;
+      nx = Math.cos(a);
+      ny = Math.sin(a);
+      x = cx + nx * (box.w / 2);
+      y = cy + ny * (box.h / 2);
+    } else {
+      // Un point au hasard sur le périmètre du cadre, et la normale du côté choisi.
+      const t = Math.random() * 2 * (box.w + box.h);
+      if (t < box.w) [x, y, nx, ny] = [box.x + t, box.y, 0, -1];
+      else if (t < box.w + box.h) [x, y, nx, ny] = [box.x + box.w, box.y + t - box.w, 1, 0];
+      else if (t < 2 * box.w + box.h) [x, y, nx, ny] = [box.x + box.w - (t - box.w - box.h), box.y + box.h, 0, 1];
+      else [x, y, nx, ny] = [box.x, box.y + box.h - (t - 2 * box.w - box.h), -1, 0];
+    }
+    const speed = burst ? 120 + Math.random() * 320 : 25 + Math.random() * (40 + power * 90);
+    const jitter = (Math.random() - 0.5) * (burst ? 1.4 : 0.9);
+    const vx = nx * Math.cos(jitter) - ny * Math.sin(jitter);
+    const vy = nx * Math.sin(jitter) + ny * Math.cos(jitter);
+    const max = burst ? 900 + Math.random() * 900 : 600 + Math.random() * 800;
     this.sparks.push({
-      x: burst ? box.x + box.w / 2 : box.x - pad + Math.random() * (box.w + pad * 2),
-      y: burst ? box.y + box.h / 2 : box.y - pad + Math.random() * (box.h + pad * 2),
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed - (burst ? 40 : 18),
+      x,
+      y,
+      vx: vx * speed,
+      vy: vy * speed - (burst ? 30 : 10),
       life: max,
       max,
-      size: (burst ? 3 : 1.6) + Math.random() * (2 + power * 3),
+      size: (burst ? 3 : 1.8) + Math.random() * (2 + power * 3.5),
       color: this.colors[Math.floor(Math.random() * this.colors.length)],
       spin: Math.random() * Math.PI,
     });
@@ -166,8 +235,8 @@ export class ScanSparkles {
         this.sparks.splice(i, 1);
         continue;
       }
-      p.vx *= 1 - 1.8 * s;
-      p.vy = p.vy * (1 - 1.8 * s) + 30 * s;
+      p.vx *= 1 - 1.6 * s;
+      p.vy = p.vy * (1 - 1.6 * s) + 24 * s;
       p.x += p.vx * s;
       p.y += p.vy * s;
       p.spin += s * 3;
