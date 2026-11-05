@@ -42,9 +42,6 @@ export const SECTION_LABELS: Readonly<Record<SectionId, string>> = {
  */
 export const SECRETS: readonly SecretDef[] = [
   { id: 'nav-version', label: 'Le numéro de version', section: 'accueil' },
-  { id: 'hero-measure', label: 'La mesure du titre en direct', section: 'accueil' },
-  { id: 'hero-stamp', label: 'Le tampon « pas censé voir ça »', section: 'accueil' },
-  { id: 'hero-twin', label: 'La page en deux exemplaires', section: 'accueil' },
   { id: 'about-summary', label: "Le résumé LinkedIn d'origine", section: 'profil' },
   { id: 'about-facts', label: 'Le calcul des mois sur le terrain', section: 'profil' },
   ...PROFILE.experiences.map((e) => ({ id: `exp-${e.id}`, label: e.secretLabel, section: 'parcours' as const })),
@@ -57,8 +54,6 @@ export const SECRETS: readonly SecretDef[] = [
   { id: 'edu-chain', label: 'Le BTS et le Bachelor enchaînés', section: 'formation' },
   { id: 'edu-decoder', label: "Le décodeur d'acronymes", section: 'formation' },
   { id: 'edu-span', label: 'Les années de formation', section: 'formation' },
-  { id: 'contact-score', label: 'Le score à mentionner', section: 'contact' },
-  { id: 'footer-made', label: 'La signature du site', section: 'contact' },
 ];
 
 export const SECRET_IDS: ReadonlySet<string> = new Set(SECRETS.map((s) => s.id));

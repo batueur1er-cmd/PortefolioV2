@@ -17,6 +17,7 @@ Dans `src/app/features/secrets/data/secrets.catalog.ts`, ajoute une entrée à `
 { id: '<section>-<nom>', label: 'Ce que la notification affiche une fois trouvé', section: '<SectionId>' },
 ```
 
+- Un secret doit apprendre quelque chose de concret sur le profil (un chiffre, une compétence, un choix technique). Pas de clin d'œil gratuit du type « vous n'étiez pas censé voir ça ».
 - L'identifiant est stable : les fenêtres ouvertes se l'échangent sur le bus (rien n'est enregistré, recharger relance la chasse).
 - Les secrets d'expériences et de projets sont générés à partir du profil (`exp-<id>`, `proj-<id>`,
   champs `secret` et `secretLabel` de `profile.data.ts`) : pour ceux-là, ne touche pas au catalogue.

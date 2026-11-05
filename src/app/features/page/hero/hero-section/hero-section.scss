@@ -68,11 +68,6 @@
   padding-bottom: clamp(18px, 2.6cqi, 34px);
 }
 
-.measure {
-  left: 0.2em;
-  top: 22px;
-}
-
 .name {
   margin: 0;
   font: 400 clamp(84px, 16.5cqi, 236px) / 0.84 var(--serif);
@@ -229,18 +224,6 @@
   height: 62px;
 }
 
-.seen {
-  right: max(clamp(20px, 4.5cqi, 56px), calc((100cqi - 1200px) / 2 + 56px));
-  top: 96px;
-  --r: 7deg;
-}
-
-.twin {
-  left: max(clamp(20px, 4.5cqi, 56px), calc((100cqi - 1200px) / 2 + 56px));
-  bottom: 34px;
-  --r: -2deg;
-}
-
 @container page (max-width: 760px) {
   .orb {
     top: 64px;
@@ -250,9 +233,5 @@
 
   .bottom {
     grid-template-columns: 1fr;
-  }
-
-  .seen {
-    top: 56px;
   }
 }

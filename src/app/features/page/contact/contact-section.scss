@@ -100,12 +100,6 @@
   }
 }
 
-.score {
-  right: 0;
-  bottom: 8px;
-  --r: -3deg;
-}
-
 .footer {
   position: relative;
   padding-top: 26px;
@@ -133,9 +127,4 @@
 .top {
   text-decoration: none;
   color: var(--ink);
-}
-
-.made {
-  right: 0;
-  top: 18px;
 }

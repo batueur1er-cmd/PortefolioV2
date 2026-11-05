@@ -26,9 +26,6 @@
     <p class="local">
       <span class="dot" aria-hidden="true"></span>Il est <time>{{ time() }}</time> à {{ city }}.
     </p>
-    <p class="note score" appSecret="contact-score">
-      dites-moi combien de secrets vous avez trouvés : {{ store.count() }}/{{ store.total }}
-    </p>
   </div>
 </section>
 
@@ -40,5 +37,4 @@
     <span class="label">Angular {{ angularMajor }} · zoneless</span>
     <a class="label top" href="#accueil">Haut de page ↑</a>
   </div>
-  <span class="code made" appSecret="footer-made">fait main · signaux partout · {{ store.total }} secrets · 1 singularité</span>
 </footer>

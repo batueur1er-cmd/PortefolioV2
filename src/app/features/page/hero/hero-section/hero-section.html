@@ -16,8 +16,7 @@
     <app-hero-orb class="orb" />
 
     <div class="title">
-      <span class="chip measure" appSecret="hero-measure">font-size : {{ fontSize() }} · mesuré en direct</span>
-      <h1 class="name" #name>
+      <h1 class="name">
         <span class="first"><app-split-text [text]="profile.firstName" /></span>
         <span class="last"><app-split-text [text]="profile.lastName" [offset]="profile.firstName.length" /></span>
       </h1>
@@ -47,6 +46,4 @@
     </div>
   </div>
 
-  <p class="stamp seen" appSecret="hero-stamp">Vous n'étiez pas<br />censé voir ça</p>
-  <p class="note twin" appSecret="hero-twin">oui, cette page existe en deux exemplaires.<br />vous regardez la deuxième.</p>
 </header>

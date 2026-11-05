@@ -3,8 +3,6 @@ import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, VERSION, comp
 import { Clock, formatClock } from '@core/time/clock';
 import { TODAY } from '@core/time/time';
 import { PROFILE } from '@domain/profile/profile.data';
-import { SecretsStore } from '@features/secrets/data/secrets.store';
-import { SecretDirective } from '@features/secrets/secret.directive';
 import { MagneticDirective } from '@shared/motion/magnetic.directive';
 import { RevealDirective } from '@shared/motion/reveal.directive';
 import { SplitText } from '@shared/motion/split-text';
@@ -14,14 +12,13 @@ import { PageContext } from '../page-context';
 
 @Component({
   selector: 'app-contact-section',
-  imports: [SecretDirective, SectionHeader, SplitText, MagneticDirective, RevealDirective],
+  imports: [SectionHeader, SplitText, MagneticDirective, RevealDirective],
   templateUrl: './contact-section.html',
   styleUrl: './contact-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactSection {
   protected readonly page = inject(PageContext);
-  protected readonly store = inject(SecretsStore);
   private readonly clock = inject(Clock);
   private readonly win = inject(DOCUMENT).defaultView;
 
