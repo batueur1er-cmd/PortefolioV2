@@ -164,6 +164,9 @@ export class LensView {
   protected readonly mainSize = signal({ w: 0, h: 0 }, { equal: (a, b) => a.w === b.w && a.h === b.h });
 
   private readonly scanner = new ScanEngine();
+  private scanElement: HTMLElement | null = null;
+  private scanFocus: string | null = null;
+  private scanProgress = 0;
   private readonly audio = new GeigerAudio();
   private targetId: string | null = null;
   /** Taille d'un pixel du portfolio visé, en pixels de la loupe (zooms navigateur différents). */
@@ -234,12 +237,14 @@ export class LensView {
       zoom: this.zoom(),
       target: this.targetId,
       section: this.section(),
+      scan: this.scanFocus ? { id: this.scanFocus, progress: this.scanProgress } : null,
     });
 
     if (!shown) {
       this.overlay.set(null);
       this.strength.set(0);
       this.progress.set(0);
+      this.markScanning(null, 0);
       return;
     }
 
@@ -270,6 +275,7 @@ export class LensView {
       if (project && this.frame++ % 20 === 0) this.section.set(PROJECT_TITLES.get(project) ?? null);
       this.strength.set(0);
       this.progress.set(0);
+      this.markScanning(null, 0);
       return;
     }
     // La détection mesure le DOM : une image sur deux suffit largement.
@@ -312,10 +318,27 @@ export class LensView {
     const result = this.scanner.step(candidates, dt);
     for (const id of result.completed) this.reveal(id);
     this.progress.set(round2(result.progress));
+    this.markScanning(result.focus, result.progress);
 
     const strength = Number.isFinite(nearest) ? clamp(1 - nearest / DETECTOR_RANGE, 0, 1) : 0;
     this.strength.set(round2(strength));
     if (!this.muted()) this.audio.update(strength, dt);
+  }
+
+  /** Le secret analysé s'illumine peu à peu dans la copie (variable --scan, de 0 à 1). */
+  private markScanning(id: string | null, progress: number): void {
+    const element = id ? ((this.page().secretElements().get(id) as HTMLElement | undefined) ?? null) : null;
+    if (this.scanElement && this.scanElement !== element) {
+      this.scanElement.classList.remove('scanning');
+      this.scanElement.style.removeProperty('--scan');
+    }
+    this.scanElement = element;
+    this.scanFocus = element ? id : null;
+    this.scanProgress = element ? round2(progress) : 0;
+    if (element) {
+      element.classList.add('scanning');
+      element.style.setProperty('--scan', progress.toFixed(3));
+    }
   }
 
   private reveal(id: string): void {
@@ -327,7 +350,7 @@ export class LensView {
   private showToast(text: string): void {
     this.toast.set(text);
     clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => this.toast.set(null), 1800);
+    this.toastTimer = setTimeout(() => this.toast.set(null), 3200);
   }
 
   private onWheel(e: WheelEvent, win: Window): void {

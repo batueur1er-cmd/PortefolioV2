@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
+const PHASES = ['Acquisition', 'Analyse', 'Décodage', 'Révélation'];
+
 export type LensState = 'searching' | 'off' | 'on';
 
 /** L'habillage de la fenêtre loupe : viseur, zoom, détecteur, progression et messages. */
@@ -8,7 +10,7 @@ export type LensState = 'searching' | 'off' | 'on';
   templateUrl: './lens-hud.html',
   styleUrl: './lens-hud.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.locked]': 'progress() > 0' },
+  host: { '[class.locked]': 'progress() > 0', '[style.--p]': 'progress()' },
 })
 export class LensHud {
   readonly zoom = input(1);
@@ -31,4 +33,7 @@ export class LensHud {
   protected readonly bars = [0, 1, 2, 3, 4];
   protected readonly zoomLabel = computed(() => this.zoom().toFixed(1).replace('.', ','));
   protected readonly level = computed(() => Math.round(this.strength() * 5));
+  /** Les quatre temps de l'analyse, une seconde chacun. */
+  protected readonly phase = computed(() => PHASES[Math.min(PHASES.length - 1, Math.floor(this.progress() * PHASES.length))]);
+  protected readonly percent = computed(() => Math.round(this.progress() * 100));
 }

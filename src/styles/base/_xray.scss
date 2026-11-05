@@ -46,16 +46,32 @@
   pointer-events: none;
 }
 
+/* Le secret sous analyse (loupe) : il s'illumine pendant 4 s, --scan passant de 0 à 1. */
+.scanning {
+  filter: brightness(calc(1 + var(--scan, 0) * 0.9)) drop-shadow(0 0 calc(var(--scan, 0) * 20px) var(--xn));
+  outline: 1px dashed color-mix(in srgb, var(--xn) calc(var(--scan, 0) * 100%), transparent);
+  outline-offset: calc(16px - var(--scan, 0) * 12px);
+}
+
 .just {
-  animation: secret-found 1.2s ease-out;
+  animation: secret-found 2.2s ease-out;
 }
 
 @keyframes secret-found {
   0% {
-    filter: brightness(2.4) drop-shadow(0 0 18px var(--xn));
+    filter: brightness(3) drop-shadow(0 0 28px var(--xn));
+    outline: 2px solid var(--xn);
+    outline-offset: 2px;
+  }
+  30% {
+    filter: brightness(1.8) drop-shadow(0 0 18px var(--xp));
+    outline: 1px solid color-mix(in srgb, var(--xp) 70%, transparent);
+    outline-offset: 18px;
   }
   100% {
     filter: none;
+    outline: 1px solid transparent;
+    outline-offset: 30px;
   }
 }
 

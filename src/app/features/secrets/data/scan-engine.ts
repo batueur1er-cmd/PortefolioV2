@@ -2,7 +2,7 @@
 export const SCAN_COVERAGE = 0.6;
 
 /** Temps d'analyse avant qu'un secret soit considéré comme trouvé. */
-export const SCAN_DWELL_MS = 550;
+export const SCAN_DWELL_MS = 4000;
 
 export interface ScanResult {
   /** Secrets dont l'analyse vient d'aboutir. */

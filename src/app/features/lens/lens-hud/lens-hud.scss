@@ -294,3 +294,111 @@ p {
     display: none;
   }
 }
+
+/* ---------- Analyse en cours (4 s) : tout monte avec --p, de 0 à 1 ---------- */
+
+:host(.locked) .scan {
+  animation-duration: 1.4s;
+  background: linear-gradient(transparent, color-mix(in srgb, var(--xn) 14%, transparent), transparent);
+}
+
+:host(.locked) .vignette {
+  box-shadow:
+    inset 0 0 90px 12px color-mix(in srgb, #000 70%, transparent),
+    inset 0 0 calc(var(--p, 0) * 140px) color-mix(in srgb, var(--xn) calc(var(--p, 0) * 35%), transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--xn) 60%, transparent);
+}
+
+:host(.locked) .reticle {
+  transform: translate(-50%, -50%) scale(calc(0.86 + var(--p, 0) * 0.6)) rotate(calc(45deg + var(--p, 0) * 135deg));
+}
+
+.orbit {
+  position: absolute;
+  inset: -18px;
+  border-radius: 50%;
+  border: 1px dashed color-mix(in srgb, var(--xn) 70%, transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+:host(.locked) .orbit {
+  opacity: calc(0.3 + var(--p, 0) * 0.7);
+  animation: orbit 3s linear infinite;
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pulse {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  border: 1px solid var(--xn);
+  opacity: 0;
+}
+
+:host(.locked) .pulse {
+  animation: pulse 1s ease-out infinite;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.analysis {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 64px);
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: auto 96px auto;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  color: var(--xn);
+  background: color-mix(in srgb, var(--xbg) 80%, transparent);
+  border: 1px solid color-mix(in srgb, var(--xn) 45%, transparent);
+  white-space: nowrap;
+}
+
+.meter {
+  height: 3px;
+  background: color-mix(in srgb, var(--xn) 18%, transparent);
+}
+
+.meter i {
+  display: block;
+  height: 100%;
+  background: var(--xn);
+  transform-origin: left;
+  box-shadow: 0 0 8px var(--xn);
+}
+
+.pct {
+  min-width: 4ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host(.locked) .pulse,
+  :host(.locked) .orbit,
+  :host(.locked) .scan {
+    animation: none;
+  }
+}

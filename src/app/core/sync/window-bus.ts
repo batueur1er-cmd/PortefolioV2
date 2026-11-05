@@ -60,6 +60,8 @@ export interface LensPresence extends WindowBase {
   readonly target: string | null;
   /** Section du portfolio sous le réticule. */
   readonly section: string | null;
+  /** Secret en cours d'analyse et son avancement (0 à 1) : le portfolio y fait briller des paillettes. */
+  readonly scan?: { readonly id: string; readonly progress: number } | null;
 }
 
 export type WindowPresence = MainPresence | LensPresence;
