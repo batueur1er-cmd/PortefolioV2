@@ -19,7 +19,6 @@ import { AchievementsStore } from '@features/achievements/data/achievements.stor
 import { CvDownload } from '@features/cv/cv-download';
 import { SecretsStore } from '@features/secrets/data/secrets.store';
 import { HuntClock, formatElapsed } from '@features/secrets/data/hunt-clock';
-import { CatWalk } from '@shared/ui/cat-walk/cat-walk';
 
 import { TermLine, TerminalContext, complete, runCommand } from './data/terminal-commands';
 
@@ -44,7 +43,6 @@ export class TerminalOverlay {
   private readonly motion = inject(MotionPreference);
   private readonly secrets = inject(SecretsStore);
   private readonly hunt = inject(HuntClock);
-  private readonly cat = inject(CatWalk);
   private readonly achievements = inject(AchievementsStore);
   private readonly cv = inject(CvDownload);
   private readonly today = inject(TODAY);
@@ -163,7 +161,6 @@ export class TerminalOverlay {
         return this.motion.simple();
       },
       clear: () => this.lines.set([]),
-      summonCat: () => this.cat.summon(),
       close: () => this.close(),
     };
   }

@@ -16,7 +16,6 @@ function context(overrides: Partial<TerminalContext> = {}): TerminalContext {
     setTheme: () => undefined,
     toggleSimple: () => true,
     clear: () => undefined,
-    summonCat: () => undefined,
     close: () => undefined,
     ...overrides,
   };
