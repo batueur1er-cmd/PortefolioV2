@@ -22,14 +22,15 @@ describe('career', () => {
   it('place les formations sur une frise graduée par année', () => {
     const ruler = educationRuler(PROFILE.education);
     expect(ruler.years[0].year).toBe(2020);
-    expect(ruler.years.at(-1)?.year).toBe(2027);
-    expect(ruler.bars.map((b) => b.id)).toEqual(['aiguerande', 'lamartine', 'diiage']);
+    expect(ruler.years.at(-1)?.year).toBe(2029);
+    expect(ruler.bars.map((b) => b.id)).toEqual(['aiguerande', 'lamartine', 'diiage-cpi', 'diiage-eadl']);
     for (const bar of ruler.bars) expect(bar.start + bar.width).toBeLessThanOrEqual(1);
   });
 
   it('décode les sigles et résume les années de formation', () => {
     expect(acronymDecoder(PROFILE)).toContain('CPI = Coordinateur de projets informatiques');
-    expect(educationSpan(PROFILE.education, TODAY)).toBe('sept. 2020 → août 2026 · 6 ans de formation en ligne droite');
+    expect(acronymDecoder(PROFILE)).toContain('EADL = Expert en architecture et développement logiciel');
+    expect(educationSpan(PROFILE.education, TODAY)).toBe('sept. 2020 → août 2028 · 8 ans de formation en ligne droite');
   });
 });
 

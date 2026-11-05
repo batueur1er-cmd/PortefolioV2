@@ -6,11 +6,13 @@ import { Profile } from './profile.model';
  * (drive Laravel, CRM, gestion de magasin, visualiseur 3D, captures dans public/projects/) ;
  * les phrases d'accroche et les coulisses sont des propositions à reformuler librement.
  * Les coordonnées GPS sont celles des villes, à quelques centaines de mètres près.
+ * Le mastère (depuis septembre 2026, même école, même entreprise) : dit par Baptiste en novembre 2026,
+ * intitulé repris des fiches Onisep et Intercariforef de la formation EADL du DIIAGE.
  */
 export const PROFILE: Profile = {
   firstName: 'Baptiste',
   lastName: 'Nodon',
-  kicker: 'Apprenti développeur · Bachelor CPI · DIIAGE',
+  kicker: 'Apprenti développeur · Mastère EADL · DIIAGE',
   location: 'Auvergne-Rhône-Alpes, France',
   city: 'Villefontaine',
   status: 'En alternance chez Quercy Réfrigération',
@@ -36,7 +38,9 @@ export const PROFILE: Profile = {
     },
     formation: {
       title: 'Apprendre, puis appliquer.',
-      intro: 'Un bac orienté maths et informatique, un BTS SIO, puis un Bachelor de coordination de projets.',
+      intro:
+        'Un bac orienté maths et informatique, un BTS SIO, un Bachelor de coordination de projets, ' +
+        'puis un mastère en architecture et développement logiciel.',
     },
     coulisses: {
       title: 'Ce portfolio est aussi un projet.',
@@ -49,7 +53,8 @@ export const PROFILE: Profile = {
     title: "Un parcours qui part de l'infrastructure pour arriver au code.",
     paragraphs: [
       'Après un bac Mathématiques et informatique, puis un BTS Services informatiques aux organisations ' +
-        "au lycée Lamartine, j'ai rejoint le DIIAGE pour un Bachelor Coordinateur de projets informatiques.",
+        "au lycée Lamartine, j'ai rejoint le DIIAGE pour un Bachelor Coordinateur de projets informatiques. " +
+        'Depuis septembre 2026, j’y suis le Mastère Expert en architecture et développement logiciel.',
       'Depuis décembre 2025, je suis apprenti en développement informatique chez Quercy Réfrigération, ' +
         "à Villefontaine. Avant ça, j'ai configuré des serveurs et un réseau Windows et Linux pour une " +
         'communauté de communes, puis développé un CRM interne en Angular pendant un stage de six semaines.',
@@ -79,7 +84,9 @@ export const PROFILE: Profile = {
       start: '2025-12',
       end: null,
       place: { city: 'Villefontaine', region: 'Auvergne-Rhône-Alpes', geo: { lat: 45.6136, lon: 5.1503 } },
-      summary: 'Développement informatique en alternance, en parallèle du Bachelor Coordinateur de projets informatiques.',
+      summary:
+        'Développement informatique en alternance, d’abord pendant le Bachelor CPI, aujourd’hui en parallèle du ' +
+        'Mastère Expert en architecture et développement logiciel.',
       skills: [],
       secret: "J+{jours} d'alternance · compteur en direct",
       secretLabel: "Le compteur d'alternance",
@@ -314,7 +321,15 @@ export const PROFILE: Profile = {
 
   education: [
     {
-      id: 'diiage',
+      id: 'diiage-eadl',
+      school: 'DIIAGE',
+      degree: 'Mastère Expert en architecture et développement logiciel',
+      acronym: 'EADL',
+      start: '2026-09',
+      end: '2028-08',
+    },
+    {
+      id: 'diiage-cpi',
       school: 'DIIAGE',
       degree: 'Bachelor Coordinateur de projets informatiques',
       acronym: 'CPI',

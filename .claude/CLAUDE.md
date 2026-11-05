@@ -1,6 +1,6 @@
 # Portfolio v2 — Révélateur
 
-Le portfolio de Baptiste Nodon (apprenti développeur, Bachelor CPI au DIIAGE), en Angular 21
+Le portfolio de Baptiste Nodon (apprenti développeur, Mastère EADL au DIIAGE, après un Bachelor CPI), en Angular 21
 zoneless. Sa particularité : la page existe en deux exemplaires. Une seconde fenêtre du site,
 rétrécie et posée sur la première, devient une **loupe à rayons X** qui révèle des coulisses et
 une chasse aux secrets.

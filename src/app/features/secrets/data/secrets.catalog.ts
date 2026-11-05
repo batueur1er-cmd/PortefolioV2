@@ -51,7 +51,7 @@ export const SECRETS: readonly SecretDef[] = [
   { id: 'skills-graph', label: 'Le graphe des compétences', section: 'competences' },
   { id: 'skills-linkedin', label: 'Le top 3 LinkedIn', section: 'competences' },
   { id: 'skills-pix', label: 'Le tampon PIX', section: 'competences' },
-  { id: 'edu-chain', label: 'Le BTS et le Bachelor enchaînés', section: 'formation' },
+  { id: 'edu-chain', label: 'Les diplômes enchaînés sans pause', section: 'formation' },
   { id: 'edu-decoder', label: "Le décodeur d'acronymes", section: 'formation' },
   { id: 'edu-span', label: 'Les années de formation', section: 'formation' },
 ];

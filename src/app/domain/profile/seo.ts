@@ -26,8 +26,8 @@ export const HOME_META: PageMeta = {
   path: '/',
   title: `${FULL_NAME} — Portfolio`,
   description:
-    `Portfolio de ${FULL_NAME}, apprenti développeur et étudiant en Bachelor Coordinateur de projets ` +
-    `informatiques. ${PROFILE.status}. Ce site a une face cachée : ouvrez la loupe.`,
+    `Portfolio de ${FULL_NAME}, apprenti développeur en Mastère Expert en architecture ` +
+    `et développement logiciel au DIIAGE. ${PROFILE.status}. Ce site a une face cachée : ouvrez la loupe.`,
   image: '/og/portfolio.png',
   type: 'website',
 };
