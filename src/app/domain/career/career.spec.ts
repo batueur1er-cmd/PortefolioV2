@@ -1,5 +1,5 @@
 import { PROFILE } from '../profile/profile.data';
-import { acronymDecoder, careerMap, careerTotals, educationRuler, educationSpan, timeline } from './career';
+import { acronymDecoder, careerMap, careerTotals, educationRuler, currentPosition, educationSpan, timeline } from './career';
 
 const TODAY = new Date(2026, 10, 3);
 
@@ -30,5 +30,14 @@ describe('career', () => {
   it('décode les sigles et résume les années de formation', () => {
     expect(acronymDecoder(PROFILE)).toContain('CPI = Coordinateur de projets informatiques');
     expect(educationSpan(PROFILE.education, TODAY)).toBe('sept. 2020 → août 2026 · 6 ans de formation en ligne droite');
+  });
+});
+
+describe('currentPosition', () => {
+  it('reprend le poste sans date de fin, avec sa durée à ce jour', () => {
+    const position = currentPosition(PROFILE, new Date(2026, 10, 5));
+    expect(position?.company).toBe('Quercy Réfrigération');
+    expect(position?.since).toBe('déc. 2025');
+    expect(position?.duration).toBe('1 an');
   });
 });

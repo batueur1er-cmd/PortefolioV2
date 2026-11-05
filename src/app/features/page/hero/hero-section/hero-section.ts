@@ -7,6 +7,8 @@ import {
 } from '@angular/core';
 
 import { Clock, formatClock } from '@core/time/clock';
+import { TODAY } from '@core/time/time';
+import { currentPosition } from '@domain/career/career';
 import { PROFILE } from '@domain/profile/profile.data';
 import { CvDownload } from '@features/cv/cv-download';
 import { MagneticDirective } from '@shared/motion/magnetic.directive';
@@ -29,6 +31,8 @@ export class HeroSection {
   protected readonly cv = inject(CvDownload);
   private readonly clock = inject(Clock);
   protected readonly profile = PROFILE;
+  /** Le poste en cours, pour le bandeau de disponibilité. */
+  protected readonly position = currentPosition(PROFILE, inject(TODAY));
   protected readonly skills = PROFILE.skills.map((s) => s.label);
   protected readonly time = computed(() => formatClock(this.clock.now()));
 }

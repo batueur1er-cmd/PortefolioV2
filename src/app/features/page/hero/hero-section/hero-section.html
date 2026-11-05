@@ -38,7 +38,13 @@
     </div>
 
     <div class="side">
-      <p class="status"><span class="dot" aria-hidden="true"></span>{{ profile.status }}</p>
+      <section class="avail" aria-label="Disponibilité">
+        <p class="status"><span class="dot" aria-hidden="true"></span>{{ profile.status }}</p>
+        @if (position; as now) {
+          <p class="avail-line">{{ now.role }} · depuis {{ now.since }} ({{ now.duration }}) · {{ now.city }}</p>
+        }
+        <a class="avail-link" href="#contact">Une question, un projet ? Écrivez-moi <span aria-hidden="true">→</span></a>
+      </section>
       <a class="hint" routerLink="/projets/site">
         <app-window-gesture class="hint-art" />
         <span class="hint-text">

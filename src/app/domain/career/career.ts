@@ -182,3 +182,28 @@ export function educationSpan(education: readonly Education[], today: Date): str
 function byStart(experiences: readonly Experience[]): Experience[] {
   return [...experiences].sort((a, b) => a.start.localeCompare(b.start));
 }
+
+export interface Availability {
+  readonly company: string;
+  readonly role: string;
+  readonly contract: string;
+  /** « déc. 2025 ». */
+  readonly since: string;
+  /** « 11 mois », « 1 an et 2 mois ». */
+  readonly duration: string;
+  readonly city: string;
+}
+
+/** Le poste en cours (sans date de fin), pour le bandeau de disponibilité ; null s'il n'y en a pas. */
+export function currentPosition(profile: Profile, today: Date): Availability | null {
+  const current = profile.experiences.find((e) => e.end === null);
+  if (!current) return null;
+  return {
+    company: current.company,
+    role: current.role,
+    contract: current.contract,
+    since: formatYearMonth(current.start),
+    duration: formatDuration(monthsInclusive(current.start, null, today)),
+    city: current.place.city,
+  };
+}
