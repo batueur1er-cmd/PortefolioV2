@@ -139,6 +139,8 @@ export class ScanSparkles {
 
   /** Portfolio : la fenêtre loupe qui analyse un secret de cette page, en pixels CSS d'ici. */
   private frameScan(win: Window): { box: Box; progress: number } | null {
+    // Le portfolio a le focus : il est passé devant la loupe, ses bords ne se voient plus.
+    if (win.document.hasFocus()) return null;
     let lens: LensPresence | null = null;
     for (const state of this.bus.windows.snapshot().values()) {
       if (isLens(state) && state.target === this.bus.id && state.scan) lens = state;

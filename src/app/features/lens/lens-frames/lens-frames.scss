@@ -3,6 +3,12 @@
   inset: 0;
   z-index: 39;
   pointer-events: none;
+  transition: opacity 0.12s;
+}
+
+:host(.behind) {
+  opacity: 0;
+  transition: none;
 }
 
 .frame {

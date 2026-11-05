@@ -7,6 +7,7 @@ import {
   afterNextRender,
   computed,
   inject,
+  signal,
 } from '@angular/core';
 
 import { FrameLoop } from '@core/dom/frame-loop';
@@ -23,7 +24,7 @@ import { WindowBus, isLens } from '@core/sync/window-bus';
   `,
   styleUrl: './lens-frames.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { 'aria-hidden': 'true' },
+  host: { 'aria-hidden': 'true', '[class.behind]': 'focused()' },
 })
 export class LensFrames {
   private readonly bus = inject(WindowBus);
@@ -31,12 +32,25 @@ export class LensFrames {
   private readonly doc = inject(DOCUMENT);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   protected readonly lenses = computed(() => this.bus.windows.roster().filter(isLens));
+  /**
+   * Le portfolio a le focus : on vient de cliquer dessus, sa fenêtre est passée devant la loupe.
+   * Le cadre ne montrerait plus qu'une loupe cachée : il s'efface jusqu'au retour sur la loupe.
+   */
+  protected readonly focused = signal(this.doc.hasFocus?.() ?? false);
 
   constructor() {
     const destroyRef = inject(DestroyRef);
     afterNextRender(() => {
       const win = this.doc.defaultView;
       if (!win) return;
+      const sync = () => this.focused.set(this.doc.hasFocus());
+      win.addEventListener('focus', sync);
+      win.addEventListener('blur', sync);
+      destroyRef.onDestroy(() => {
+        win.removeEventListener('focus', sync);
+        win.removeEventListener('blur', sync);
+      });
+      sync();
       const stop = this.frames.add(() => {
         const zoom = pageZoom(win);
         const origin = contentOrigin(win, zoom);

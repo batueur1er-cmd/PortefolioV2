@@ -128,9 +128,16 @@ export class WindowBus {
       this.windows.leave(this.id);
       this.holes.leave(this.id);
     };
+    // Onglet caché : la fenêtre ne se voit plus, elle quitte le roster sans attendre son délai
+    // d'oubli. Elle y revient d'elle-même à sa prochaine image, une fois visible.
+    const onVisibility = () => {
+      if (win?.document.visibilityState === 'hidden') leave();
+    };
     win?.addEventListener('pagehide', leave);
+    win?.document.addEventListener('visibilitychange', onVisibility);
     inject(DestroyRef).onDestroy(() => {
       win?.removeEventListener('pagehide', leave);
+      win?.document.removeEventListener('visibilitychange', onVisibility);
       leave();
       this.windows.close();
       this.holes.close();
