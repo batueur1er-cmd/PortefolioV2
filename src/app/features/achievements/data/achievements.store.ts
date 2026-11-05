@@ -11,6 +11,7 @@ import { ACHIEVEMENTS, ACHIEVEMENT_BY_ID, AchievementDef, EXPLORER_PAGES } from 
 const STORAGE_KEY = 'pv2.achievements';
 const VISITED_KEY = 'pv2.projects-seen';
 const SCHEMAS_KEY = 'pv2.schemas-seen';
+const ZOOM_KEY = 'pv2.max-zoom';
 
 const ALL_PROJECTS = PROFILE.projects.map((p) => p.id);
 /** Les projets dont la page montre un schéma de principe. */
@@ -40,6 +41,34 @@ export class AchievementsStore {
   private readonly lastEvent = signal<UnlockEvent | null>(null);
   readonly lastUnlocked = this.lastEvent.asReadonly();
   private seq = 0;
+
+  private readonly maxZoomValue = signal<number | null>(this.readZoom());
+  /** Plus fort grossissement atteint avec la loupe, d'une visite à l'autre. */
+  readonly maxZoom = this.maxZoomValue.asReadonly();
+
+  /** Pages projet et schémas déjà vus, pour les statistiques. */
+  projectsSeen(): number {
+    return this.read(VISITED_KEY).size;
+  }
+
+  schemasSeen(): number {
+    return this.read(SCHEMAS_KEY).size;
+  }
+
+  readonly schemasTotal = SCHEMA_PROJECTS.length;
+
+  /** Note le grossissement de la loupe ; seul un nouveau maximum est enregistré. */
+  noteZoom(zoom: number): void {
+    const rounded = Math.round(zoom * 10) / 10;
+    const best = this.maxZoomValue();
+    if (best !== null && rounded <= best) return;
+    this.maxZoomValue.set(rounded);
+    try {
+      this.storage?.setItem(ZOOM_KEY, String(rounded));
+    } catch {
+      // Stockage indisponible : le maximum dure le temps de la visite.
+    }
+  }
 
   constructor() {
     this.bus.commands$.pipe(takeUntilDestroyed()).subscribe((command) => {
@@ -113,6 +142,15 @@ export class AchievementsStore {
       this.storage?.setItem(key, JSON.stringify([...ids]));
     } catch {
       // Stockage indisponible : les succès durent le temps de la visite.
+    }
+  }
+
+  private readZoom(): number | null {
+    try {
+      const value = Number(this.storage?.getItem(ZOOM_KEY));
+      return Number.isFinite(value) && value > 0 ? value : null;
+    } catch {
+      return null;
     }
   }
 }

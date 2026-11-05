@@ -87,6 +87,17 @@ test.describe('portfolio', () => {
     await expect(page.getByRole('dialog', { name: 'Singularité' })).toBeVisible({ timeout: 10_000 });
   });
 
+  test('matrix fait pleuvoir des caractères et débloque « Pilule rouge »', async ({ page }) => {
+    await page.goto('/');
+    const field = await openTerminal(page);
+    await field.fill('matrix');
+    await field.press('Enter');
+    await expect(page.locator('app-matrix-rain')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('app-matrix-rain')).toHaveCount(0);
+    expect(await page.evaluate(() => localStorage.getItem('pv2.achievements'))).toContain('pilule-rouge');
+  });
+
   test('une seconde fenêtre rétrécie devient la loupe', async ({ context }) => {
     const main = await context.newPage();
     await main.setViewportSize({ width: 1280, height: 800 });

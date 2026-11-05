@@ -27,3 +27,7 @@
     </label>
   </section>
 }
+
+@if (matrix()) {
+  <app-matrix-rain (finished)="matrix.set(false)" />
+}

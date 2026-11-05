@@ -1,5 +1,5 @@
-import { currentPosition, timeline } from '@domain/career/career';
 import { formatYearMonth } from '@core/time/time';
+import { currentPosition, timeline } from '@domain/career/career';
 import { Profile } from '@domain/profile/profile.model';
 import { projectLink, skillLabelsOf } from '@domain/profile/projects';
 
@@ -7,6 +7,20 @@ import { projectLink, skillLabelsOf } from '@domain/profile/projects';
 export interface TermLine {
   readonly text: string;
   readonly kind?: 'out' | 'cmd' | 'err' | 'ok' | 'dim';
+}
+
+/** Les chiffres de la visite, pour « stats » et « neofetch ». */
+export interface VisitStats {
+  /** Temps passé sur cette page depuis son ouverture, en ms. */
+  readonly visitMs: number;
+  /** Fenêtres du site ouvertes en ce moment, celle-ci comprise. */
+  readonly mains: number;
+  readonly lenses: number;
+  readonly projectsSeen: number;
+  readonly schemasSeen: number;
+  readonly schemasTotal: number;
+  /** Plus fort grossissement atteint avec la loupe, s'il y en a eu un. */
+  readonly maxZoom: number | null;
 }
 
 /** Ce dont les commandes ont besoin : des données à lire et quelques actions sur le site. */
@@ -30,6 +44,10 @@ export interface TerminalContext {
   readonly openSingularity: () => void;
   readonly forgetSecrets: () => void;
   readonly forgetAchievements: () => void;
+  readonly stats: () => VisitStats;
+  readonly clearRecord: () => void;
+  /** Lance la pluie de caractères ; faux si les animations sont réduites. */
+  readonly startMatrix: () => boolean;
   readonly clear: () => void;
   readonly close: () => void;
 }
@@ -45,6 +63,28 @@ const out = (text: string): TermLine => ({ text });
 const dim = (text: string): TermLine => ({ text, kind: 'dim' });
 const ok = (text: string): TermLine => ({ text, kind: 'ok' });
 const err = (text: string): TermLine => ({ text, kind: 'err' });
+
+/** « 04:12 », ou « 1:02:14 » au-delà d'une heure. */
+function duration(ms: number): string {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const h = Math.floor(total / 3600);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const rest = `${pad(Math.floor((total % 3600) / 60))}:${pad(total % 60)}`;
+  return h ? `${h}:${rest}` : rest;
+}
+
+const zoomLabel = (zoom: number | null): string => (zoom === null ? 'pas encore de loupe' : `×${zoom.toFixed(1).replace('.', ',')}`);
+
+const plural = (n: number, word: string): string => `${n} ${word}${n > 1 ? 's' : ''}`;
+
+/** Le monogramme « BN » de neofetch, en ASCII : les blocs pleins n'ont pas la largeur d'une espace. */
+const LOGO = [
+  ' ____  _   _ ',
+  String.raw`| __ )| \ | |`,
+  String.raw`|  _ \|  \| |`,
+  String.raw`| |_) | |\  |`,
+  String.raw`|____/|_| \_|`,
+];
 
 export const COMMANDS: readonly Command[] = [
   {
@@ -196,6 +236,80 @@ export const COMMANDS: readonly Command[] = [
       }
       return [err('Oublier quoi ?'), dim('Usage : oublier secrets, oublier succes, ou oublier tout')];
     },
+  },
+  {
+    name: 'stats',
+    help: 'les chiffres de votre visite',
+    run: (_, ctx) => {
+      const s = ctx.stats();
+      const unlocked = ctx.achievements.filter((a) => a.unlocked).length;
+      const row = (label: string, value: string) => out(`  ${label.padEnd(20)} ${value}`);
+      return [
+        ok('Statistiques de visite'),
+        row('cette visite', duration(s.visitMs)),
+        row('fenêtres ouvertes', `${s.mains + s.lenses} (${plural(s.mains, 'portfolio')} · ${plural(s.lenses, 'loupe')})`),
+        row('secrets', `${ctx.secrets.found}/${ctx.secrets.total}`),
+        row('succès', `${unlocked}/${ctx.achievements.length}`),
+        row('pages projet vues', `${s.projectsSeen}/${ctx.profile.projects.length}`),
+        row('schémas vus', `${s.schemasSeen}/${s.schemasTotal}`),
+        row('zoom max de loupe', zoomLabel(s.maxZoom)),
+      ];
+    },
+  },
+  {
+    name: 'record',
+    help: '[effacer] votre meilleur temps de chasse aux secrets',
+    run: ([action], ctx) => {
+      const { best, elapsed, found, total } = ctx.secrets;
+      if (action === 'effacer' || action === 'reset') {
+        if (!best) return [dim('Aucun record à effacer.')];
+        ctx.clearRecord();
+        return [ok('Record effacé.')];
+      }
+      if (action) return [err(`Action inconnue : ${action}`), dim('Usage : record, ou record effacer')];
+      const current = elapsed ? `${elapsed} · ${found}/${total} secrets` : 'pas commencée';
+      return [
+        best ? ok(`Record : ${best}`) : dim('Pas encore de record : trouvez tous les secrets pour en poser un.'),
+        dim(`Chasse en cours : ${current}`),
+      ];
+    },
+  },
+  {
+    name: 'neofetch',
+    aliases: ['fetch'],
+    help: 'le profil, façon terminal Linux',
+    run: (_, ctx) => {
+      const { profile, today } = ctx;
+      const s = ctx.stats();
+      const now = currentPosition(profile, today);
+      const unlocked = ctx.achievements.filter((a) => a.unlocked).length;
+      const user = `${profile.firstName.toLowerCase()}@portfolio`;
+      const info = [
+        user,
+        '─'.repeat(user.length),
+        ...(now ? [`Poste     ${now.role} · ${now.company}`] : []),
+        `Lieu      ${profile.city}`,
+        `Stack     ${profile.skills.slice(0, 5).map((k) => k.label).join(', ')}`,
+        `Projets   ${profile.projects.length}`,
+        `Secrets   ${ctx.secrets.found}/${ctx.secrets.total}`,
+        `Succès    ${unlocked}/${ctx.achievements.length}`,
+        `Uptime    ${duration(s.visitMs)}`,
+        `Shell     angular 21 · zoneless`,
+      ];
+      const width = LOGO[0].length + 3;
+      return Array.from({ length: Math.max(LOGO.length, info.length) }, (_, i) => {
+        const text = `${(LOGO[i] ?? '').padEnd(width)}${info[i] ?? ''}`;
+        return i === 0 ? ok(text) : out(text);
+      });
+    },
+  },
+  {
+    name: 'matrix',
+    help: 'suivez le lapin blanc',
+    run: (_, ctx) =>
+      ctx.startMatrix()
+        ? [ok('Réveille-toi…'), dim('Échap pour sortir de la matrice.')]
+        : [dim('Les animations sont réduites sur cet appareil : la matrice reste fermée.')],
   },
   {
     name: 'theme',

@@ -94,6 +94,16 @@ export class HuntClock {
     return `Section « ${SECTION_LABELS[secret.section]} » : ${maskLabel(secret.label)}`;
   }
 
+  /** Efface le meilleur temps (commande « record effacer »). */
+  clearBest(): void {
+    this.bestMs.set(null);
+    try {
+      this.storage?.removeItem(BEST_KEY);
+    } catch {
+      // Stockage indisponible : rien à effacer.
+    }
+  }
+
   private readBest(): number | null {
     try {
       const value = Number(this.storage?.getItem(BEST_KEY));

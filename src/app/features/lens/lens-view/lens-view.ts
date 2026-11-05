@@ -425,6 +425,7 @@ export class LensView {
     const theme = inject(ThemeStore);
     effect(() => {
       const zoom = this.zoom();
+      achievements.noteZoom(zoom);
       if (zoom >= MAX_ZOOM - 0.001 || zoom <= MIN_ZOOM + 0.001) achievements.unlock('zoom-extreme');
     });
     effect(() => {

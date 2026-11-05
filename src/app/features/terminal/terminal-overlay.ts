@@ -12,6 +12,7 @@ import {
 import { Router } from '@angular/router';
 
 import { MotionPreference } from '@core/dom/motion-preference';
+import { WindowBus } from '@core/sync/window-bus';
 import { ThemeStore } from '@core/theme/theme.store';
 import { TODAY } from '@core/time/time';
 import { isCvFocus } from '@domain/profile/cv';
@@ -22,6 +23,7 @@ import { SecretsStore } from '@features/secrets/data/secrets.store';
 import { HuntClock, formatElapsed } from '@features/secrets/data/hunt-clock';
 
 import { TermLine, TerminalContext, complete, runCommand } from './data/terminal-commands';
+import { MatrixRain } from './ui/matrix-rain';
 
 /** Touches qui ouvrent le terminal : « ~ » (QWERTY), « ² » et « ` » (la touche sous Échap en AZERTY). */
 const OPEN_KEYS = new Set(['~', '²', '`']);
@@ -32,6 +34,7 @@ const OPEN_KEYS = new Set(['~', '²', '`']);
  */
 @Component({
   selector: 'app-terminal-overlay',
+  imports: [MatrixRain],
   templateUrl: './terminal-overlay.html',
   styleUrl: './terminal-overlay.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,11 +50,14 @@ export class TerminalOverlay {
   private readonly achievements = inject(AchievementsStore);
   private readonly cv = inject(CvDownload);
   private readonly today = inject(TODAY);
+  private readonly bus = inject(WindowBus);
 
   /** La commande « singularite » : à la fenêtre qui accueille le terminal de l'ouvrir. */
   readonly singularity = output<void>();
 
   protected readonly open = signal(false);
+  /** La pluie de caractères de « matrix » est en cours. */
+  protected readonly matrix = signal(false);
   protected readonly lines = signal<readonly TermLine[]>([]);
   protected readonly value = signal('');
   protected readonly prompt = 'visiteur@baptiste:~$';
@@ -75,6 +81,11 @@ export class TerminalOverlay {
 
   protected onKey(event: Event): void {
     const e = event as KeyboardEvent;
+    if (this.matrix() && e.key === 'Escape') {
+      e.preventDefault();
+      this.matrix.set(false);
+      return;
+    }
     if (this.open()) {
       if (e.key === 'Escape') {
         e.preventDefault();
@@ -170,6 +181,23 @@ export class TerminalOverlay {
       },
       forgetSecrets: () => this.secrets.reset(),
       forgetAchievements: () => this.achievements.reset(),
+      stats: () => ({
+        visitMs: this.doc.defaultView?.performance.now() ?? 0,
+        mains: this.bus.otherMains() + 1,
+        lenses: this.bus.otherLenses(),
+        projectsSeen: this.achievements.projectsSeen(),
+        schemasSeen: this.achievements.schemasSeen(),
+        schemasTotal: this.achievements.schemasTotal,
+        maxZoom: this.achievements.maxZoom(),
+      }),
+      clearRecord: () => this.hunt.clearBest(),
+      startMatrix: () => {
+        if (this.motion.reduced()) return false;
+        this.achievements.unlock('pilule-rouge');
+        this.close();
+        this.matrix.set(true);
+        return true;
+      },
       clear: () => this.lines.set([]),
       close: () => this.close(),
     };

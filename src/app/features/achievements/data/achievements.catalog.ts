@@ -20,6 +20,7 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   { id: 'terminal', label: 'Sous le capot', hint: 'Ouvrir le terminal caché.' },
   { id: 'tour-complet', label: 'Tour complet', hint: 'Visiter toutes les pages projet.' },
   { id: 'lecteur-de-plans', label: 'Lecteur de plans', hint: 'Regarder le schéma de principe de chaque projet qui en a un.' },
+  { id: 'pilule-rouge', label: 'Pilule rouge', hint: 'Entrer dans la matrice depuis le terminal.' },
   { id: 'code-ouvert', label: 'Code ouvert', hint: 'Ouvrir un dépôt GitHub depuis une page projet.' },
 ];
 

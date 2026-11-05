@@ -18,6 +18,9 @@ function context(overrides: Partial<TerminalContext> = {}): TerminalContext {
     openSingularity: () => undefined,
     forgetSecrets: () => undefined,
     forgetAchievements: () => undefined,
+    stats: () => ({ visitMs: 252_000, mains: 1, lenses: 1, projectsSeen: 3, schemasSeen: 2, schemasTotal: 7, maxZoom: 2.4 }),
+    clearRecord: () => undefined,
+    startMatrix: () => true,
     clear: () => undefined,
     close: () => undefined,
     ...overrides,
@@ -25,6 +28,35 @@ function context(overrides: Partial<TerminalContext> = {}): TerminalContext {
 }
 
 describe('commandes du terminal', () => {
+  it('stats résume la visite', () => {
+    const text = runCommand('stats', context()).map((l) => l.text).join('\n');
+    expect(text).toContain('04:12');
+    expect(text).toContain('2 (1 portfolio · 1 loupe)');
+    expect(text).toContain('×2,4');
+    expect(text).toContain('2/7');
+  });
+
+  it('record efface le meilleur temps sur demande', () => {
+    let cleared = false;
+    const ctx = context({ secrets: { found: 1, total: 20, elapsed: '00:30', best: '05:00', hint: () => null }, clearRecord: () => (cleared = true) });
+    expect(runCommand('record', ctx)[0].text).toBe('Record : 05:00');
+    runCommand('record effacer', ctx);
+    expect(cleared).toBe(true);
+  });
+
+  it('neofetch aligne le logo et le profil', () => {
+    const lines = runCommand('neofetch', context()).map((l) => l.text);
+    expect(lines[0]).toMatch(/^ ____ .*baptiste@portfolio$/);
+    // La colonne d'information commence au même endroit, sous le logo comme à côté.
+    expect(lines[1].indexOf('─')).toBe(lines[0].indexOf('baptiste'));
+    expect(lines[3].indexOf('Lieu')).toBe(lines[0].indexOf('baptiste'));
+    expect(lines.join('\n')).toContain('Uptime    04:12');
+  });
+
+  it('matrix respecte les animations réduites', () => {
+    expect(runCommand('matrix', context({ startMatrix: () => false }))[0].text).toContain('réduites');
+  });
+
   it('whoami donne le nom et le poste en cours', () => {
     const text = runCommand('whoami', context()).map((l) => l.text).join('\n');
     expect(text).toContain('Baptiste Nodon');
