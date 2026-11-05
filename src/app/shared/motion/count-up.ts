@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, ElementRef, computed, effect, inject, input, signal } from '@angular/core';
 
+import { MotionPreference } from '@core/dom/motion-preference';
 import { watchReveal } from './reveal.directive';
 
 /**
@@ -25,6 +26,7 @@ export class CountUp {
 
   private readonly reveal = watchReveal(inject<ElementRef<HTMLElement>>(ElementRef).nativeElement);
   private readonly win = inject(DOCUMENT).defaultView;
+  private readonly motion = inject(MotionPreference);
   private readonly current = signal<number | null>(0);
   protected readonly width = computed(() => String(this.value()).length);
   protected readonly display = computed(() => this.current() ?? this.value());
@@ -37,7 +39,7 @@ export class CountUp {
         return;
       }
       const win = this.win;
-      if (this.reveal.instant() || !win || win.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (this.reveal.instant() || !win || this.motion.reduced()) {
         this.current.set(null);
         return;
       }

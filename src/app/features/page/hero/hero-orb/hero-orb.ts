@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ElementRef, afterNextRender, inject, signal } from '@angular/core';
 
+import { MotionPreference } from '@core/dom/motion-preference';
 import { PageContext } from '../../page-context';
 
 /**
@@ -48,15 +49,15 @@ export class HeroOrb {
     const page = inject(PageContext);
     const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
     const doc = inject(DOCUMENT);
+    const motion = inject(MotionPreference);
     const destroyRef = inject(DestroyRef);
 
     afterNextRender(() => {
       const win = doc.defaultView;
       if (page.decorative() || !win?.matchMedia('(pointer: fine)').matches) return;
-      const reduced = win.matchMedia('(prefers-reduced-motion: reduce)');
       let frame = 0;
       const onMove = (e: PointerEvent) => {
-        if (reduced.matches) return;
+        if (motion.reduced()) return;
         cancelAnimationFrame(frame);
         frame = requestAnimationFrame(() => {
           const rect = host.getBoundingClientRect();

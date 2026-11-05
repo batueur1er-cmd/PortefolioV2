@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, VERSION, afterNextRender, computed, inject } from '@angular/core';
 
+import { MotionPreference } from '@core/dom/motion-preference';
 import { PROFILE } from '@domain/profile/profile.data';
 import { SecretDirective } from '@features/secrets/secret.directive';
 import { ScrollStage, stageTop } from '@shared/motion/scroll-stage';
@@ -42,6 +43,7 @@ const SPY_LINE = 0.35;
 export class SiteNav {
   private readonly stage = inject(ScrollStage);
   private readonly doc = inject(DOCUMENT);
+  private readonly motion = inject(MotionPreference);
 
   constructor() {
     // Arrivée avec une ancre dans l'adresse (#contact…) : on y va une fois la page dessinée.
@@ -65,7 +67,7 @@ export class SiteNav {
     if (!win || !target) return;
     const bar = (this.doc.querySelector('.nav') as HTMLElement | null)?.offsetHeight ?? 0;
     const top = id === 'accueil' ? 0 : target.getBoundingClientRect().top + win.scrollY - bar;
-    const reduced = win.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduced = this.motion.reduced();
     win.scrollTo({ top, behavior: reduced ? 'auto' : behavior });
     // Le focus suit, pour le clavier et les lecteurs d'écran, sans refaire défiler.
     target.setAttribute('tabindex', '-1');

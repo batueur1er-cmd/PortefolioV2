@@ -83,7 +83,9 @@ export type BusCommand =
   /** Une fenêtre qui s'ouvre demande aux autres les secrets déjà trouvés. */
   | { readonly type: 'secrets-sync' }
   | { readonly type: 'singularity'; readonly open: boolean }
-  | { readonly type: 'theme'; readonly id: string };
+  | { readonly type: 'theme'; readonly id: string }
+  /** Version simple, sans effets, activée ou coupée. */
+  | { readonly type: 'simple'; readonly on: boolean };
 
 export const isMain = (p: WindowPresence): p is MainPresence => p.kind === 'main';
 export const isLens = (p: WindowPresence): p is LensPresence => p.kind === 'lens';

@@ -29,6 +29,9 @@ import { ScrollStage, stageTop } from './scroll-stage';
         opacity: 1;
       }
     }
+    :host-context(html.simple) .word {
+      opacity: 1;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

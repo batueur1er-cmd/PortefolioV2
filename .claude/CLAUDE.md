@@ -71,8 +71,8 @@ taille, autre moment d'ouverture, pas de pointeur, pas de défilement propre). D
    Les animations d'arrivée sont réservées à la vraie page (`:host-context(.intro)`).
 6. Les effets au pointeur ne tournent que sur la page principale et ne déplacent pas la mise en page.
 7. **La loupe reste secrète** : elle n'existe que dans une autre fenêtre du navigateur, rétrécie
-   par le visiteur lui-même. Aucun bouton ne l'ouvre ni ne montre la vue rayons X ; le seul bouton
-   flottant est le mode nuit. Ne réintroduis pas de loupe intégrée à la page.
+   par le visiteur lui-même. Aucun bouton ne l'ouvre ni ne montre la vue rayons X ; les seuls boutons
+   flottants sont la version simple et le mode nuit. Ne réintroduis pas de loupe intégrée à la page.
 8. Le seuil de la loupe (`LENS_WINDOW`, 680 × 620 px, dans `core/sync/window-size.ts`) fait partie
    du protocole entre fenêtres : toutes appliquent la même règle (`decideRole`).
 

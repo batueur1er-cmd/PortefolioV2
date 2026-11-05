@@ -17,7 +17,8 @@
   transition: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
+/* Sans animation : réglage du système, ou « Version simple » choisie sur le site. */
+@mixin still {
   *,
   *::before,
   *::after {
@@ -29,5 +30,21 @@
   .reveal {
     opacity: 1;
     transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @include still;
+}
+
+html.simple {
+  scroll-behavior: auto;
+
+  @include still;
+
+  /* Les effets purement décoratifs disparaissent. */
+  .grain,
+  app-scan-sparkles {
+    display: none;
   }
 }

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ElementRef, afterNextRender, inject, input } from '@angular/core';
 
 import { FrameLoop } from '@core/dom/frame-loop';
+import { MotionPreference } from '@core/dom/motion-preference';
 
 const INTERACTIVE = 'a, button, [tabindex]:not([tabindex="-1"]), summary, label';
 
@@ -13,9 +14,10 @@ const INTERACTIVE = 'a, button, [tabindex]:not([tabindex="-1"]), summary, label'
   template: '<span class="ring"></span><span class="dot"></span>',
   styleUrl: './cursor-aura.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { 'aria-hidden': 'true', '[class.off]': 'off()' },
+  host: { 'aria-hidden': 'true', '[class.off]': 'off() || motion.simple()' },
 })
 export class CursorAura {
+  protected readonly motion = inject(MotionPreference);
   /** Masqué, par exemple pendant que la loupe de poche suit déjà le pointeur. */
   readonly off = input(false);
 

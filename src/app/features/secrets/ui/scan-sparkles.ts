@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ElementRef, afterNextRender, effect, inject } from '@angular/core';
 
 import { FrameLoop } from '@core/dom/frame-loop';
+import { MotionPreference } from '@core/dom/motion-preference';
 import { WindowBus, isLens } from '@core/sync/window-bus';
 
 import { SecretsStore } from '../data/secrets.store';
@@ -51,6 +52,7 @@ export class ScanSparkles {
   private readonly bus = inject(WindowBus);
   private readonly store = inject(SecretsStore);
   private readonly doc = inject(DOCUMENT);
+  private readonly motion = inject(MotionPreference);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly sparks: Spark[] = [];
   /** Dernière position connue de chaque secret analysé, pour l'éclat final. */
@@ -67,14 +69,14 @@ export class ScanSparkles {
     effect(() => {
       const event = this.store.lastFound();
       const box = event && this.boxes.get(event.def.id);
-      if (box) this.burst(box);
+      if (box && !this.motion.reduced()) this.burst(box);
     });
 
     afterNextRender(() => {
       const win = this.doc.defaultView;
       const canvas = this.host.querySelector('canvas');
       const ctx = canvas?.getContext('2d');
-      if (!win || !canvas || !ctx || win.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+      if (!win || !canvas || !ctx) return;
       this.readColors(win);
       let since = 0;
       const stop = frames.add((_now, dt) => {
@@ -82,7 +84,8 @@ export class ScanSparkles {
           since = 0;
           this.readColors(win);
         }
-        this.emit(dt);
+        if (this.motion.reduced()) this.sparks.length = 0;
+        else this.emit(dt);
         this.draw(ctx, canvas, win, dt);
       });
       destroyRef.onDestroy(stop);
