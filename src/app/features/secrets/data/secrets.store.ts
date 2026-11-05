@@ -1,8 +1,12 @@
 import { DOCUMENT, Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { SECRETS, SECRET_BY_ID, SECRET_IDS, SecretDef } from './secrets.catalog';
+import { safeStorage } from '@core/dom/dom';
 import { WindowBus } from '@core/sync/window-bus';
+
+import { SECRETS, SECRET_BY_ID, SECRET_IDS, SecretDef } from './secrets.catalog';
+
+const STORAGE_KEY = 'pv2.secrets.found';
 
 export interface FoundEvent {
   readonly def: SecretDef;
@@ -12,19 +16,19 @@ export interface FoundEvent {
 }
 
 /**
- * Secrets découverts, communs à toutes les fenêtres ouvertes, mais jamais enregistrés : recharger
- * la page relance la chasse. Ils passent par le bus : une fenêtre qui s'ouvre (la loupe) récupère
- * ceux des autres, une fenêtre rechargée remet tout le monde à zéro.
+ * Secrets découverts, communs à toutes les fenêtres : gardés dans le navigateur (la chasse reprend
+ * où elle en était, même après un rechargement) et diffusés sur le bus pour que chaque fenêtre se
+ * mette à jour tout de suite. Seule la commande `oublier secrets` (ou `reset`) les efface.
  */
 @Injectable({ providedIn: 'root' })
 export class SecretsStore {
   private readonly bus = inject(WindowBus);
-  private readonly win = inject(DOCUMENT).defaultView;
+  private readonly storage = safeStorage(inject(DOCUMENT).defaultView);
 
   readonly catalog = SECRETS;
   readonly total = SECRETS.length;
 
-  private readonly foundIds = signal<ReadonlySet<string>>(new Set());
+  private readonly foundIds = signal<ReadonlySet<string>>(this.load());
   readonly found = this.foundIds.asReadonly();
   readonly count = computed(() => this.foundIds().size);
   readonly progress = computed(() => this.count() / this.total);
@@ -43,15 +47,8 @@ export class SecretsStore {
       }
     });
 
-    // Rechargée : la chasse repart de zéro, pour toutes les fenêtres. Nouvelle fenêtre : elle
-    // demande où en sont les autres.
-    if (this.isReload()) this.bus.send({ type: 'reset' });
-    else this.bus.send({ type: 'secrets-sync' });
-  }
-
-  private isReload(): boolean {
-    const entry = this.win?.performance?.getEntriesByType?.('navigation')[0] as PerformanceNavigationTiming | undefined;
-    return entry?.type === 'reload';
+    // Nouvelle fenêtre : elle demande aux autres ce qu'elles auraient trouvé sans stockage commun.
+    this.bus.send({ type: 'secrets-sync' });
   }
 
   markFound(id: string): void {
@@ -62,6 +59,7 @@ export class SecretsStore {
 
   reset(): void {
     this.foundIds.set(new Set());
+    this.save();
     this.bus.send({ type: 'reset' });
   }
 
@@ -75,6 +73,25 @@ export class SecretsStore {
     }
     if (!last) return;
     this.foundIds.set(next);
+    // La fenêtre qui a trouvé le secret l'a déjà enregistré : le stockage est partagé.
+    if (!remote) this.save();
     this.lastEvent.set({ def: last, remote, seq: ++this.seq });
+  }
+
+  private load(): ReadonlySet<string> {
+    try {
+      const raw: unknown = JSON.parse(this.storage?.getItem(STORAGE_KEY) ?? '[]');
+      return new Set(Array.isArray(raw) ? raw.filter((id): id is string => SECRET_IDS.has(String(id))) : []);
+    } catch {
+      return new Set();
+    }
+  }
+
+  private save(): void {
+    try {
+      this.storage?.setItem(STORAGE_KEY, JSON.stringify([...this.foundIds()]));
+    } catch {
+      // Stockage indisponible (navigation privée stricte) : la partie dure le temps de la visite.
+    }
   }
 }

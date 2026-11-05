@@ -7,6 +7,13 @@ import { SECRETS, SECTION_LABELS } from './secrets.catalog';
 import { SecretsStore } from './secrets.store';
 
 const BEST_KEY = 'pv2.best-hunt';
+/** Départ et fin de la chasse en cours : elle survit à un rechargement, comme les secrets. */
+const RUN_KEY = 'pv2.hunt-run';
+
+interface HuntRun {
+  readonly start: number | null;
+  readonly finished: number | null;
+}
 
 /** « 02:14 », ou « 1:02:14 » au-delà d'une heure. */
 export function formatElapsed(ms: number): string {
@@ -28,7 +35,7 @@ export function maskLabel(label: string): string {
 
 /**
  * Le chronomètre de la chasse : il part au premier secret trouvé et s'arrête au dernier. Le
- * meilleur temps reste dans le navigateur ; la chasse, elle, repart de zéro à chaque rechargement.
+ * meilleur temps et la chasse en cours restent dans le navigateur ; « oublier secrets » la relance.
  */
 @Injectable({ providedIn: 'root' })
 export class HuntClock {
@@ -36,8 +43,9 @@ export class HuntClock {
   private readonly clock = inject(Clock);
   private readonly storage = safeStorage(inject(DOCUMENT).defaultView);
 
-  private readonly startedAt = signal<number | null>(null);
-  private readonly finished = signal<number | null>(null);
+  private readonly run = this.readRun();
+  private readonly startedAt = signal<number | null>(this.run.start);
+  private readonly finished = signal<number | null>(this.run.finished);
   private readonly bestMs = signal<number | null>(this.readBest());
 
   /** Temps écoulé depuis le premier secret (figé à la fin de la chasse). */
@@ -58,13 +66,18 @@ export class HuntClock {
         if (count === 0) {
           this.startedAt.set(null);
           this.finished.set(null);
+          this.saveRun();
           return;
         }
         const now = this.clock.now();
-        if (this.startedAt() === null) this.startedAt.set(now);
+        if (this.startedAt() === null) {
+          this.startedAt.set(now);
+          this.saveRun();
+        }
         if (complete && this.finished() === null) {
           const time = now - (this.startedAt() ?? now);
           this.finished.set(time);
+          this.saveRun();
           const best = this.bestMs();
           if (best === null || time < best) this.saveBest(time);
         }
@@ -96,6 +109,24 @@ export class HuntClock {
       this.storage?.setItem(BEST_KEY, String(Math.round(ms)));
     } catch {
       // Stockage indisponible : le record dure le temps de la visite.
+    }
+  }
+
+  private readRun(): HuntRun {
+    try {
+      const raw = JSON.parse(this.storage?.getItem(RUN_KEY) ?? 'null') as Partial<HuntRun> | null;
+      const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFinite(v) ? v : null);
+      return { start: num(raw?.start), finished: num(raw?.finished) };
+    } catch {
+      return { start: null, finished: null };
+    }
+  }
+
+  private saveRun(): void {
+    try {
+      this.storage?.setItem(RUN_KEY, JSON.stringify({ start: this.startedAt(), finished: this.finished() }));
+    } catch {
+      // Stockage indisponible : le chrono dure le temps de la visite.
     }
   }
 }
