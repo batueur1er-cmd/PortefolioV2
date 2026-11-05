@@ -1,0 +1,29 @@
+@if (open()) {
+  <div class="backdrop" (click)="close()" aria-hidden="true"></div>
+  <section class="term" role="dialog" aria-modal="true" aria-label="Terminal du portfolio" animate.enter="term-enter">
+    <header class="bar">
+      <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="title">terminal — portfolio</span>
+      <button type="button" class="close" (click)="close()" aria-label="Fermer le terminal">Échap</button>
+    </header>
+    <div class="screen" #screen role="log" aria-live="polite">
+      @for (line of lines(); track $index) {
+        <p class="line" [class]="line.kind ?? 'out'">{{ line.text }}</p>
+      }
+    </div>
+    <label class="input">
+      <span class="prompt" aria-hidden="true">{{ prompt }}</span>
+      <span class="sr-only">Commande</span>
+      <input
+        #field
+        type="text"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        [value]="value()"
+        (input)="value.set(field.value)"
+        (keydown)="onFieldKey($event)"
+      />
+    </label>
+  </section>
+}

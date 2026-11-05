@@ -11,6 +11,7 @@ import { WindowRoleStore } from '@features/lens/data/window-role.store';
 import { ProjectPage } from '@features/project/project-page';
 import { AchievementsStore } from '@features/achievements/data/achievements.store';
 import { AchievementToast } from '@features/achievements/ui/achievement-toast';
+import { TerminalOverlay } from '@features/terminal/terminal-overlay';
 
 import { ControlDock } from './control-dock/control-dock';
 
@@ -20,11 +21,12 @@ import { ControlDock } from './control-dock/control-dock';
  */
 @Component({
   selector: 'app-project-shell',
-  imports: [ProjectPage, ControlDock, AchievementToast],
+  imports: [ProjectPage, ControlDock, AchievementToast, TerminalOverlay],
   template: `
     <app-project-page [id]="id()" />
     <app-control-dock />
     <app-achievement-toast />
+    <app-terminal-overlay />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
