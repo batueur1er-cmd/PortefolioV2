@@ -13,6 +13,7 @@ Réponds à Baptiste en français. Les textes du site et les commentaires de cod
 npm start                  # serveur de dev sur http://localhost:4200
 npm test -- --watch=false  # règles d'architecture, puis tests Vitest
 npm run lint:archi         # règles d'architecture seules
+npm run e2e                # tests de bout en bout Playwright + audit AXE (après npm run build)
 npm run build              # build de production + balises SEO de chaque page (scripts/seo.mjs)
 ```
 
