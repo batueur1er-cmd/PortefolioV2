@@ -196,7 +196,7 @@
 
 .avail-link {
   font: 500 12px/1.4 var(--mono);
-  color: var(--accent);
+  color: color-mix(in srgb, var(--accent) 80%, var(--ink));
   text-decoration: none;
 }
 

@@ -7,7 +7,8 @@
     "build": "ng build && node scripts/seo.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "node scripts/check-architecture.mjs && ng test",
-    "lint:archi": "node scripts/check-architecture.mjs"
+    "lint:archi": "node scripts/check-architecture.mjs",
+    "e2e": "playwright test"
   },
   "private": true,
   "packageManager": "npm@11.7.0",
@@ -33,6 +34,8 @@
     "@angular/build": "^21.2.29",
     "@angular/cli": "^21.2.29",
     "@angular/compiler-cli": "^21.2.0",
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",

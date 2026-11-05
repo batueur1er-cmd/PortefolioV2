@@ -116,8 +116,9 @@
 .now {
   padding: 4px 8px;
   border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--ok) 16%, transparent);
-  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 10%, transparent);
+  /* Assombri vers l'encre : contraste AA même en tout petit (9,5 px). */
+  color: color-mix(in srgb, var(--ok) 70%, var(--ink));
   font-size: 9.5px;
 }
 
@@ -159,8 +160,8 @@
 }
 
 .thread .label {
-  color: inherit;
-  opacity: 0.6;
+  /* Atténué par mélange plutôt que par opacité : contraste AA dans les deux thèmes. */
+  color: color-mix(in srgb, var(--paper) 72%, var(--ink));
 }
 
 .thread-big {
@@ -184,7 +185,7 @@
   font: 500 10px/1.4 var(--mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  opacity: 0.6;
+  color: color-mix(in srgb, var(--paper) 72%, var(--ink));
 }
 
 .thread-text {
