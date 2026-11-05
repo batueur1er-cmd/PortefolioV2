@@ -70,6 +70,20 @@ test.describe('portfolio', () => {
     await expect(main.locator('app-main-view app-portfolio-page').first()).toHaveClass(/xray/);
   });
 
+  test('la loupe recopie la fenêtre des autres projets sur toute sa hauteur', async ({ context }) => {
+    const main = await context.newPage();
+    await main.setViewportSize({ width: 1280, height: 800 });
+    await main.goto('/');
+    const lens = await context.newPage();
+    await lens.setViewportSize({ width: 520, height: 420 });
+    await lens.goto('/');
+    await expect(lens.locator('html')).toHaveClass(/lens-mode/, { timeout: 10_000 });
+    await main.getByRole('button', { name: /autres projets/ }).click();
+    const real = await main.locator('.mat-mdc-dialog-content').evaluate((e) => e.clientHeight);
+    const copy = lens.locator('app-projects-mirror .mirror-content');
+    await expect.poll(() => copy.evaluate((e) => Math.round(e.getBoundingClientRect().height))).toBeGreaterThan(real - 4);
+  });
+
   for (const theme of ['clair', 'nuit']) {
     test(`passe l’audit d’accessibilité (thème ${theme})`, async ({ page }) => {
       await page.goto(`/?simple=1&theme=${theme}`);

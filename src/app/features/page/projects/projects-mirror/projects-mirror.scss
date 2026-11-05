@@ -28,7 +28,10 @@
   color: var(--xl);
 }
 
-.mirror-content {
+/* Spécificité au-dessus de « .content.content » (projects-dialog.scss) : sa limite en vh se
+   calculerait sur la petite fenêtre loupe et couperait la liste à mi-hauteur. La hauteur vient
+   de la vraie fenêtre (contentHeight). */
+.content.mirror-content {
   flex: 1 1 auto;
   max-height: none;
   overflow: hidden;
