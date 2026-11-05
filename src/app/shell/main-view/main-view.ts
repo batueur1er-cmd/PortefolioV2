@@ -63,6 +63,8 @@ export class MainView {
   protected readonly vh = signal(this.win?.innerHeight ?? 800);
   protected readonly scrollY = signal(Math.round(this.win?.scrollY ?? 0));
   protected readonly singularityOpen = signal(false);
+  /** Toute la page en rayons X, sur ordre de la loupe (code Konami). */
+  protected readonly xrayAll = signal(false);
   protected readonly notice = signal<string | null>(null);
   private konamiIndex = 0;
 
@@ -196,6 +198,8 @@ export class MainView {
       this.win?.scrollBy({ top: command.dy, behavior: 'instant' });
     } else if (command.type === 'singularity') {
       this.setSingularity(command.open, false);
+    } else if (command.type === 'xray-all') {
+      this.xrayAll.set(command.on);
     }
   }
 

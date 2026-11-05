@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, effect, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FrameLoop } from '@core/dom/frame-loop';
@@ -23,7 +23,7 @@ import { ControlDock } from './control-dock/control-dock';
   selector: 'app-project-shell',
   imports: [ProjectPage, ControlDock, AchievementToast, TerminalOverlay],
   template: `
-    <app-project-page [id]="id()" />
+    <app-project-page [id]="id()" [mode]="xrayAll() ? 'xray' : 'surface'" />
     <app-control-dock />
     <app-achievement-toast />
     <app-terminal-overlay />
@@ -32,6 +32,8 @@ import { ControlDock } from './control-dock/control-dock';
 })
 export class ProjectShell {
   readonly id = input.required<string>();
+  /** Toute la page en rayons X, sur ordre de la loupe (code Konami). */
+  protected readonly xrayAll = signal(false);
 
   constructor() {
     const bus = inject(WindowBus);
@@ -55,6 +57,8 @@ export class ProjectShell {
     bus.commands$.pipe(takeUntilDestroyed()).subscribe((command) => {
       if (command.type === 'scroll' && command.target === bus.id) {
         doc.defaultView?.scrollBy({ top: command.dy, behavior: 'instant' });
+      } else if (command.type === 'xray-all') {
+        this.xrayAll.set(command.on);
       }
     });
 

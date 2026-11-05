@@ -47,6 +47,20 @@ test.describe('portfolio', () => {
     await expect(main.locator('app-lens-frames .frame')).toHaveCount(1, { timeout: 10_000 });
   });
 
+  test('le code Konami dans la loupe passe le portfolio en rayons X', async ({ context }) => {
+    const main = await context.newPage();
+    await main.setViewportSize({ width: 1280, height: 800 });
+    await main.goto('/');
+    const lens = await context.newPage();
+    await lens.setViewportSize({ width: 520, height: 420 });
+    await lens.goto('/');
+    await expect(lens.locator('html')).toHaveClass(/lens-mode/, { timeout: 10_000 });
+    for (const key of ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']) {
+      await lens.keyboard.press(key);
+    }
+    await expect(main.locator('app-main-view app-portfolio-page').first()).toHaveClass(/xray/);
+  });
+
   for (const theme of ['clair', 'nuit']) {
     test(`passe l’audit d’accessibilité (thème ${theme})`, async ({ page }) => {
       await page.goto(`/?simple=1&theme=${theme}`);

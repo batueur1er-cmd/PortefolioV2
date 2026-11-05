@@ -1,7 +1,7 @@
 <a class="skip-link" href="#contenu">Aller au contenu</a>
 
 <div class="stage">
-  <app-portfolio-page [vh]="vh()" [scrollY]="scrollY()" />
+  <app-portfolio-page [vh]="vh()" [scrollY]="scrollY()" [mode]="xrayAll() ? 'xray' : 'surface'" />
 </div>
 
 <div class="grain" aria-hidden="true"></div>

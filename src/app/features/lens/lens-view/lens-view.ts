@@ -185,6 +185,7 @@ export class LensView {
   private scanFocus: string | null = null;
   private scanProgress = 0;
   private konamiIndex = 0;
+  private xrayAll = false;
   protected readonly singularityOpen = signal(false);
   private readonly hunt = inject(HuntClock);
   protected readonly elapsed = computed(() => (this.hunt.elapsed() ? formatElapsed(this.hunt.elapsed()) : ''));
@@ -438,6 +439,9 @@ export class LensView {
       if (this.konamiIndex === KONAMI.length) {
         this.konamiIndex = 0;
         achievements.unlock('konami-loupe');
+        this.xrayAll = !this.xrayAll;
+        this.bus.send({ type: 'xray-all', on: this.xrayAll });
+        this.showToast(this.xrayAll ? 'Rayons X sur toute la page' : 'Retour à la surface');
       }
     };
   }

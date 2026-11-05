@@ -87,7 +87,9 @@ export type BusCommand =
   /** Version simple, sans effets, activée ou coupée. */
   | { readonly type: 'simple'; readonly on: boolean }
   /** Un succès caché vient d'être débloqué. */
-  | { readonly type: 'achievement'; readonly id: string };
+  | { readonly type: 'achievement'; readonly id: string }
+  /** Code Konami tapé dans la loupe : le portfolio bascule tout entier en rayons X. */
+  | { readonly type: 'xray-all'; readonly on: boolean };
 
 export const isMain = (p: WindowPresence): p is MainPresence => p.kind === 'main';
 export const isLens = (p: WindowPresence): p is LensPresence => p.kind === 'lens';
