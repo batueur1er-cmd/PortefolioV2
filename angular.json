@@ -46,7 +46,8 @@
               "raf",
               "rgbcolor",
               "html2canvas",
-              "dompurify"
+              "dompurify",
+              "qrcode-generator"
             ]
           },
           "configurations": {

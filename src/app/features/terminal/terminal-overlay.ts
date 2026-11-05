@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { MotionPreference } from '@core/dom/motion-preference';
 import { ThemeStore } from '@core/theme/theme.store';
 import { TODAY } from '@core/time/time';
+import { isCvFocus } from '@domain/profile/cv';
 import { PROFILE } from '@domain/profile/profile.data';
 import { AchievementsStore } from '@features/achievements/data/achievements.store';
 import { CvDownload } from '@features/cv/cv-download';
@@ -154,7 +155,7 @@ export class TerminalOverlay {
         if (target) target.scrollIntoView({ behavior: this.motion.reduced() ? 'auto' : 'smooth' });
         else void this.router.navigate([path], { fragment });
       },
-      downloadCv: () => void this.cv.download(),
+      downloadCv: (focus) => void this.cv.download(isCvFocus(focus) ? focus : null),
       setTheme: (id) => this.theme.set(id),
       toggleSimple: () => {
         this.motion.toggle();

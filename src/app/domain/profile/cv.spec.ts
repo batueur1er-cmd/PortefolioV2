@@ -14,6 +14,13 @@ describe('cvContent', () => {
     expect(cv.projects.map((p) => p.title)).toEqual(PROFILE.projects.slice(0, CV_PROJECTS).map((p) => p.title));
   });
 
+  it('oriente le CV vers un poste', () => {
+    const mobile = cvContent(PROFILE, new Date(2026, 10, 5), { focus: 'mobile' });
+    expect(mobile.focus).toBe('Développeur mobile');
+    expect(mobile.projects[0].title).toBe('Argus');
+    expect(mobile.fileName).toBe('CV-Baptiste-Nodon-mobile.pdf');
+  });
+
   it('nomme le fichier avec le nom complet', () => {
     expect(cv.fileName).toBe('CV-Baptiste-Nodon.pdf');
   });

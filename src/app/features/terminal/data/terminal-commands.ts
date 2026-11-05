@@ -23,7 +23,7 @@ export interface TerminalContext {
   };
   readonly achievements: readonly { readonly label: string; readonly hint: string; readonly unlocked: boolean }[];
   readonly navigate: (path: string, fragment?: string) => void;
-  readonly downloadCv: () => void;
+  readonly downloadCv: (focus: string | null) => void;
   readonly setTheme: (id: 'clair' | 'nuit') => void;
   readonly toggleSimple: () => boolean;
   readonly clear: () => void;
@@ -130,10 +130,12 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     name: 'cv',
-    help: 'télécharge le CV en PDF',
-    run: (_, ctx) => {
-      ctx.downloadCv();
-      return [ok('Génération du CV en PDF…')];
+    help: '[web|mobile|backend|infra] télécharge le CV, orienté ou non',
+    run: ([focus], ctx) => {
+      const postes = ['web', 'mobile', 'backend', 'infra'];
+      if (focus && !postes.includes(focus)) return [err(`Poste inconnu : ${focus}`), dim(`postes : ${postes.join(', ')}`)];
+      ctx.downloadCv(focus ?? null);
+      return [ok(focus ? `Génération du CV orienté « ${focus} »…` : 'Génération du CV en PDF…')];
     },
   },
   {

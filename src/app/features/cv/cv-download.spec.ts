@@ -15,6 +15,15 @@ describe('renderCv', () => {
       light: '#eef2ff',
     });
     const raw = pdf.output();
+    const withQr = new jsPDF({ unit: 'mm', format: 'a4', compress: false });
+    renderCv(
+      withQr,
+      cvContent(PROFILE, new Date(2026, 10, 5), { focus: 'web', siteUrl: 'https://exemple.fr' }),
+      { accent: '#4f46e5', ink: '#111827', muted: '#4b5563', light: '#eef2ff' },
+      () => ({ size: 21, dark: (r, c) => (r + c) % 2 === 0 }),
+    );
+    expect(withQr.output()).toContain('exemple.fr');
+    expect(withQr.output()).toContain('veloppeur web');
     expect(pdf.getNumberOfPages()).toBeGreaterThanOrEqual(1);
     expect(raw).toContain('Baptiste');
     expect(raw).toContain('EXP');

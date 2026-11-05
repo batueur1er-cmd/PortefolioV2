@@ -2,7 +2,8 @@ import { DOCUMENT, Injectable, inject, signal } from '@angular/core';
 import type { jsPDF } from 'jspdf';
 
 import { TODAY } from '@core/time/time';
-import { CvContent, CvEntry, cvContent } from '@domain/profile/cv';
+import { CvContent, CvEntry, CvFocus, cvContent, isCvFocus } from '@domain/profile/cv';
+import { SITE_URL } from '@domain/profile/seo';
 import { PROFILE } from '@domain/profile/profile.data';
 
 import { AchievementsStore } from '@features/achievements/data/achievements.store';
@@ -34,19 +35,37 @@ export class CvDownload {
   private readonly achievements = inject(AchievementsStore);
   readonly busy = signal(false);
 
-  async download(): Promise<void> {
+  /** Télécharge le CV ; sans poste donné, celui de l'adresse (`?poste=web`) s'il y en a un. */
+  async download(focus?: CvFocus | null): Promise<void> {
     if (this.busy()) return;
     this.busy.set(true);
     try {
-      const { jsPDF } = await import('jspdf');
+      const [{ jsPDF }, { default: qrcode }] = await Promise.all([import('jspdf'), import('qrcode-generator')]);
       const pdf = new jsPDF({ unit: 'mm', format: 'a4' });
-      const content = cvContent(PROFILE, this.today);
-      renderCv(pdf, content, this.palette());
+      const content = cvContent(PROFILE, this.today, { focus: focus ?? this.focusFromUrl(), siteUrl: this.siteUrl() });
+      renderCv(pdf, content, this.palette(), (text) => {
+        const qr = qrcode(0, 'M');
+        qr.addData(text);
+        qr.make();
+        return { size: qr.getModuleCount(), dark: (r: number, c: number) => qr.isDark(r, c) };
+      });
       pdf.save(content.fileName);
       this.achievements.unlock('cv');
     } finally {
       this.busy.set(false);
     }
+  }
+
+  private focusFromUrl(): CvFocus | null {
+    const value = new URLSearchParams(this.doc.location.search).get('poste');
+    return isCvFocus(value) ? value : null;
+  }
+
+  /** L'adresse publique du site ; à défaut celle de la page, sauf en développement local. */
+  private siteUrl(): string | null {
+    if (SITE_URL) return SITE_URL;
+    const origin = this.doc.location.origin;
+    return /^https?:\/\/(localhost|127\.|\[::1\])/.test(origin) ? null : origin;
   }
 
   /** Les couleurs du thème clair du site, lues sur la page (repli sur l'indigo d'origine). */
@@ -65,7 +84,13 @@ export class CvDownload {
   }
 }
 
-export function renderCv(pdf: jsPDF, cv: CvContent, c: Palette): void {
+/** Un QR code déjà calculé : sa taille en modules et la couleur de chacun. */
+export interface QrMatrix {
+  readonly size: number;
+  readonly dark: (row: number, col: number) => boolean;
+}
+
+export function renderCv(pdf: jsPDF, cv: CvContent, c: Palette, makeQr?: (text: string) => QrMatrix): void {
   const sidebar = () => {
     pdf.setFillColor(c.light);
     pdf.rect(0, 0, SIDE_W, PAGE_H, 'F');
@@ -121,6 +146,27 @@ export function renderCv(pdf: jsPDF, cv: CvContent, c: Palette): void {
     for (const cert of cv.certifications) sideText(cert);
   }
 
+  // QR code vers le portfolio, en bas de la colonne : pratique sur un CV imprimé.
+  if (cv.qrUrl && makeQr) {
+    const qr = makeQr(cv.qrUrl);
+    const side = 30;
+    const cell = side / qr.size;
+    const top = PAGE_H - 16 - side - 8;
+    pdf.setFillColor('#ffffff');
+    pdf.rect(MARGIN - 2, top - 2, side + 4, side + 4, 'F');
+    pdf.setFillColor(c.ink);
+    for (let r = 0; r < qr.size; r++) {
+      for (let col = 0; col < qr.size; col++) {
+        if (qr.dark(r, col)) pdf.rect(MARGIN + col * cell, top + r * cell, cell + 0.02, cell + 0.02, 'F');
+      }
+    }
+    pdf.link(MARGIN, top, side, side, { url: cv.qrUrl });
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(7.5);
+    pdf.setTextColor(c.muted);
+    pdf.text('Le portfolio, en ligne', MARGIN, top + side + 6);
+  }
+
   // ---------- Colonne principale ----------
   y = 20;
   pdf.setFont('helvetica', 'bold');
@@ -128,6 +174,12 @@ export function renderCv(pdf: jsPDF, cv: CvContent, c: Palette): void {
   pdf.setTextColor(c.ink);
   pdf.text(clean(cv.kicker), MAIN_X, y);
   y += 6;
+  if (cv.focus) {
+    pdf.setFontSize(9);
+    pdf.setTextColor(c.accent);
+    pdf.text(clean(`Poste visé : ${cv.focus}`), MAIN_X, y);
+    y += 5.5;
+  }
   pdf.setFont('helvetica', 'normal');
   pdf.setFontSize(9.5);
   pdf.setTextColor(c.muted);
