@@ -24,6 +24,8 @@ interface WindowBase extends PresenceState {
  */
 export interface OverlayPresence {
   readonly id: string;
+  /** Rang du premier projet listé (la fenêtre liste tout, ou seulement la suite de la page). */
+  readonly from: number;
   /** Centre du panneau. */
   readonly cx: number;
   readonly cy: number;

@@ -23,7 +23,7 @@ const FEATURE_DEPS = {
   terminal: ['achievements', 'secrets', 'cv'],
   lens: ['page', 'secrets', 'project', 'achievements', 'singularity'],
   singularity: ['secrets'],
-  project: ['achievements'],
+  project: ['achievements', 'page'],
 };
 
 const files = walk(ROOT).filter((f) => f.endsWith('.ts'));

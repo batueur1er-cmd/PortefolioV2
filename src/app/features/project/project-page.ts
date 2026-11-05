@@ -10,12 +10,14 @@ import {
   input,
   viewChild,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
 
 import { TODAY } from '@core/time/time';
 import { PROFILE } from '@domain/profile/profile.data';
 import { projectById, projectLink } from '@domain/profile/projects';
 import { AchievementsStore } from '@features/achievements/data/achievements.store';
+import { openProjectsDialog } from '@features/page/projects/projects-dialog/projects-dialog';
 import { ProjectSchema, hasSchema } from '@shared/ui/project-schema/project-schema';
 
 import { SiteBackstage } from './site/site-backstage';
@@ -115,6 +117,13 @@ export class ProjectPage {
       observer.observe(element);
       onCleanup(() => observer.disconnect());
     });
+  }
+
+  private readonly dialog = inject(MatDialog);
+
+  /** La même fenêtre que sur l'accueil, avec tous les projets. */
+  protected openAll(): void {
+    if (!this.decorative()) openProjectsDialog(this.dialog, 0);
   }
 
   protected openedRepo(): void {

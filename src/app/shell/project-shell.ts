@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { measureProjectsOverlay } from '@features/page/projects/projects-dialog/projects-dialog';
+
 import { FrameLoop } from '@core/dom/frame-loop';
 import { contentOrigin, pageZoom } from '@core/geometry/geometry';
 import { Seo } from '@core/seo/seo';
@@ -78,7 +80,7 @@ export class ProjectShell {
           layoutWidth: doc.documentElement.clientWidth,
           scroll: { x: win.scrollX, y: win.scrollY },
           route: `/projets/${this.id()}`,
-          overlay: null,
+          overlay: measureProjectsOverlay(doc),
         });
       });
       destroyRef.onDestroy(stop);

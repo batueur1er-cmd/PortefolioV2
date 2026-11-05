@@ -69,6 +69,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
   a === b ||
   (!!a &&
     !!b &&
+    a.from === b.from &&
     a.cx === b.cx &&
     a.cy === b.cy &&
     a.w === b.w &&
@@ -116,6 +117,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
       @if (overlay(); as o) {
         <div class="overlay-backdrop" [style.width.px]="mainSize().w" [style.height.px]="mainSize().h" [style.opacity]="o.opacity"></div>
         <app-projects-mirror
+          [from]="o.from"
           [scrollTop]="o.scrollTop"
           [contentHeight]="o.contentHeight"
           [contentTop]="o.contentTop"

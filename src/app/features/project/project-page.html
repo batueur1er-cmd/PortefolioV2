@@ -140,7 +140,12 @@
 
     <!-- Projets voisins -->
     <nav class="wrap pager" aria-label="Autres projets">
-      <p class="label">Navigation projets</p>
+      <div class="pager-head">
+        <p class="label">Navigation projets</p>
+        <button type="button" class="all-projects" (click)="openAll()">
+          Afficher tous les projets <span aria-hidden="true">→</span>
+        </button>
+      </div>
       <div class="pager-grid">
         @if (previous(); as prev) {
           <a class="neighbour prev" [routerLink]="link(prev.id)">

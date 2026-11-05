@@ -7,8 +7,8 @@ import { SectionHeader } from '@shared/ui/section-header/section-header';
 
 import { PageContext } from '../../page-context';
 import { ProjectCard } from '../project-card/project-card';
-import { OTHERS_FIRST_NUMBER, OTHER_PROJECTS, PROJECT_VIEWS, SHOWN_PROJECTS } from '../project-views';
-import { PROJECTS_DIALOG_PANEL, ProjectsDialog, ProjectsDialogData } from '../projects-dialog/projects-dialog';
+import { OTHER_PROJECTS, PROJECT_VIEWS, SHOWN_PROJECTS } from '../project-views';
+import { openProjectsDialog } from '../projects-dialog/projects-dialog';
 
 /** Largeur de page (px) sous laquelle une seule réalisation reste sur la page (voir le SCSS). */
 const NARROW_PAGE = 680;
@@ -76,14 +76,6 @@ export class ProjectsSection {
     if (this.page.decorative()) return;
     // Même seuil que la requête de conteneur du gabarit : sur mobile, une seule carte est visible.
     const narrow = this.host.clientWidth <= NARROW_PAGE;
-    this.dialog.open<ProjectsDialog, ProjectsDialogData>(ProjectsDialog, {
-      data: narrow
-        ? { projects: this.all.slice(1), firstNumber: 2 }
-        : { projects: this.others, firstNumber: OTHERS_FIRST_NUMBER },
-      panelClass: PROJECTS_DIALOG_PANEL,
-      width: '960px',
-      maxWidth: 'calc(100vw - 32px)',
-      autoFocus: 'dialog',
-    });
+    openProjectsDialog(this.dialog, narrow ? 1 : this.shown.length);
   }
 }

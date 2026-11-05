@@ -13,11 +13,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FrameLoop } from '@core/dom/frame-loop';
 import { contentOrigin, pageZoom } from '@core/geometry/geometry';
-import { BusCommand, OverlayPresence, WindowBus } from '@core/sync/window-bus';
+import { BusCommand, WindowBus } from '@core/sync/window-bus';
 import { WindowRoleStore } from '@features/lens/data/window-role.store';
 import { LensFrames } from '@features/lens/lens-frames/lens-frames';
 import { PortfolioPage } from '@features/page/portfolio-page';
-import { PROJECTS_DIALOG_PANEL } from '@features/page/projects/projects-dialog/projects-dialog';
+import { measureProjectsOverlay } from '@features/page/projects/projects-dialog/projects-dialog';
 import { SecretsStore } from '@features/secrets/data/secrets.store';
 import { FoundToast } from '@features/secrets/ui/found-toast';
 import { AchievementsStore } from '@features/achievements/data/achievements.store';
@@ -104,7 +104,7 @@ export class MainView {
           layoutWidth: this.doc.documentElement.clientWidth,
           scroll: { x: win.scrollX, y: win.scrollY },
           route: '/',
-          overlay: this.measureOverlay(),
+          overlay: measureProjectsOverlay(this.doc),
         });
       });
       destroyRef.onDestroy(() => {
@@ -113,27 +113,6 @@ export class MainView {
         win.removeEventListener('scroll', onScroll);
       });
     });
-  }
-
-  /** La fenêtre « Tous les projets », si elle est ouverte, telle que la loupe doit la recopier. */
-  private measureOverlay(): OverlayPresence | null {
-    const surface = this.doc.querySelector<HTMLElement>(`.${PROJECTS_DIALOG_PANEL} .mat-mdc-dialog-surface`);
-    if (!surface || !surface.offsetWidth) return null;
-    const rect = surface.getBoundingClientRect();
-    const content = surface.querySelector<HTMLElement>('.mat-mdc-dialog-content');
-    const container = surface.closest<HTMLElement>('.mat-mdc-dialog-container');
-    return {
-      id: 'projects',
-      cx: Math.round(rect.left + rect.width / 2),
-      cy: Math.round(rect.top + rect.height / 2),
-      w: surface.offsetWidth,
-      h: surface.offsetHeight,
-      scale: Math.round((rect.width / surface.offsetWidth) * 1000) / 1000,
-      opacity: container ? Math.round(Number(getComputedStyle(container).opacity) * 100) / 100 : 1,
-      contentHeight: content?.clientHeight ?? 0,
-      contentTop: content ? Math.round(content.getBoundingClientRect().top - rect.top) : 0,
-      scrollTop: Math.round(content?.scrollTop ?? 0),
-    };
   }
 
   protected onResize(): void {

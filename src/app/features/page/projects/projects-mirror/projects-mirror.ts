@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-import { OTHERS_FIRST_NUMBER, OTHER_PROJECTS } from '../project-views';
+import { OTHERS_FIRST_NUMBER, PROJECT_VIEWS } from '../project-views';
+import { projectsDialogHeading } from '../projects-dialog/projects-dialog';
 import { ProjectsList } from '../projects-list/projects-list';
 
 /**
@@ -12,14 +13,14 @@ import { ProjectsList } from '../projects-list/projects-list';
   imports: [ProjectsList],
   template: `
     <header class="head" [style.height.px]="contentTop()">
-      <p class="kicker">Réalisations · suite <span class="tag">&lt;mat-dialog&gt;</span></p>
-      <h2 class="title">Les autres projets</h2>
+      <p class="kicker">{{ heading().kicker }} <span class="tag">&lt;mat-dialog&gt;</span></p>
+      <h2 class="title">{{ heading().title }}</h2>
       <span class="close" aria-hidden="true">×</span>
     </header>
     <div class="content mirror-content" [style.height.px]="contentHeight()">
       <app-projects-list
-        [projects]="projects"
-        [firstNumber]="firstNumber"
+        [projects]="projects()"
+        [firstNumber]="from() + 1"
         [style.transform]="'translateY(' + -scrollTop() + 'px)'"
       />
     </div>
@@ -36,6 +37,9 @@ export class ProjectsMirror {
   /** Hauteur de l'en-tête dans la vraie fenêtre : la liste commence au même niveau. */
   readonly contentTop = input<number | null>(null);
 
-  protected readonly projects = OTHER_PROJECTS;
-  protected readonly firstNumber = OTHERS_FIRST_NUMBER;
+  /** Rang du premier projet listé dans la vraie fenêtre. */
+  readonly from = input(OTHERS_FIRST_NUMBER - 1);
+
+  protected readonly projects = computed(() => PROJECT_VIEWS.slice(this.from()));
+  protected readonly heading = computed(() => projectsDialogHeading(this.from()));
 }

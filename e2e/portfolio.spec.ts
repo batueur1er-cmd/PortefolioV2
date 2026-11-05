@@ -84,6 +84,27 @@ test.describe('portfolio', () => {
     await expect.poll(() => copy.evaluate((e) => Math.round(e.getBoundingClientRect().height))).toBeGreaterThan(real - 4);
   });
 
+  test('une page projet ouvre la fenêtre de tous les projets, recopiée par la loupe', async ({ context }) => {
+    const main = await context.newPage();
+    await main.setViewportSize({ width: 1280, height: 800 });
+    await main.goto('/projets/crm');
+    const lens = await context.newPage();
+    await lens.setViewportSize({ width: 520, height: 420 });
+    await lens.goto('/');
+    await expect(lens.locator('html')).toHaveClass(/lens-mode/, { timeout: 10_000 });
+    await main.getByRole('button', { name: 'Afficher tous les projets' }).click();
+    const dialog = main.getByRole('dialog');
+    await expect(dialog.getByRole('heading', { name: 'Tous les projets' })).toBeVisible();
+    const count = await dialog.locator('.item').count();
+    expect(count).toBeGreaterThan(3);
+    await expect(lens.locator('app-projects-mirror .item')).toHaveCount(count);
+    await expect(lens.locator('app-projects-mirror .title')).toHaveText('Tous les projets');
+    // Choisir un projet ferme la fenêtre et change de page.
+    await dialog.getByRole('link', { name: 'Argus' }).click();
+    await expect(main).toHaveURL(/projets\/argus/);
+    await expect(main.getByRole('dialog')).toHaveCount(0);
+  });
+
   for (const theme of ['clair', 'nuit']) {
     test(`passe l’audit d’accessibilité (thème ${theme})`, async ({ page }) => {
       await page.goto(`/?simple=1&theme=${theme}`);
