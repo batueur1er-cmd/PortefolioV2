@@ -8,6 +8,7 @@ import {
 
 import { Clock, formatClock } from '@core/time/clock';
 import { PROFILE } from '@domain/profile/profile.data';
+import { CvDownload } from '@features/cv/cv-download';
 import { MagneticDirective } from '@shared/motion/magnetic.directive';
 import { SplitText } from '@shared/motion/split-text';
 import { Marquee } from '@shared/ui/marquee/marquee';
@@ -25,6 +26,7 @@ import { HeroOrb } from '../hero-orb/hero-orb';
 })
 export class HeroSection {
   protected readonly page = inject(PageContext);
+  protected readonly cv = inject(CvDownload);
   private readonly clock = inject(Clock);
   protected readonly profile = PROFILE;
   protected readonly skills = PROFILE.skills.map((s) => s.label);

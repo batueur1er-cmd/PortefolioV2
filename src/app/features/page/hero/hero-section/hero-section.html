@@ -31,6 +31,9 @@
       <div class="actions">
         <a class="btn" href="#parcours" appMagnetic>Voir le parcours <span aria-hidden="true">↓</span></a>
         <a class="btn ghost" href="#contact" appMagnetic>Me contacter</a>
+        <button type="button" class="btn ghost" appMagnetic [disabled]="cv.busy()" (click)="cv.download()">
+          {{ cv.busy() ? 'Préparation…' : 'Télécharger le CV' }} <span aria-hidden="true">↓</span>
+        </button>
       </div>
     </div>
 

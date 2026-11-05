@@ -16,6 +16,9 @@
       <button type="button" class="btn" (click)="copy()" [attr.aria-live]="'polite'">
         {{ copied() ? 'Adresse copiée ✓' : "Copier l'adresse" }}
       </button>
+      <button type="button" class="btn ghost" [disabled]="cv.busy()" (click)="cv.download()">
+        {{ cv.busy() ? 'Préparation…' : 'CV en PDF' }} <span aria-hidden="true">↓</span>
+      </button>
       <a class="btn ghost" [href]="contact.linkedin" target="_blank" rel="noopener">
         LinkedIn <span aria-hidden="true">↗</span><span class="sr-only">(nouvel onglet)</span>
       </a>

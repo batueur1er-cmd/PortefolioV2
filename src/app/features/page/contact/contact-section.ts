@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, VERSION, comp
 import { Clock, formatClock } from '@core/time/clock';
 import { TODAY } from '@core/time/time';
 import { PROFILE } from '@domain/profile/profile.data';
+import { CvDownload } from '@features/cv/cv-download';
 import { MagneticDirective } from '@shared/motion/magnetic.directive';
 import { RevealDirective } from '@shared/motion/reveal.directive';
 import { SplitText } from '@shared/motion/split-text';
@@ -19,6 +20,7 @@ import { PageContext } from '../page-context';
 })
 export class ContactSection {
   protected readonly page = inject(PageContext);
+  protected readonly cv = inject(CvDownload);
   private readonly clock = inject(Clock);
   private readonly win = inject(DOCUMENT).defaultView;
 

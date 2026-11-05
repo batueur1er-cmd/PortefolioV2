@@ -17,7 +17,8 @@ const ALIASES = { '@core/': 'core/', '@domain/': 'domain/', '@shared/': 'shared/
 /** Une fonctionnalité ne dépend que de celles listées ici : jamais de cycle. */
 const FEATURE_DEPS = {
   secrets: [],
-  page: ['secrets'],
+  page: ['secrets', 'cv'],
+  cv: [],
   lens: ['page', 'secrets', 'project'],
   singularity: [],
   project: [],

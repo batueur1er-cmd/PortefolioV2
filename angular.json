@@ -39,6 +39,14 @@
               "@fontsource-variable/caveat/index.css",
               "src/styles/themes/index.scss",
               "src/styles.scss"
+            ],
+            "allowedCommonJsDependencies": [
+              "canvg",
+              "core-js",
+              "raf",
+              "rgbcolor",
+              "html2canvas",
+              "dompurify"
             ]
           },
           "configurations": {
