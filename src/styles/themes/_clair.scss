@@ -55,6 +55,8 @@
   --void-light: #ffe9d0;
 
   /* ---------- Typographies ---------- */
+  /* Les grandes lettres (nom de l'accueil, grands titres) en serif ; tout le reste en Inter Tight. */
+  --serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
   --sans: 'Inter Tight Variable', system-ui, sans-serif;
   --mono: 'JetBrains Mono Variable', ui-monospace, Consolas, monospace;
 

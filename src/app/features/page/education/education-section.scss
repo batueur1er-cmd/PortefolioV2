@@ -120,7 +120,7 @@ abbr {
 }
 
 .mark {
-  font: 500 clamp(40px, 6cqi, 88px) / 1 var(--sans);
+  font: italic 400 clamp(40px, 6cqi, 88px) / 1 var(--serif);
   color: transparent;
   -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 40%, transparent);
   transition:

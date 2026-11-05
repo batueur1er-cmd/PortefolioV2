@@ -23,8 +23,9 @@ illustrations compris.
 Les familles de variables : surface (`--paper`, `--paper-2`, `--ink`, `--muted`, `--accent`,
 `--on-accent`, `--line`, `--ok`, `--glass`), rayons X (`--xbg`, `--xbg-2`, `--xl` cyan, `--xn`
 jaune, `--xp` magenta, `--xtext`), illustrations (`--art-*`), singularité (`--void*`), polices
-(`--sans` pour titres et texte, `--mono` pour étiquettes et code : deux familles seulement,
-choix de Baptiste), formes (`--radius-*`, `--shadow-float`).
+(`--serif` pour les grandes lettres seulement : le nom de l'accueil et les grands titres ;
+`--sans` pour tout le reste, accroches et petits titres compris ; `--mono` pour étiquettes et code.
+Trois familles, pas plus : choix de Baptiste), formes (`--radius-*`, `--shadow-float`).
 
 ## Modifier une couleur
 
@@ -49,8 +50,8 @@ choix de Baptiste), formes (`--radius-*`, `--shadow-float`).
 1. `npm install @fontsource-variable/<police>` (ou `@fontsource/<police>`).
 2. Ajoute son CSS dans `angular.json` → `projects.portfolio-v2.architect.build.options.styles`,
    avant `src/styles/themes/index.scss`.
-3. Modifie `--sans` ou `--mono` dans le thème. Garde deux familles : le site a été uniformisé,
-   n'en réintroduis pas une troisième sans qu'on te le demande.
+3. Modifie `--serif`, `--sans` ou `--mono` dans le thème. N'ajoute pas de quatrième famille sans
+   qu'on te le demande (l'écriture manuscrite Caveat a été retirée).
 4. **Relance `npm start`** : le serveur de dev ne relit pas `angular.json` à chaud.
 
 ## Appliquer une maquette (Stitch, Figma…)

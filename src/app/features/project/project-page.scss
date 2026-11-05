@@ -160,7 +160,7 @@ main {
 
 .title {
   margin: 0 0 30px;
-  font: 600 clamp(56px, 8.7cqi, 104px) / 0.95 var(--sans);
+  font: 400 clamp(56px, 8.7cqi, 104px) / 0.95 var(--serif);
   letter-spacing: -0.02em;
   text-wrap: balance;
   animation: rise 0.8s 0.06s cubic-bezier(0.2, 0.7, 0.1, 1) both;
