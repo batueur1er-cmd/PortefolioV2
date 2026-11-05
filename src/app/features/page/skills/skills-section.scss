@@ -59,7 +59,7 @@
 
 .group-title {
   margin: 0 0 6px;
-  font: 400 clamp(24px, 2.2cqi, 32px) / 1.05 var(--serif);
+  font: 600 clamp(24px, 2.2cqi, 32px) / 1.05 var(--sans);
 }
 
 .group .label {
@@ -141,7 +141,7 @@
 .extras-text {
   max-width: 44ch;
   margin: 0;
-  font: italic 400 20px/1.4 var(--serif);
+  font: 500 20px/1.4 var(--sans);
   color: var(--muted);
 }
 

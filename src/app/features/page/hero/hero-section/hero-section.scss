@@ -70,8 +70,9 @@
 
 .name {
   margin: 0;
-  font: 400 clamp(84px, 16.5cqi, 236px) / 0.84 var(--serif);
-  letter-spacing: -0.035em;
+  /* Inter Tight est plus large que l'ancienne serif : un cran plus petit pour laisser la sphère. */
+  font: 600 clamp(52px, 12.8cqi, 184px) / 0.9 var(--sans);
+  letter-spacing: -0.045em;
 }
 
 .first,
@@ -81,7 +82,6 @@
 
 .last {
   padding-left: 0.85em;
-  font-style: italic;
   color: var(--accent);
 }
 
@@ -128,7 +128,7 @@
 .band {
   padding: 16px 0;
   border-block: 1px solid var(--line);
-  font: italic 400 clamp(26px, 3.2cqi, 44px) / 1.1 var(--serif);
+  font: 500 clamp(26px, 3.2cqi, 44px) / 1.1 var(--sans);
   color: var(--ink);
 }
 
@@ -241,7 +241,7 @@
 .hint b {
   display: block;
   margin-bottom: 2px;
-  font: italic 400 19px/1.2 var(--serif);
+  font: 500 19px/1.2 var(--sans);
   color: var(--ink);
 }
 

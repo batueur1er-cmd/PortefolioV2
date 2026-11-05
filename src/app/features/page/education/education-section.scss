@@ -101,7 +101,7 @@
 
 .school {
   margin: 0;
-  font: 400 clamp(28px, 3cqi, 42px) / 1.05 var(--serif);
+  font: 600 clamp(28px, 3cqi, 42px) / 1.05 var(--sans);
 }
 
 .degree {
@@ -120,7 +120,7 @@ abbr {
 }
 
 .mark {
-  font: italic 400 clamp(40px, 6cqi, 88px) / 1 var(--serif);
+  font: 500 clamp(40px, 6cqi, 88px) / 1 var(--sans);
   color: transparent;
   -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 40%, transparent);
   transition:

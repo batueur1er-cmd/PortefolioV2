@@ -32,11 +32,8 @@
             ],
             "styles": [
               "@angular/cdk/overlay-prebuilt.css",
-              "@fontsource/instrument-serif/400.css",
-              "@fontsource/instrument-serif/400-italic.css",
               "@fontsource-variable/inter-tight/index.css",
               "@fontsource-variable/jetbrains-mono/index.css",
-              "@fontsource-variable/caveat/index.css",
               "src/styles/themes/index.scss",
               "src/styles.scss"
             ],

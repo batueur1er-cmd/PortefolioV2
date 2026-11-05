@@ -79,7 +79,7 @@ main {
 }
 
 .brand-name {
-  font: 400 24px/1 var(--serif);
+  font: 600 24px/1 var(--sans);
   transition: color 0.25s;
 }
 
@@ -160,7 +160,7 @@ main {
 
 .title {
   margin: 0 0 30px;
-  font: 400 clamp(56px, 8.7cqi, 104px) / 0.95 var(--serif);
+  font: 600 clamp(56px, 8.7cqi, 104px) / 0.95 var(--sans);
   letter-spacing: -0.02em;
   text-wrap: balance;
   animation: rise 0.8s 0.06s cubic-bezier(0.2, 0.7, 0.1, 1) both;
@@ -369,7 +369,7 @@ main {
   margin: 0 0 18px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--line);
-  font: 400 26px/1 var(--serif);
+  font: 600 26px/1 var(--sans);
 }
 
 .stack-group {
@@ -596,7 +596,7 @@ main {
 }
 
 .neighbour-title {
-  font: 400 clamp(26px, 2.8cqi, 36px) / 1.05 var(--serif);
+  font: 600 clamp(26px, 2.8cqi, 36px) / 1.05 var(--sans);
 }
 
 .neighbour-summary {
@@ -620,7 +620,7 @@ main {
 }
 
 .foot-name {
-  font: 400 20px/1 var(--serif);
+  font: 600 20px/1 var(--sans);
   letter-spacing: 0;
   text-transform: none;
   color: var(--ink);

@@ -25,7 +25,7 @@ export function downloadHuntBadge(doc: Document, info: BadgeInfo): void {
   const glow = color('--void-glow', '#ffaa50');
   const light = color('--void-light', '#ffe9d0');
   const text = color('--void-text', '#e1d7ff');
-  const serif = color('--serif', 'Georgia, serif');
+  const sans = color('--sans', 'system-ui, sans-serif');
   const mono = color('--mono', 'monospace');
 
   ctx.fillStyle = voidBg;
@@ -65,7 +65,7 @@ export function downloadHuntBadge(doc: Document, info: BadgeInfo): void {
   ctx.font = `500 22px ${mono}`;
   ctx.fillText('SINGULARITÉ ATTEINTE', 80, 140);
   ctx.fillStyle = light;
-  ctx.font = `400 74px ${serif}`;
+  ctx.font = `600 64px ${sans}`;
   ctx.fillText(`J'ai trouvé les ${info.found}`, 80, 240);
   ctx.fillText(`secrets du portfolio`, 80, 320);
   ctx.fillText(`de ${info.owner}`, 80, 400);

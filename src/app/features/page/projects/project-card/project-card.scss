@@ -69,7 +69,7 @@
   position: absolute;
   right: 12px;
   bottom: 10px;
-  font: 400 34px/1 var(--serif);
+  font: 600 34px/1 var(--sans);
   color: color-mix(in srgb, #fff 85%, transparent);
   mix-blend-mode: difference;
 }
@@ -94,7 +94,7 @@
 
 .title {
   margin: 0;
-  font: 400 clamp(28px, 2.6cqi, 38px) / 1.02 var(--serif);
+  font: 600 clamp(28px, 2.6cqi, 38px) / 1.02 var(--sans);
   letter-spacing: -0.01em;
 }
 

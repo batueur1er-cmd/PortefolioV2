@@ -124,7 +124,7 @@
 
 .company {
   margin: 0;
-  font: 400 clamp(30px, 3.4cqi, 46px) / 1.02 var(--serif);
+  font: 600 clamp(30px, 3.4cqi, 46px) / 1.02 var(--sans);
   letter-spacing: -0.015em;
 }
 
@@ -166,7 +166,7 @@
 
 .thread-big {
   margin: 10px 0 18px;
-  font: italic 400 clamp(32px, 3.4cqi, 46px) / 1 var(--serif);
+  font: 500 clamp(32px, 3.4cqi, 46px) / 1 var(--sans);
 }
 
 .stats {
@@ -177,7 +177,7 @@
 }
 
 .stats dt {
-  font: 400 44px/1 var(--serif);
+  font: 600 44px/1 var(--sans);
 }
 
 .stats dd {
