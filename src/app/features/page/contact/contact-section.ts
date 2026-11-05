@@ -8,7 +8,7 @@ import { SecretDirective } from '@features/secrets/secret.directive';
 import { MagneticDirective } from '@shared/motion/magnetic.directive';
 import { RevealDirective } from '@shared/motion/reveal.directive';
 import { SplitText } from '@shared/motion/split-text';
-import { SectionHeader } from '@shared/ui/section-header';
+import { SectionHeader } from '@shared/ui/section-header/section-header';
 
 import { PageContext } from '../page-context';
 

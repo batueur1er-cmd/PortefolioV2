@@ -6,7 +6,7 @@ import { projectLink } from '@domain/profile/projects';
 import { TiltDirective } from '@shared/motion/tilt.directive';
 import { TagList } from '@shared/ui/tag-list';
 
-import { ProjectArt } from './project-art';
+import { ProjectArt } from '../project-art/project-art';
 
 export interface ProjectView extends Project {
   readonly secretId: string;

@@ -15,15 +15,15 @@ import { FrameLoop } from '@core/dom/frame-loop';
 import { contentOrigin, pageZoom } from '@core/geometry/geometry';
 import { BusCommand, OverlayPresence, WindowBus } from '@core/sync/window-bus';
 import { WindowRoleStore } from '@features/lens/data/window-role.store';
-import { LensFrames } from '@features/lens/lens-frames';
+import { LensFrames } from '@features/lens/lens-frames/lens-frames';
 import { PortfolioPage } from '@features/page/portfolio-page';
-import { PROJECTS_DIALOG_PANEL } from '@features/page/projects/projects-dialog';
+import { PROJECTS_DIALOG_PANEL } from '@features/page/projects/projects-dialog/projects-dialog';
 import { SecretsStore } from '@features/secrets/data/secrets.store';
 import { FoundToast } from '@features/secrets/ui/found-toast';
 import { SingularityOverlay } from '@features/singularity/singularity-overlay';
 
-import { ControlDock } from './control-dock';
-import { CursorAura } from './cursor-aura';
+import { ControlDock } from '../control-dock/control-dock';
+import { CursorAura } from '../cursor-aura/cursor-aura';
 
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 

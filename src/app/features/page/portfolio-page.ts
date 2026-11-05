@@ -20,10 +20,10 @@ import { AboutSection } from './about/about-section';
 import { ContactSection } from './contact/contact-section';
 import { EducationSection } from './education/education-section';
 import { ExperienceSection } from './experience/experience-section';
-import { HeroSection } from './hero/hero-section';
+import { HeroSection } from './hero/hero-section/hero-section';
 import { SiteNav } from './nav/site-nav';
 import { PageContext, PageMode } from './page-context';
-import { ProjectsSection } from './projects/projects-section';
+import { ProjectsSection } from './projects/projects-section/projects-section';
 import { SkillsSection } from './skills/skills-section';
 
 /**

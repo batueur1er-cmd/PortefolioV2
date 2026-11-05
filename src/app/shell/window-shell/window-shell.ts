@@ -3,9 +3,9 @@ import { Title } from '@angular/platform-browser';
 
 import { WindowRole } from '@core/sync/window-bus';
 import { WindowRoleStore } from '@features/lens/data/window-role.store';
-import { LensView } from '@features/lens/lens-view';
+import { LensView } from '@features/lens/lens-view/lens-view';
 
-import { MainView } from './main-view';
+import { MainView } from '../main-view/main-view';
 
 interface Morph {
   readonly id: number;

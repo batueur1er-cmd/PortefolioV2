@@ -7,7 +7,7 @@ import { SecretDirective } from '@features/secrets/secret.directive';
 import { CountUp } from '@shared/motion/count-up';
 import { RevealDirective } from '@shared/motion/reveal.directive';
 import { ScrollWords } from '@shared/motion/scroll-words';
-import { SectionHeader } from '@shared/ui/section-header';
+import { SectionHeader } from '@shared/ui/section-header/section-header';
 
 import { PageContext } from '../page-context';
 

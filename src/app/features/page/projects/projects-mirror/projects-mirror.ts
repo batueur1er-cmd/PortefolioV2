@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { OTHERS_FIRST_NUMBER, OTHER_PROJECTS } from './project-views';
-import { ProjectsList } from './projects-list';
+import { OTHERS_FIRST_NUMBER, OTHER_PROJECTS } from '../project-views';
+import { ProjectsList } from '../projects-list/projects-list';
 
 /**
  * La copie rayons X de la fenêtre « Tous les projets », affichée par la loupe quand le portfolio
@@ -24,7 +24,7 @@ import { ProjectsList } from './projects-list';
       />
     </div>
   `,
-  styleUrls: ['./projects-dialog.scss', './projects-mirror.scss'],
+  styleUrls: ['../projects-dialog/projects-dialog.scss', './projects-mirror.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'xray', 'aria-hidden': 'true', inert: '' },
 })

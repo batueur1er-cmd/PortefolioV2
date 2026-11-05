@@ -6,7 +6,7 @@ import { PROFILE } from '@domain/profile/profile.data';
 import { SecretDirective } from '@features/secrets/secret.directive';
 import { RevealDirective } from '@shared/motion/reveal.directive';
 import { ScrollStage, stageTop } from '@shared/motion/scroll-stage';
-import { SectionHeader } from '@shared/ui/section-header';
+import { SectionHeader } from '@shared/ui/section-header/section-header';
 import { TagList } from '@shared/ui/tag-list';
 
 import { PageContext } from '../page-context';

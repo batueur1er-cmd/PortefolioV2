@@ -40,7 +40,7 @@ jaune, `--xp` magenta, `--xtext`), illustrations (`--art-*`), singularité (`--v
 2. Ne redéfinis que ce qui change : le reste vient de `_clair.scss`.
 3. Ajoute `@use '<id>';` dans `index.scss` et `{ id: '<id>', label: '<Libellé>' }` dans `THEMES`.
 4. Teste avec `http://localhost:4200/?theme=<id>` (impose le thème sans l'enregistrer), ou avec le
-   bouton « Mode nuit », qui bascule entre `clair` et `nuit` (adapte `shell/control-dock.ts` pour un
+   bouton « Mode nuit », qui bascule entre `clair` et `nuit` (adapte `shell/control-dock/control-dock.ts` pour un
    troisième thème). Le thème choisi est enregistré et partagé avec la fenêtre loupe.
 
 ## Changer de police

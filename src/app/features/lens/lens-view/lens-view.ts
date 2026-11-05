@@ -26,16 +26,16 @@ import {
 } from '@core/geometry/geometry';
 import { MainPresence, OverlayPresence, WindowBus, isMain } from '@core/sync/window-bus';
 import { PortfolioPage } from '@features/page/portfolio-page';
-import { ProjectsMirror } from '@features/page/projects/projects-mirror';
+import { ProjectsMirror } from '@features/page/projects/projects-mirror/projects-mirror';
 import { ProjectPage } from '@features/project/project-page';
 import { SCAN_COVERAGE, ScanEngine } from '@features/secrets/data/scan-engine';
 import { PROFILE } from '@domain/profile/profile.data';
 import { SECRET_BY_ID } from '@features/secrets/data/secrets.catalog';
 import { SecretsStore } from '@features/secrets/data/secrets.store';
 
-import { WindowRoleStore } from './data/window-role.store';
-import { GeigerAudio } from './geiger-audio';
-import { LensHud, LensState } from './lens-hud';
+import { WindowRoleStore } from '../data/window-role.store';
+import { GeigerAudio } from '../geiger-audio';
+import { LensHud, LensState } from '../lens-hud/lens-hud';
 
 /** Distance (px) en deçà de laquelle le détecteur commence à réagir. */
 const DETECTOR_RANGE = 700;

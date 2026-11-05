@@ -18,11 +18,11 @@ import { PROFILE } from '@domain/profile/profile.data';
 import { SecretDirective } from '@features/secrets/secret.directive';
 import { MagneticDirective } from '@shared/motion/magnetic.directive';
 import { SplitText } from '@shared/motion/split-text';
-import { Marquee } from '@shared/ui/marquee';
-import { WindowGesture } from '@shared/ui/window-gesture';
+import { Marquee } from '@shared/ui/marquee/marquee';
+import { WindowGesture } from '@shared/ui/window-gesture/window-gesture';
 
-import { PageContext } from '../page-context';
-import { HeroOrb } from './hero-orb';
+import { PageContext } from '../../page-context';
+import { HeroOrb } from '../hero-orb/hero-orb';
 
 @Component({
   selector: 'app-hero-section',

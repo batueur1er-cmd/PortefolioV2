@@ -8,7 +8,7 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    loadComponent: () => import('./shell/window-shell').then((m) => m.WindowShell),
+    loadComponent: () => import('./shell/window-shell/window-shell').then((m) => m.WindowShell),
   },
   {
     path: 'projets/:id',

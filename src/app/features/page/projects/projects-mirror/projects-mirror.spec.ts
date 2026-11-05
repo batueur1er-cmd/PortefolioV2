@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
-import { OTHER_PROJECTS } from './project-views';
+import { OTHER_PROJECTS } from '../project-views';
 import { ProjectsMirror } from './projects-mirror';
 
 describe('ProjectsMirror', () => {

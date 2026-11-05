@@ -7,7 +7,7 @@ import { coOccurrence, skillSources, sourceSummary, sourcesBySkill } from '@doma
 import { SecretDirective } from '@features/secrets/secret.directive';
 import { RevealDirective } from '@shared/motion/reveal.directive';
 import { ScrollStage } from '@shared/motion/scroll-stage';
-import { SectionHeader } from '@shared/ui/section-header';
+import { SectionHeader } from '@shared/ui/section-header/section-header';
 
 import { PageContext } from '../page-context';
 

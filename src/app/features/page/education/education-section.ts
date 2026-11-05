@@ -5,7 +5,7 @@ import { acronymDecoder, educationRuler, educationSpan } from '@domain/career/ca
 import { PROFILE } from '@domain/profile/profile.data';
 import { SecretDirective } from '@features/secrets/secret.directive';
 import { RevealDirective } from '@shared/motion/reveal.directive';
-import { SectionHeader } from '@shared/ui/section-header';
+import { SectionHeader } from '@shared/ui/section-header/section-header';
 
 import { PageContext } from '../page-context';
 

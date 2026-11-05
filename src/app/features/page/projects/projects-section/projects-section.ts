@@ -3,12 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { PROFILE } from '@domain/profile/profile.data';
 import { RevealDirective } from '@shared/motion/reveal.directive';
-import { SectionHeader } from '@shared/ui/section-header';
+import { SectionHeader } from '@shared/ui/section-header/section-header';
 
-import { PageContext } from '../page-context';
-import { ProjectCard } from './project-card';
-import { OTHERS_FIRST_NUMBER, OTHER_PROJECTS, PROJECT_VIEWS, SHOWN_PROJECTS } from './project-views';
-import { PROJECTS_DIALOG_PANEL, ProjectsDialog, ProjectsDialogData } from './projects-dialog';
+import { PageContext } from '../../page-context';
+import { ProjectCard } from '../project-card/project-card';
+import { OTHERS_FIRST_NUMBER, OTHER_PROJECTS, PROJECT_VIEWS, SHOWN_PROJECTS } from '../project-views';
+import { PROJECTS_DIALOG_PANEL, ProjectsDialog, ProjectsDialogData } from '../projects-dialog/projects-dialog';
 
 /** Largeur de page (px) sous laquelle une seule réalisation reste sur la page (voir le SCSS). */
 const NARROW_PAGE = 680;

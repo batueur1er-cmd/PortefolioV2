@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { ProjectView } from './project-card';
-import { ProjectsList } from './projects-list';
+import { ProjectView } from '../project-card/project-card';
+import { ProjectsList } from '../projects-list/projects-list';
 
 export interface ProjectsDialogData {
   readonly projects: readonly ProjectView[];

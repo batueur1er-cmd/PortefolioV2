@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, VERSION, computed, inject } from '@
 import { LENS_WINDOW } from '@core/sync/window-size';
 import { WindowBus } from '@core/sync/window-bus';
 import { PROFILE } from '@domain/profile/profile.data';
-import { WindowGesture } from '@shared/ui/window-gesture';
+import { WindowGesture } from '@shared/ui/window-gesture/window-gesture';
 
 /**
  * « Sous le capot », sur la page du projet « Portfolio v2 » : comment le site est construit,

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ElementRef, afterNextRender, inject, signal } from '@angular/core';
 
-import { PageContext } from '../page-context';
+import { PageContext } from '../../page-context';
 
 /**
  * Une sphère posée sur la page, comme une lentille. Elle suit doucement le pointeur et sa

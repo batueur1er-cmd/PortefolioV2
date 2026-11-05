@@ -1,7 +1,7 @@
 import { PROFILE } from '@domain/profile/profile.data';
 import { PROJECTS_ON_PAGE, skillLabelsOf } from '@domain/profile/projects';
 
-import { ProjectView } from './project-card';
+import { ProjectView } from './project-card/project-card';
 
 /** Tous les projets, prêts à afficher. */
 export const PROJECT_VIEWS: readonly ProjectView[] = PROFILE.projects.map((project) => ({

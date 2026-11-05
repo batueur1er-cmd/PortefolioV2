@@ -49,7 +49,7 @@ elle est sûre.
 `visu3d`, `infra` ou `site`. Pour un
 projet qui mérite sa propre illustration :
 1. ajoute la valeur à `ProjectVisual` dans `profile.model.ts` ;
-2. dans `src/app/features/page/projects/project-art.html`, ajoute un `@case` côté surface (petite
+2. dans `src/app/features/page/projects/project-art/project-art.html`, ajoute un `@case` côté surface (petite
    interface animée en CSS) et un `@case` côté rayons X (un `svg.wire` en `viewBox="0 -40 400 260"`
    qui montre son plan de principe) ;
 3. dans `project-art.scss`, donne-lui un fond avec `:host(.art-<visual>) .surface { … }`, des

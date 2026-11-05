@@ -5,8 +5,8 @@ import { projectLink } from '@domain/profile/projects';
 import { DisplayOnlySecretHost, SecretHost } from '@features/secrets/secret-host';
 import { TagList } from '@shared/ui/tag-list';
 
-import { ProjectArt } from './project-art';
-import { ProjectView } from './project-card';
+import { ProjectArt } from '../project-art/project-art';
+import { ProjectView } from '../project-card/project-card';
 
 /**
  * La liste des autres projets. Elle sert deux fois : dans la vraie fenêtre « Tous les projets »

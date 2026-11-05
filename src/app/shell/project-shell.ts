@@ -7,7 +7,7 @@ import { WindowBus } from '@core/sync/window-bus';
 import { WindowRoleStore } from '@features/lens/data/window-role.store';
 import { ProjectPage } from '@features/project/project-page';
 
-import { ControlDock } from './control-dock';
+import { ControlDock } from './control-dock/control-dock';
 
 /**
  * La fenêtre d'une page projet : la page et le bouton mode nuit. Elle annonce, comme l'accueil,

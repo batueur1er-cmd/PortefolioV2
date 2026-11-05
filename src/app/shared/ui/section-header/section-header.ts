@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { RevealDirective } from '../motion/reveal.directive';
-import { SplitText } from '../motion/split-text';
+import { RevealDirective } from '../../motion/reveal.directive';
+import { SplitText } from '../../motion/split-text';
 
 /**
  * L'en-tête d'une section : numéro, nom, titre en grand et chapeau. Le titre monte mot à mot
