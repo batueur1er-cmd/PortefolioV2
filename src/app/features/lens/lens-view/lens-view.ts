@@ -35,6 +35,8 @@ import { SECRET_BY_ID } from '@features/secrets/data/secrets.catalog';
 import { SecretsStore } from '@features/secrets/data/secrets.store';
 import { AchievementsStore } from '@features/achievements/data/achievements.store';
 import { ThemeStore } from '@core/theme/theme.store';
+import { SingularityOverlay } from '@features/singularity/singularity-overlay';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { WindowRoleStore } from '../data/window-role.store';
 import { GeigerAudio } from '../geiger-audio';
@@ -80,7 +82,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
  */
 @Component({
   selector: 'app-lens-view',
-  imports: [PortfolioPage, LensHud, ProjectsMirror, ProjectPage],
+  imports: [PortfolioPage, LensHud, ProjectsMirror, ProjectPage, SingularityOverlay],
   template: `
     <app-portfolio-page
       class="lens-page"
@@ -136,6 +138,12 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
       (toggleSound)="toggleSound()"
       (resetZoom)="zoom.set(1)"
     />
+    <!-- Tous les secrets trouvés : la loupe devient elle aussi un trou noir, à côté du portfolio. -->
+    @defer (when singularityOpen()) {
+      @if (singularityOpen()) {
+        <app-singularity-overlay (closed)="closeSingularity()" />
+      }
+    }
   `,
   styleUrl: './lens-view.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -172,6 +180,7 @@ export class LensView {
   private scanFocus: string | null = null;
   private scanProgress = 0;
   private konamiIndex = 0;
+  protected readonly singularityOpen = signal(false);
   private unlockOnKonami: (key: string) => void = () => undefined;
   private readonly audio = new GeigerAudio();
   private targetId: string | null = null;
@@ -184,6 +193,7 @@ export class LensView {
     this.doc.documentElement.classList.add('lens-mode');
     const destroyRef = inject(DestroyRef);
     this.watchAchievements();
+    this.watchSingularity();
 
     afterNextRender(() => {
       const win = this.doc.defaultView;
@@ -370,6 +380,33 @@ export class LensView {
       // La molette fait défiler le portfolio sous la loupe.
       this.bus.send({ type: 'scroll', target: this.targetId, dy: delta / this.ratio });
     }
+  }
+
+  /**
+   * La fin de la chasse ouvre la singularité dans les deux écrans : le portfolio et la loupe.
+   * Le portfolio l'annonce sur le bus ; la loupe la déclenche aussi elle-même, au cas où.
+   */
+  private watchSingularity(): void {
+    this.bus.commands$.pipe(takeUntilDestroyed()).subscribe((command) => {
+      if (command.type === 'singularity') this.singularityOpen.set(command.open);
+    });
+    let before = this.store.complete();
+    effect((onCleanup) => {
+      const complete = this.store.complete();
+      if (complete && !before) {
+        const timer = setTimeout(() => {
+          this.singularityOpen.set(true);
+          this.bus.send({ type: 'singularity', open: true });
+        }, 1600);
+        onCleanup(() => clearTimeout(timer));
+      }
+      before = complete;
+    });
+  }
+
+  protected closeSingularity(): void {
+    this.singularityOpen.set(false);
+    this.bus.send({ type: 'singularity', open: false });
   }
 
   /** Les succès propres à la loupe, et l'annonce de tous les succès dans son viseur. */
