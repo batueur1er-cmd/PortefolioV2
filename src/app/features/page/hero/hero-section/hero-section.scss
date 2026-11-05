@@ -55,9 +55,9 @@
 
 .orb {
   position: absolute;
-  right: 1%;
-  top: 9%;
-  width: clamp(190px, 31cqi, 450px);
+  right: 4%;
+  top: 13%;
+  width: clamp(150px, 24cqi, 340px);
   aspect-ratio: 1;
 }
 
@@ -258,8 +258,8 @@
 
 @container page (max-width: 760px) {
   .orb {
-    top: 64px;
-    right: -6%;
+    top: 72px;
+    right: -4%;
     opacity: 0.9;
   }
 
