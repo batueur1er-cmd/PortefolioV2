@@ -14,6 +14,11 @@ import {
 import { FrameLoop } from '@core/dom/frame-loop';
 import { clamp, contentOrigin } from '@core/geometry/geometry';
 import { HolePresence, WindowBus } from '@core/sync/window-bus';
+import { PROFILE } from '@domain/profile/profile.data';
+import { HuntClock, formatElapsed } from '@features/secrets/data/hunt-clock';
+import { SecretsStore } from '@features/secrets/data/secrets.store';
+import { downloadHuntBadge } from '@features/secrets/ui/hunt-badge';
+
 import { BlackHoleRenderer, HOLE_PALETTE, HoleView, hash, strHash } from './black-hole-renderer';
 
 /**
@@ -33,7 +38,18 @@ import { BlackHoleRenderer, HOLE_PALETTE, HoleView, hash, strHash } from './blac
           {{ peers() + 1 }} fenêtres en orbite. Rapproche-les, éloigne-les.
         }
       </p>
-      <button #close type="button" (click)="closed.emit()">Revenir au portfolio · Échap</button>
+      @if (hunt.finalTime(); as time) {
+        <p class="hint">
+          {{ store.count() }} secrets en {{ format(time) }}
+          @if (hunt.best(); as best) {
+            · record {{ format(best) }}
+          }
+        </p>
+      }
+      <div class="actions">
+        <button #close type="button" (click)="closed.emit()">Revenir au portfolio · Échap</button>
+        <button type="button" (click)="badge()">Télécharger mon badge</button>
+      </div>
     </div>
   `,
   styleUrl: './singularity-overlay.scss',
@@ -54,6 +70,20 @@ export class SingularityOverlay {
   private readonly canvas = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
   private readonly closeButton = viewChild.required<ElementRef<HTMLButtonElement>>('close');
   protected readonly peers = computed(() => this.bus.holes.roster().length);
+  protected readonly store = inject(SecretsStore);
+  protected readonly hunt = inject(HuntClock);
+  protected readonly format = formatElapsed;
+
+  /** Le badge à partager, avec le score et le temps de la chasse. */
+  protected badge(): void {
+    downloadHuntBadge(this.doc, {
+      owner: `${PROFILE.firstName} ${PROFILE.lastName}`,
+      found: this.store.count(),
+      total: this.store.total,
+      time: this.hunt.finalTime(),
+      best: this.hunt.best(),
+    });
+  }
 
   constructor() {
     const destroyRef = inject(DestroyRef);

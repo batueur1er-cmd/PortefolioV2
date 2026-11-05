@@ -13,7 +13,14 @@ export interface TermLine {
 export interface TerminalContext {
   readonly profile: Profile;
   readonly today: Date;
-  readonly secrets: { readonly found: number; readonly total: number };
+  readonly secrets: {
+    readonly found: number;
+    readonly total: number;
+    /** « 02:14 », vide avant le premier secret. */
+    readonly elapsed: string;
+    readonly best: string;
+    readonly hint: () => string | null;
+  };
   readonly achievements: readonly { readonly label: string; readonly hint: string; readonly unlocked: boolean }[];
   readonly navigate: (path: string, fragment?: string) => void;
   readonly downloadCv: () => void;
@@ -143,9 +150,19 @@ export const COMMANDS: readonly Command[] = [
     name: 'secrets',
     help: 'avancement de la chasse',
     run: (_, { secrets }) => [
-      out(`${secrets.found}/${secrets.total} secrets trouvés`),
+      out(`${secrets.found}/${secrets.total} secrets trouvés${secrets.elapsed ? ` · ${secrets.elapsed}` : ''}`),
+      ...(secrets.best ? [dim(`Record : ${secrets.best}`)] : []),
       dim(secrets.found ? 'Continuez avec la loupe.' : 'Indice : une seconde fenêtre, rétrécie, voit à travers.'),
     ],
+  },
+  {
+    name: 'indice',
+    aliases: ['hint'],
+    help: 'un indice sur un secret pas encore trouvé',
+    run: (_, { secrets }) => {
+      const hint = secrets.hint();
+      return hint ? [ok(hint), dim('Il se révèle sous la loupe, après 4 secondes d’analyse.')] : [ok('Tous les secrets sont trouvés.')];
+    },
   },
   {
     name: 'succes',

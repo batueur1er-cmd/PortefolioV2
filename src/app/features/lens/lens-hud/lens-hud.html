@@ -38,7 +38,7 @@
   Signal
 </div>
 
-<p class="bottom-left">Secrets {{ found() }}/{{ total() }}</p>
+<p class="bottom-left">Secrets {{ found() }}/{{ total() }}@if (elapsed()) { · ⏱ {{ elapsed() }}}</p>
 
 <button type="button" class="sound" [attr.aria-pressed]="!muted()" (click)="toggleSound.emit()">
   {{ muted() ? 'Son coupé' : 'Son actif' }} · M

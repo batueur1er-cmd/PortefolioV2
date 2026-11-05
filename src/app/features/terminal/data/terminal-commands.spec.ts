@@ -6,7 +6,7 @@ function context(overrides: Partial<TerminalContext> = {}): TerminalContext {
   return {
     profile: PROFILE,
     today: new Date(2026, 10, 5),
-    secrets: { found: 2, total: 20 },
+    secrets: { found: 2, total: 20, elapsed: '01:00', best: '', hint: () => 'Section « Profil » : L_ r_s_m_' },
     achievements: [
       { label: 'A', hint: 'a', unlocked: true },
       { label: 'B', hint: 'b', unlocked: false },
@@ -42,6 +42,10 @@ describe('commandes du terminal', () => {
     const text = runCommand('succes', context()).map((l) => l.text);
     expect(text).toContain('  ★ A — a');
     expect(text).toContain('  ☆ ???');
+  });
+
+  it('indice donne une piste', () => {
+    expect(runCommand('indice', context())[0].text).toContain('Profil');
   });
 
   it('complète le nom d’une commande', () => {

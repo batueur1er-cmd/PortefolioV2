@@ -25,6 +25,8 @@ export class LensHud {
   readonly section = input<string | null>(null);
   readonly muted = input(true);
   readonly toast = input<string | null>(null);
+  /** Chronomètre de la chasse (« 02:14 »), vide avant le premier secret. */
+  readonly elapsed = input('');
 
   readonly toggleSound = output<void>();
   /** Clic sur le facteur de zoom : retour à ×1. */

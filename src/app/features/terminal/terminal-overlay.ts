@@ -17,6 +17,7 @@ import { PROFILE } from '@domain/profile/profile.data';
 import { AchievementsStore } from '@features/achievements/data/achievements.store';
 import { CvDownload } from '@features/cv/cv-download';
 import { SecretsStore } from '@features/secrets/data/secrets.store';
+import { HuntClock, formatElapsed } from '@features/secrets/data/hunt-clock';
 
 import { TermLine, TerminalContext, complete, runCommand } from './data/terminal-commands';
 
@@ -40,6 +41,7 @@ export class TerminalOverlay {
   private readonly theme = inject(ThemeStore);
   private readonly motion = inject(MotionPreference);
   private readonly secrets = inject(SecretsStore);
+  private readonly hunt = inject(HuntClock);
   private readonly achievements = inject(AchievementsStore);
   private readonly cv = inject(CvDownload);
   private readonly today = inject(TODAY);
@@ -135,7 +137,13 @@ export class TerminalOverlay {
     return {
       profile: PROFILE,
       today: this.today,
-      secrets: { found: this.secrets.count(), total: this.secrets.total },
+      secrets: {
+        found: this.secrets.count(),
+        total: this.secrets.total,
+        elapsed: this.hunt.elapsed() ? formatElapsed(this.hunt.elapsed()) : '',
+        best: this.hunt.best() ? formatElapsed(this.hunt.best() ?? 0) : '',
+        hint: () => this.hunt.hint(),
+      },
       achievements: this.achievements.catalog.map((a) => ({ label: a.label, hint: a.hint, unlocked: unlocked.has(a.id) })),
       navigate: (path, fragment) => {
         const here = this.router.url.split('#')[0] || '/';

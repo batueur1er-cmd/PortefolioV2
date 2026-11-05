@@ -55,3 +55,9 @@ button {
 button:hover {
   background: color-mix(in srgb, var(--void-glow) 18%, transparent);
 }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

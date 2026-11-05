@@ -5,6 +5,7 @@ import {
   DestroyRef,
   ElementRef,
   afterNextRender,
+  computed,
   effect,
   inject,
   signal,
@@ -34,6 +35,7 @@ import { PROFILE } from '@domain/profile/profile.data';
 import { SECRET_BY_ID } from '@features/secrets/data/secrets.catalog';
 import { SecretsStore } from '@features/secrets/data/secrets.store';
 import { ScanSparkles } from '@features/secrets/ui/scan-sparkles';
+import { HuntClock, formatElapsed } from '@features/secrets/data/hunt-clock';
 import { AchievementsStore } from '@features/achievements/data/achievements.store';
 import { ThemeStore } from '@core/theme/theme.store';
 import { SingularityOverlay } from '@features/singularity/singularity-overlay';
@@ -136,6 +138,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
       [section]="section()"
       [muted]="muted()"
       [toast]="toast()"
+      [elapsed]="elapsed()"
       (toggleSound)="toggleSound()"
       (resetZoom)="zoom.set(1)"
     />
@@ -183,6 +186,8 @@ export class LensView {
   private scanProgress = 0;
   private konamiIndex = 0;
   protected readonly singularityOpen = signal(false);
+  private readonly hunt = inject(HuntClock);
+  protected readonly elapsed = computed(() => (this.hunt.elapsed() ? formatElapsed(this.hunt.elapsed()) : ''));
   private unlockOnKonami: (key: string) => void = () => undefined;
   private readonly audio = new GeigerAudio();
   private targetId: string | null = null;
