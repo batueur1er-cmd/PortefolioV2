@@ -23,6 +23,9 @@ import { FoundToast } from '@features/secrets/ui/found-toast';
 import { AchievementsStore } from '@features/achievements/data/achievements.store';
 import { AchievementToast } from '@features/achievements/ui/achievement-toast';
 import { TerminalOverlay } from '@features/terminal/terminal-overlay';
+import { CatWalkLayer } from '@shared/ui/cat-walk/cat-walk';
+
+import { SeasonDecor } from '../season-decor/season-decor';
 import { ThemeStore } from '@core/theme/theme.store';
 import { ScanSparkles } from '@features/secrets/ui/scan-sparkles';
 import { SingularityOverlay } from '@features/singularity/singularity-overlay';
@@ -35,7 +38,7 @@ const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'Ar
 /** La fenêtre portfolio : la page en surface, et tout ce qui permet de la percer à jour. */
 @Component({
   selector: 'app-main-view',
-  imports: [PortfolioPage, LensFrames, ControlDock, FoundToast, SingularityOverlay, CursorAura, ScanSparkles, AchievementToast, TerminalOverlay],
+  imports: [PortfolioPage, LensFrames, ControlDock, FoundToast, SingularityOverlay, CursorAura, ScanSparkles, AchievementToast, TerminalOverlay, CatWalkLayer, SeasonDecor],
   templateUrl: './main-view.html',
   styleUrl: './main-view.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

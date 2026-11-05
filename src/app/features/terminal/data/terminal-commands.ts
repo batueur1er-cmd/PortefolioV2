@@ -27,6 +27,7 @@ export interface TerminalContext {
   readonly setTheme: (id: 'clair' | 'nuit') => void;
   readonly toggleSimple: () => boolean;
   readonly clear: () => void;
+  readonly summonCat: () => void;
   readonly close: () => void;
 }
 
@@ -186,6 +187,15 @@ export const COMMANDS: readonly Command[] = [
     name: 'simple',
     help: 'active ou coupe la version simple',
     run: (_, ctx) => [ok(ctx.toggleSimple() ? 'Version simple activée.' : 'Version simple coupée.')],
+  },
+  {
+    name: 'chat',
+    aliases: ['cat', 'miaou'],
+    help: 'le chat de la maison',
+    run: (_, ctx) => {
+      ctx.summonCat();
+      return [out(' /\\_/\\'), out('( o.o )  miaou.'), out(' > ^ <'), dim('Regardez en bas de l’écran.')];
+    },
   },
   {
     name: 'date',
