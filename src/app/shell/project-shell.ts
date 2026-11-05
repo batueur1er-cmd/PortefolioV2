@@ -1,9 +1,12 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FrameLoop } from '@core/dom/frame-loop';
 import { contentOrigin, pageZoom } from '@core/geometry/geometry';
+import { Seo } from '@core/seo/seo';
 import { WindowBus } from '@core/sync/window-bus';
+import { metaFor, seoTags } from '@domain/profile/seo';
+import { projectLink } from '@domain/profile/projects';
 import { WindowRoleStore } from '@features/lens/data/window-role.store';
 import { ProjectPage } from '@features/project/project-page';
 
@@ -32,6 +35,14 @@ export class ProjectShell {
     const doc = inject(DOCUMENT);
     const destroyRef = inject(DestroyRef);
     bus.role.set('main');
+
+    const seo = inject(Seo);
+    effect(() => {
+      const path = projectLink(this.id());
+      const meta = metaFor(path);
+      // Adresse inconnue : la page dit « Projet introuvable », le titre aussi.
+      seo.apply(meta.path === path ? seoTags(meta) : { ...seoTags(meta), title: 'Projet introuvable — Baptiste Nodon' });
+    });
 
     // La molette d'une loupe posée dessus fait défiler cette page.
     bus.commands$.pipe(takeUntilDestroyed()).subscribe((command) => {

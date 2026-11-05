@@ -1,6 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { TODAY } from '@core/time/time';
@@ -78,13 +77,4 @@ export class ProjectPage {
   /** Première capture en grand, les autres dans la galerie. */
   protected readonly hero = computed(() => this.project()?.images?.[0]);
   protected readonly gallery = computed(() => this.project()?.images?.slice(1) ?? []);
-
-  constructor() {
-    const title = inject(Title);
-    effect(() => {
-      if (this.decorative()) return;
-      const p = this.project();
-      title.setTitle(p ? `${p.title} — ${this.fullName}` : `Projet introuvable — ${this.fullName}`);
-    });
-  }
 }

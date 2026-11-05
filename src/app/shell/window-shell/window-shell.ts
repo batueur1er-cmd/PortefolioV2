@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, effect, inject, signal } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 
+import { Seo } from '@core/seo/seo';
 import { WindowRole } from '@core/sync/window-bus';
+import { HOME_META, seoTags } from '@domain/profile/seo';
 import { WindowRoleStore } from '@features/lens/data/window-role.store';
 import { LensView } from '@features/lens/lens-view/lens-view';
 
@@ -61,12 +62,13 @@ export class WindowShell {
     win?.addEventListener('scroll', onScroll, { passive: true });
     inject(DestroyRef).onDestroy(() => win?.removeEventListener('scroll', onScroll));
 
-    const title = inject(Title);
+    const seo = inject(Seo);
     let previous: WindowRole | null = null;
     let id = 0;
     effect(() => {
       const role = this.roles.role();
-      title.setTitle(role === 'lens' ? 'Loupe — Baptiste Nodon' : 'Baptiste Nodon — Portfolio');
+      const tags = seoTags(HOME_META);
+      seo.apply(role === 'lens' ? { ...tags, title: 'Loupe — Baptiste Nodon' } : tags);
       if (role && previous && role !== previous) {
         this.morph.set({ id: ++id, to: role });
         this.announcement.set(

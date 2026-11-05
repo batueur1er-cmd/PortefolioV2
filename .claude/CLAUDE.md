@@ -13,7 +13,7 @@ Réponds à Baptiste en français. Les textes du site et les commentaires de cod
 npm start                  # serveur de dev sur http://localhost:4200
 npm test -- --watch=false  # règles d'architecture, puis tests Vitest
 npm run lint:archi         # règles d'architecture seules
-npx ng build               # build de production (budgets dans angular.json)
+npm run build              # build de production + balises SEO de chaque page (scripts/seo.mjs)
 ```
 
 Dans le navigateur intégré, le serveur se lance avec `preview_start` (configuration « portfolio »

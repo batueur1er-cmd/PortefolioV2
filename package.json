@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build && node scripts/seo.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "node scripts/check-architecture.mjs && ng test",
     "lint:archi": "node scripts/check-architecture.mjs"
