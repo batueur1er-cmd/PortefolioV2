@@ -1,5 +1,14 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
+
+/** Ouvre le terminal caché et renvoie son champ de saisie. */
+async function openTerminal(page: Page) {
+  await page.locator('body').click({ position: { x: 5, y: 5 } });
+  await page.keyboard.press('`');
+  const field = page.getByRole('dialog', { name: 'Terminal du portfolio' }).locator('input');
+  await expect(field).toBeFocused();
+  return field;
+}
 
 test.describe('portfolio', () => {
   test('affiche l’accueil avec ses balises de partage', async ({ page }) => {
@@ -41,6 +50,41 @@ test.describe('portfolio', () => {
     await field.fill('whoami');
     await field.press('Enter');
     await expect(page.getByRole('log')).toContainText('Quercy Réfrigération');
+  });
+
+  test('les secrets trouvés restent après un rechargement, jusqu’à « oublier secrets »', async ({ page }) => {
+    await page.goto('/');
+    await page.evaluate(() => localStorage.setItem('pv2.secrets.found', JSON.stringify(['nav-version', 'skills-pix'])));
+    await page.reload();
+    const field = await openTerminal(page);
+    await field.fill('secrets');
+    await field.press('Enter');
+    await expect(page.getByRole('log')).toContainText(/2\/\d+ secrets trouvés/);
+    await field.fill('oublier secrets');
+    await field.press('Enter');
+    await expect(page.getByRole('log')).toContainText('la chasse repart de zéro');
+    expect(await page.evaluate(() => localStorage.getItem('pv2.secrets.found'))).toBe('[]');
+  });
+
+  test('le terminal oublie les succès et ouvre la singularité', async ({ page }) => {
+    await page.goto('/');
+    const field = await openTerminal(page);
+    await field.fill('oublier succes');
+    await field.press('Enter');
+    await expect(page.getByRole('log')).toContainText('Succès oubliés.');
+    expect(await page.evaluate(() => localStorage.getItem('pv2.achievements'))).toBe('[]');
+    await field.fill('singularite');
+    await field.press('Enter');
+    await expect(page.getByRole('dialog', { name: 'Singularité' })).toBeVisible({ timeout: 10_000 });
+  });
+
+  test('depuis une page projet, « singularite » ramène à l’accueil et l’ouvre', async ({ page }) => {
+    await page.goto('/projets/argus');
+    const field = await openTerminal(page);
+    await field.fill('singularite');
+    await field.press('Enter');
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByRole('dialog', { name: 'Singularité' })).toBeVisible({ timeout: 10_000 });
   });
 
   test('une seconde fenêtre rétrécie devient la loupe', async ({ context }) => {

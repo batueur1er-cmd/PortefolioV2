@@ -26,6 +26,10 @@ export interface TerminalContext {
   readonly downloadCv: (focus: string | null) => void;
   readonly setTheme: (id: 'clair' | 'nuit') => void;
   readonly toggleSimple: () => boolean;
+  /** Ouvre la singularité, sur ce portfolio et sur les autres fenêtres ouvertes. */
+  readonly openSingularity: () => void;
+  readonly forgetSecrets: () => void;
+  readonly forgetAchievements: () => void;
   readonly clear: () => void;
   readonly close: () => void;
 }
@@ -41,8 +45,6 @@ const out = (text: string): TermLine => ({ text });
 const dim = (text: string): TermLine => ({ text, kind: 'dim' });
 const ok = (text: string): TermLine => ({ text, kind: 'ok' });
 const err = (text: string): TermLine => ({ text, kind: 'err' });
-
-const SECTIONS = ['profil', 'parcours', 'realisations', 'competences', 'formation', 'contact'];
 
 export const COMMANDS: readonly Command[] = [
   {
@@ -138,17 +140,6 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
-    name: 'aller',
-    aliases: ['goto'],
-    help: '<section> fait défiler jusqu’à une section',
-    run: ([section], ctx) => {
-      const id = section?.toLowerCase();
-      if (!id || !SECTIONS.includes(id)) return [err('Section inconnue.'), dim(`sections : ${SECTIONS.join(', ')}`)];
-      ctx.navigate('/', id);
-      return [ok(`→ ${id}`)];
-    },
-  },
-  {
     name: 'secrets',
     help: 'avancement de la chasse',
     run: (_, { secrets }) => [
@@ -176,6 +167,37 @@ export const COMMANDS: readonly Command[] = [
     ],
   },
   {
+    name: 'singularite',
+    aliases: ['singularité', 'singularity'],
+    help: 'ouvre la singularité, sur toutes les fenêtres',
+    run: (_, ctx) => {
+      ctx.openSingularity();
+      return [ok('Ouverture de la singularité…'), dim('Échap ou le bouton « Revenir » pour en sortir.')];
+    },
+  },
+  {
+    name: 'oublier',
+    aliases: ['forget'],
+    help: '<secrets|succes|tout> efface la progression gardée',
+    run: ([what], ctx) => {
+      const target = what?.toLowerCase().replace('succès', 'succes');
+      if (target === 'secrets') {
+        ctx.forgetSecrets();
+        return [ok('Secrets oubliés : la chasse repart de zéro.')];
+      }
+      if (target === 'succes') {
+        ctx.forgetAchievements();
+        return [ok('Succès oubliés.')];
+      }
+      if (target === 'tout') {
+        ctx.forgetSecrets();
+        ctx.forgetAchievements();
+        return [ok('Secrets et succès oubliés.')];
+      }
+      return [err('Oublier quoi ?'), dim('Usage : oublier secrets, oublier succes, ou oublier tout')];
+    },
+  },
+  {
     name: 'theme',
     help: '<clair|nuit> change de thème',
     run: ([id], ctx) => {
@@ -188,16 +210,6 @@ export const COMMANDS: readonly Command[] = [
     name: 'simple',
     help: 'active ou coupe la version simple',
     run: (_, ctx) => [ok(ctx.toggleSimple() ? 'Version simple activée.' : 'Version simple coupée.')],
-  },
-  {
-    name: 'date',
-    help: 'la date du jour',
-    run: (_, { today }) => [out(today.toLocaleDateString('fr-FR', { dateStyle: 'full' }))],
-  },
-  {
-    name: 'sudo',
-    help: 'essayez toujours',
-    run: () => [err('Permission refusée : ce portfolio ne se laisse pas administrer.')],
   },
   {
     name: 'effacer',

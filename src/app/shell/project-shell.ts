@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 
 import { measureProjectsOverlay } from '@features/page/projects/projects-dialog/projects-dialog';
 
@@ -28,12 +29,13 @@ import { ControlDock } from './control-dock/control-dock';
     <app-project-page [id]="id()" [mode]="xrayAll() ? 'xray' : 'surface'" />
     <app-control-dock />
     <app-achievement-toast />
-    <app-terminal-overlay />
+    <app-terminal-overlay (singularity)="openSingularity()" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectShell {
   readonly id = input.required<string>();
+  private readonly router = inject(Router);
   /** Toute la page en rayons X, sur ordre de la loupe (code Konami). */
   protected readonly xrayAll = signal(false);
 
@@ -85,5 +87,10 @@ export class ProjectShell {
       });
       destroyRef.onDestroy(stop);
     });
+  }
+
+  /** La singularité vit sur l'accueil : on y retourne, en lui demandant de l'ouvrir. */
+  protected openSingularity(): void {
+    void this.router.navigate(['/'], { state: { singularity: true } });
   }
 }

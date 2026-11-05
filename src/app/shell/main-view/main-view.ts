@@ -77,6 +77,8 @@ export class MainView {
     afterNextRender(() => {
       const win = this.win;
       if (!win) return;
+      // Arrivée depuis le terminal d'une page projet (« singularite ») : elle s'ouvre ici.
+      if ((win.history.state as { singularity?: boolean } | null)?.singularity) this.setSingularity(true, true);
       if (this.initialScroll()) win.scrollTo({ top: this.initialScroll(), behavior: 'instant' });
 
       // Le défilement pilote les animations de la page ; on le relit une fois par image au plus.

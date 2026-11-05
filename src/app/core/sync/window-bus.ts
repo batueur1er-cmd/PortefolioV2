@@ -90,6 +90,8 @@ export type BusCommand =
   | { readonly type: 'simple'; readonly on: boolean }
   /** Un succès caché vient d'être débloqué. */
   | { readonly type: 'achievement'; readonly id: string }
+  /** Les succès ont été oubliés (commande « oublier succes »). */
+  | { readonly type: 'achievements-reset' }
   /** Code Konami tapé dans la loupe : le portfolio bascule tout entier en rayons X. */
   | { readonly type: 'xray-all'; readonly on: boolean };
 

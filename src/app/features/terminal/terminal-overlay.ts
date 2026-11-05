@@ -5,6 +5,7 @@ import {
   ElementRef,
   afterRenderEffect,
   inject,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
@@ -46,6 +47,9 @@ export class TerminalOverlay {
   private readonly achievements = inject(AchievementsStore);
   private readonly cv = inject(CvDownload);
   private readonly today = inject(TODAY);
+
+  /** La commande « singularite » : à la fenêtre qui accueille le terminal de l'ouvrir. */
+  readonly singularity = output<void>();
 
   protected readonly open = signal(false);
   protected readonly lines = signal<readonly TermLine[]>([]);
@@ -160,6 +164,12 @@ export class TerminalOverlay {
         if (this.motion.simple()) this.achievements.unlock('version-simple');
         return this.motion.simple();
       },
+      openSingularity: () => {
+        this.close();
+        this.singularity.emit();
+      },
+      forgetSecrets: () => this.secrets.reset(),
+      forgetAchievements: () => this.achievements.reset(),
       clear: () => this.lines.set([]),
       close: () => this.close(),
     };

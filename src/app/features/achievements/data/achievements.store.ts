@@ -44,7 +44,20 @@ export class AchievementsStore {
   constructor() {
     this.bus.commands$.pipe(takeUntilDestroyed()).subscribe((command) => {
       if (command.type === 'achievement') this.add(command.id, false);
+      else if (command.type === 'achievements-reset') this.clear();
     });
+  }
+
+  /** Oublie tous les succès et les visites qui y mènent, dans toutes les fenêtres. */
+  reset(): void {
+    this.clear();
+    this.bus.send({ type: 'achievements-reset' });
+  }
+
+  private clear(): void {
+    this.unlockedIds.set(new Set());
+    this.lastEvent.set(null);
+    for (const key of [STORAGE_KEY, VISITED_KEY, SCHEMAS_KEY]) this.write(key, new Set());
   }
 
   unlock(id: string): void {
