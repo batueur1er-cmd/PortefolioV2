@@ -34,6 +34,13 @@ Demandée par Baptiste, elle vaut pour toute la suite du projet :
   (`.github/workflows/pages.yml`). Fusionner `dev` dans `main` et pousser, seulement à la demande.
 - Le détail, avec des exemples : skill `commit-feature`.
 
+## Les tests : Baptiste les fait
+
+- Ne vérifie pas toi-même dans le navigateur (navigateur intégré, captures, loupe simulée) et
+  n'écris pas de tests de bout en bout, sauf demande. Avant un commit : `npm test` et `npx ng build`.
+- À la fin de chaque tâche, donne la liste de ce qui a été mis en place et de quoi tester, case par
+  case : skill `liste-a-tester`. Cette règle passe avant les étapes « Vérifier » des autres skills.
+
 ## Architecture
 
 ```
@@ -115,7 +122,8 @@ captures des projets sont dans `public/projects/` et s'affichent avec `NgOptimiz
 | `creer-une-feature` | nouveau service, store, dossier, état partagé entre fenêtres |
 | `mettre-a-jour-le-contenu` | expériences, projets, compétences, formation, textes |
 | `moteur-doom` | la démo façon Doom : niveau, textures, sprites, rendu, carte, explications |
-| `verifier-le-portfolio` | avant chaque commit : tests, build, navigateur, loupe simulée |
+| `liste-a-tester` | à la fin de chaque tâche : ce qui a été fait, et quoi tester à la main |
+| `verifier-le-portfolio` | seulement sur demande : navigateur, loupe simulée |
 | `commit-feature` | à la fin de chaque feature, pour le message de commit |
 
 ## Conventions Angular et TypeScript

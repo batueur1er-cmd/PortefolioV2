@@ -80,6 +80,6 @@ Specs Vitest à côté des fichiers, intitulés en français. Dans un spec, n'ut
 
 ## Terminer
 
-`npm test` (règles d'architecture comprises), `npx ng build`, vérification visuelle (skill
-`verifier-le-portfolio`), puis un commit (skill `commit-feature`). Mets à jour le tableau des
+`npm test` (règles d'architecture comprises), `npx ng build`, puis un commit (skill `commit-feature`)
+et la liste à tester pour Baptiste (skill `liste-a-tester`). Mets à jour le tableau des
 couches du `README.md` et de `.claude/CLAUDE.md` si une fonctionnalité ou une règle a été ajoutée.

@@ -12,7 +12,8 @@ fusion dans `main` : pour ceux-là, demande d'abord.
 ## Avant de commiter
 
 1. La feature est **finie** : tout ce qui a été demandé est fait, `npm test -- --watch=false` et
-   `npx ng build` passent (skill `verifier-le-portfolio`). Sinon, termine ou dis ce qui manque.
+   `npx ng build` passent. Pas de vérification dans le navigateur : Baptiste teste lui-même.
+   Sinon, termine ou dis ce qui manque.
 2. **Branche** : `git branch --show-current` doit afficher `dev`. On commite sur `dev`, sans
    branche de feature (choix de Baptiste). `main` est le site en ligne : un push sur `main` le
    publie sur GitHub Pages, donc on n'y fusionne `dev` que quand Baptiste le demande.
@@ -53,7 +54,8 @@ Co-Authored-By: …
 EOF
 ```
 
-Puis `git log --oneline -3` pour donner le hash à Baptiste.
+Puis `git log --oneline -3` pour donner le hash à Baptiste, et termine par la liste du skill
+`liste-a-tester`.
 
 ## Exemples
 

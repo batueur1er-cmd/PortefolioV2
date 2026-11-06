@@ -1,9 +1,13 @@
 ---
 name: verifier-le-portfolio
-description: Vérifier que le portfolio Révélateur fonctionne après une modification — règles d'architecture, tests Vitest, build de production et budgets, rendu en surface et en rayons X, loupe de poche, et loupe multi-fenêtres simulée dans le navigateur intégré. À utiliser avant tout commit, avant de dire « c'est fait », après un changement de style, de contenu ou d'animation, et dès que l'utilisateur demande de tester, vérifier ou montrer le site.
+description: Vérifier que le portfolio Révélateur fonctionne après une modification — règles d'architecture, tests Vitest, build de production et budgets, rendu en surface et en rayons X, loupe de poche, et loupe multi-fenêtres simulée dans le navigateur intégré. À utiliser seulement quand Baptiste demande de tester, vérifier ou montrer le site : sinon, il teste lui-même à partir de la liste du skill liste-a-tester.
 ---
 
 # Vérifier le portfolio
+
+> Baptiste teste lui-même : par défaut, seules les étapes 1 et 2 (tests et build) tournent avant un
+> commit, puis tu lui donnes la liste du skill `liste-a-tester`. Les étapes 3 à 5 ne servent que
+> s'il demande explicitement une vérification.
 
 Avance dans l'ordre : chaque étape est plus lente que la précédente, inutile d'ouvrir le navigateur
 si les tests échouent. Dis honnêtement ce qui n'a pas pu être vérifié.
