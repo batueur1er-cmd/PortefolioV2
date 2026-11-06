@@ -32,7 +32,7 @@ export const HOME_META: PageMeta = {
   type: 'website',
 };
 
-/** Toutes les pages du site : l'accueil, puis une par projet. */
+/** Toutes les pages du site : l'accueil, une par projet, puis les démos. */
 export const PAGES: readonly PageMeta[] = [
   HOME_META,
   ...PROFILE.projects.map(
@@ -43,6 +43,19 @@ export const PAGES: readonly PageMeta[] = [
       image: `/og/${p.id}.png`,
       type: 'article',
     }),
+  ),
+  ...PROFILE.projects.flatMap((p): PageMeta[] =>
+    p.demo
+      ? [
+          {
+            path: p.demo.path,
+            title: `${p.title} · démo — ${FULL_NAME}`,
+            description: p.demo.description,
+            image: `/og/${p.id}.png`,
+            type: 'website',
+          },
+        ]
+      : [],
   ),
 ];
 

@@ -36,6 +36,16 @@ export interface ProjectImage {
   readonly alt: string;
 }
 
+/** Une démo qui tourne sur le site, ouverte depuis la page du projet. */
+export interface ProjectDemo {
+  /** Adresse de la démo sur le site. */
+  readonly path: string;
+  /** Texte du bouton, sur la page du projet. */
+  readonly label: string;
+  /** Pour les moteurs de recherche et les aperçus de lien. */
+  readonly description: string;
+}
+
 export interface Project {
   readonly id: string;
   readonly title: string;
@@ -53,6 +63,8 @@ export interface Project {
   readonly featured?: boolean;
   /** Dépôt public, s'il existe. */
   readonly repo?: string;
+  /** Démo en ligne, s'il y en a une. */
+  readonly demo?: ProjectDemo;
   readonly secret: string;
   readonly secretLabel: string;
 }

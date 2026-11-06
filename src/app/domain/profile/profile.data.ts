@@ -244,6 +244,14 @@ export const PROFILE: Profile = {
       ],
       skills: ['threejs', 'angular', 'typescript'],
       visual: 'visu3d',
+      // Refait dans ce portfolio (route déclarée dans app.routes.ts).
+      demo: {
+        path: '/projets/visu3d/demo',
+        label: 'Ouvrir le visualiseur 3D',
+        description:
+          'Le visualiseur 3D en démo : importer un modèle OBJ et le manipuler dans le navigateur, ' +
+          'avec Three.js dans une application Angular.',
+      },
       secret: 'scène · caméra · lumière · OBJLoader',
       secretLabel: 'La scène Three.js',
     },

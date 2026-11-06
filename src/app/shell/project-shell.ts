@@ -1,22 +1,15 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, effect, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 
-import { measureProjectsOverlay } from '@features/page/projects/projects-dialog/projects-dialog';
-
-import { FrameLoop } from '@core/dom/frame-loop';
-import { contentOrigin, pageZoom } from '@core/geometry/geometry';
 import { Seo } from '@core/seo/seo';
-import { WindowBus } from '@core/sync/window-bus';
 import { metaFor, seoTags } from '@domain/profile/seo';
 import { projectLink } from '@domain/profile/projects';
-import { WindowRoleStore } from '@features/lens/data/window-role.store';
 import { ProjectPage } from '@features/project/project-page';
 import { AchievementsStore } from '@features/achievements/data/achievements.store';
 import { AchievementToast } from '@features/achievements/ui/achievement-toast';
 import { TerminalOverlay } from '@features/terminal/terminal-overlay';
 
 import { ControlDock } from './control-dock/control-dock';
+import { connectPageWindow } from './page-window';
 
 /**
  * La fenêtre d'une page projet : la page et le bouton mode nuit. Elle annonce, comme l'accueil,
@@ -26,27 +19,18 @@ import { ControlDock } from './control-dock/control-dock';
   selector: 'app-project-shell',
   imports: [ProjectPage, ControlDock, AchievementToast, TerminalOverlay],
   template: `
-    <app-project-page [id]="id()" [mode]="xrayAll() ? 'xray' : 'surface'" />
+    <app-project-page [id]="id()" [mode]="page.xrayAll() ? 'xray' : 'surface'" />
     <app-control-dock />
     <app-achievement-toast />
-    <app-terminal-overlay (singularity)="openSingularity()" />
+    <app-terminal-overlay (singularity)="page.openSingularity()" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectShell {
   readonly id = input.required<string>();
-  private readonly router = inject(Router);
-  /** Toute la page en rayons X, sur ordre de la loupe (code Konami). */
-  protected readonly xrayAll = signal(false);
+  protected readonly page = connectPageWindow(() => projectLink(this.id()));
 
   constructor() {
-    const bus = inject(WindowBus);
-    const roles = inject(WindowRoleStore);
-    const frames = inject(FrameLoop);
-    const doc = inject(DOCUMENT);
-    const destroyRef = inject(DestroyRef);
-    bus.role.set('main');
-
     const seo = inject(Seo);
     const achievements = inject(AchievementsStore);
     effect(() => achievements.visitProject(this.id()));
@@ -56,41 +40,5 @@ export class ProjectShell {
       // Adresse inconnue : la page dit « Projet introuvable », le titre aussi.
       seo.apply(meta.path === path ? seoTags(meta) : { ...seoTags(meta), title: 'Projet introuvable — Baptiste Nodon' });
     });
-
-    // La molette d'une loupe posée dessus fait défiler cette page.
-    bus.commands$.pipe(takeUntilDestroyed()).subscribe((command) => {
-      if (command.type === 'scroll' && command.target === bus.id) {
-        doc.defaultView?.scrollBy({ top: command.dy, behavior: 'instant' });
-      } else if (command.type === 'xray-all') {
-        this.xrayAll.set(command.on);
-      }
-    });
-
-    afterNextRender(() => {
-      const win = doc.defaultView;
-      if (!win) return;
-      const stop = frames.add(() => {
-        const zoom = pageZoom(win);
-        bus.windows.publish({
-          kind: 'main',
-          id: bus.id,
-          t: Date.now(),
-          origin: contentOrigin(win, zoom),
-          pageZoom: zoom,
-          viewport: { w: win.innerWidth, h: win.innerHeight },
-          small: roles.small(),
-          layoutWidth: doc.documentElement.clientWidth,
-          scroll: { x: win.scrollX, y: win.scrollY },
-          route: `/projets/${this.id()}`,
-          overlay: measureProjectsOverlay(doc),
-        });
-      });
-      destroyRef.onDestroy(stop);
-    });
-  }
-
-  /** La singularité vit sur l'accueil : on y retourne, en lui demandant de l'ouvrir. */
-  protected openSingularity(): void {
-    void this.router.navigate(['/'], { state: { singularity: true } });
   }
 }

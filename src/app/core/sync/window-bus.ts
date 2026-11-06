@@ -42,6 +42,35 @@ export interface OverlayPresence {
   readonly scrollTop: number;
 }
 
+export type Vec3 = readonly [number, number, number];
+
+/**
+ * Le visualiseur 3D ouvert sur le portfolio : de quoi refaire exactement la même image dans la
+ * copie rayons X d'une loupe (même modèle, même caméra, mêmes réglages).
+ */
+export interface ViewerPresence {
+  /** « demo:<id> » pour un modèle d'exemple, « file:<id> » pour un fichier importé. */
+  readonly model: string;
+  readonly modelName: string;
+  /** Position de la caméra et point qu'elle vise, en unités de la scène. */
+  readonly camera: { readonly position: Vec3; readonly target: Vec3 };
+  /** Lumière principale (intensité, azimut et hauteur en degrés) et lumière d'ambiance. */
+  readonly light: {
+    readonly intensity: number;
+    readonly azimuth: number;
+    readonly elevation: number;
+    readonly ambient: number;
+  };
+  /** Position du modèle : décalage, rotation (degrés) et échelle. */
+  readonly transform: {
+    readonly x: number;
+    readonly y: number;
+    readonly z: number;
+    readonly rotation: number;
+    readonly scale: number;
+  };
+}
+
 /** Une fenêtre qui affiche le portfolio. */
 export interface MainPresence extends WindowBase {
   readonly kind: 'main';
@@ -52,6 +81,8 @@ export interface MainPresence extends WindowBase {
   readonly route: string;
   /** Fenêtre modale ouverte, s'il y en a une. */
   readonly overlay?: OverlayPresence | null;
+  /** Visualiseur 3D affiché, s'il y en a un. */
+  readonly viewer?: ViewerPresence | null;
 }
 
 /** Une fenêtre loupe. */
@@ -93,7 +124,11 @@ export type BusCommand =
   /** Les succès ont été oubliés (commande « oublier succes »). */
   | { readonly type: 'achievements-reset' }
   /** Code Konami tapé dans la loupe : le portfolio bascule tout entier en rayons X. */
-  | { readonly type: 'xray-all'; readonly on: boolean };
+  | { readonly type: 'xray-all'; readonly on: boolean }
+  /** Un fichier OBJ importé dans le visualiseur 3D, envoyé aux loupes pour leur copie. */
+  | { readonly type: 'viewer-model'; readonly key: string; readonly name: string; readonly text: string }
+  /** Une loupe qui n'a pas encore le fichier affiché par le visualiseur le demande. */
+  | { readonly type: 'viewer-model-request'; readonly key: string };
 
 export const isMain = (p: WindowPresence): p is MainPresence => p.kind === 'main';
 export const isLens = (p: WindowPresence): p is LensPresence => p.kind === 'lens';

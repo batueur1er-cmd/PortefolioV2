@@ -21,9 +21,10 @@ const FEATURE_DEPS = {
   cv: ['achievements'],
   achievements: [],
   terminal: ['achievements', 'secrets', 'cv'],
-  lens: ['page', 'secrets', 'project', 'achievements', 'singularity'],
+  lens: ['page', 'secrets', 'project', 'achievements', 'singularity', 'viewer'],
   singularity: ['secrets'],
   project: ['achievements', 'page'],
+  viewer: ['achievements'],
 };
 
 const files = walk(ROOT).filter((f) => f.endsWith('.ts'));

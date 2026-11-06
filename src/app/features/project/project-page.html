@@ -33,6 +33,13 @@
         <li class="chip"><span class="chip-key">Contexte</span>{{ p.context }}</li>
         <li class="chip"><span class="chip-key">Stack</span><span class="chip-accent">{{ stackLine() }}</span></li>
       </ul>
+      @if (p.demo; as demo) {
+        <a class="demo" [routerLink]="demo.path">
+          <span class="demo-dot" aria-hidden="true"></span>
+          {{ demo.label }}
+          <span aria-hidden="true">→</span>
+        </a>
+      }
     </section>
 
     <!-- Capture principale, posée sur un bandeau -->

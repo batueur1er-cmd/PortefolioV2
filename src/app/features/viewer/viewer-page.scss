@@ -1,0 +1,688 @@
+/*
+ * La démo du visualiseur 3D : les mêmes variables de thème que les pages projet. Pas de barre
+ * collante (rien à émuler dans la copie d'une loupe), des tailles qui ne dépendent que de la largeur.
+ */
+:host {
+  display: block;
+  min-height: 100vh;
+  container: page / inline-size;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+.label {
+  margin: 0 0 22px;
+  font: 600 11px/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ---------- Barre du haut ---------- */
+
+.bar {
+  border-bottom: 1px solid var(--line);
+}
+
+.bar-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 80px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.monogram {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: 50%;
+  background: var(--paper);
+  font: 600 11px/1 var(--mono);
+  color: var(--accent);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font: 600 24px/1 var(--sans);
+}
+
+.brand-sub {
+  margin-top: 2px;
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.back,
+.tool,
+.reset,
+.import {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--paper) 60%, transparent);
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    border-color 0.25s,
+    color 0.25s,
+    background 0.25s;
+}
+
+.back {
+  padding: 11px 20px;
+}
+
+.back:hover,
+.back:focus-visible,
+.tool:hover,
+.tool:focus-visible,
+.reset:hover,
+.reset:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+}
+
+/* ---------- En-tête ---------- */
+
+.intro {
+  padding-top: clamp(40px, 6cqi, 80px);
+  padding-bottom: clamp(28px, 4cqi, 44px);
+}
+
+.kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 20px;
+  font: 600 12px/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rule {
+  width: 32px;
+  height: 1px;
+  background: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.title {
+  margin: 0 0 22px;
+  font: 400 clamp(52px, 8cqi, 96px) / 0.95 var(--serif);
+  letter-spacing: -0.02em;
+}
+
+.summary {
+  max-width: 700px;
+  margin: 0;
+  font: 400 clamp(17px, 1.7cqi, 21px) / 1.55 var(--sans);
+  color: var(--muted);
+}
+
+/* ---------- Le visualiseur : la scène et ses réglages ---------- */
+
+.viewer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: start;
+  padding-bottom: clamp(56px, 7cqi, 96px);
+}
+
+.stage {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
+  border-radius: 18px;
+  background: radial-gradient(120% 90% at 50% 15%, var(--paper), var(--paper-2));
+  box-shadow: 0 24px 60px -16px color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.canvas:active {
+  cursor: grabbing;
+}
+
+.canvas:focus-visible {
+  outline-offset: -4px;
+}
+
+.stage-top {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.model-chip,
+.tools {
+  pointer-events: auto;
+}
+
+.model-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  margin: 0;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+  font: 600 12px/1.2 var(--mono);
+  overflow-wrap: anywhere;
+}
+
+.chip-key {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tools {
+  display: flex;
+  gap: 8px;
+}
+
+.tool {
+  padding: 9px 14px;
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+}
+
+.tool[aria-pressed='true'] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.notice {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  max-width: 80%;
+  margin: 0;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: var(--glass);
+  font: 500 13px/1.4 var(--mono);
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.drop {
+  position: absolute;
+  inset: 12px;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  border: 2px dashed var(--accent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--paper) 70%, transparent);
+  font: 600 13px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.stage.dragging .drop {
+  opacity: 1;
+}
+
+.hint {
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  margin: 0;
+  font: 500 11px/1.4 var(--mono);
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.controls {
+  display: grid;
+  gap: 16px;
+}
+
+.group {
+  padding: 18px 20px 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: 0 18px 34px -22px color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.group-title {
+  margin: 0 0 12px;
+  font: 600 18px/1.2 var(--sans);
+}
+
+.group-head .group-title {
+  margin: 0;
+}
+
+.reset {
+  padding: 7px 11px;
+  font-size: 10px;
+}
+
+.models {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.model {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.model:hover,
+.model:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.model[aria-pressed='true'] {
+  border-color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.model-name {
+  font: 600 14px/1.2 var(--sans);
+}
+
+.model-caption {
+  font: 400 12.5px/1.4 var(--sans);
+  color: var(--muted);
+}
+
+.import {
+  justify-content: center;
+  width: 100%;
+  padding: 13px 18px;
+  border-color: var(--ink);
+  background: var(--ink);
+  font-weight: 600;
+  color: var(--paper);
+}
+
+.import:hover,
+.import:focus-visible {
+  background: transparent;
+  color: var(--ink);
+}
+
+.file {
+  display: none;
+}
+
+.small {
+  margin: 10px 0 0;
+  font: 400 12px/1.5 var(--sans);
+  color: var(--muted);
+}
+
+.error {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--accent-2);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--accent-2) 8%, var(--paper));
+  font: 500 12.5px/1.45 var(--sans);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 14px 0 0;
+}
+
+.stats div {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.stats .wide {
+  grid-column: 1 / -1;
+}
+
+.stats dt {
+  font: 600 10px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stats dd {
+  margin: 6px 0 0;
+  font: 600 15px/1.2 var(--mono);
+  color: var(--accent);
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 10px;
+  padding: 9px 0;
+  border-top: 1px solid var(--line);
+}
+
+.field-name {
+  font: 500 13px/1.3 var(--sans);
+}
+
+.field-value {
+  font: 600 12px/1.3 var(--mono);
+  color: var(--accent);
+}
+
+.field input {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* ---------- Graphe de scène ---------- */
+
+.graph {
+  padding-top: clamp(40px, 5cqi, 64px);
+  padding-bottom: clamp(56px, 7cqi, 96px);
+  border-top: 1px solid var(--line);
+}
+
+.tree {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: 400 13px/1.5 var(--mono);
+}
+
+.tree.sub {
+  margin: 4px 0 0 18px;
+}
+
+.node {
+  position: relative;
+  padding: 3px 0 3px 22px;
+}
+
+.node::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid var(--line);
+}
+
+.node::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 14px;
+  width: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.node.root {
+  padding-left: 0;
+  font-weight: 600;
+}
+
+.node.root::before,
+.node.root::after {
+  display: none;
+}
+
+.type {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.meta,
+.more {
+  color: var(--muted);
+}
+
+/* Angular retire l'espace entre deux balises : on le rend en marge. */
+.type + .meta {
+  margin-left: 0.6em;
+}
+
+/* ---------- Pied de page ---------- */
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 28px;
+  padding-bottom: 110px;
+  border-top: 1px solid var(--line);
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.foot-name {
+  font: 600 20px/1 var(--sans);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+}
+
+/* ---------- Pages étroites ---------- */
+
+@container page (max-width: 900px) {
+  .viewer {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    align-items: start;
+  }
+}
+
+@container page (max-width: 640px) {
+  .bar-in {
+    height: 64px;
+  }
+
+  .brand-text {
+    display: none;
+  }
+
+  .stage {
+    aspect-ratio: 1;
+  }
+
+  .hint {
+    display: none;
+  }
+}
+
+/* ---------- Copie dans une loupe ---------- */
+
+:host(.remote) *,
+:host(.remote) *::before {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ---------- Rayons X : le plan de la scène, mêmes positions, autres couleurs ---------- */
+
+:host(.xray) {
+  background:
+    linear-gradient(color-mix(in srgb, var(--xl) 5%, transparent) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, color-mix(in srgb, var(--xl) 5%, transparent) 1px, transparent 1px) 0 0 / 32px 32px,
+    var(--xbg);
+  color: var(--xtext);
+}
+
+:host(.xray) .bar,
+:host(.xray) .graph,
+:host(.xray) .foot,
+:host(.xray) .field {
+  border-color: color-mix(in srgb, var(--xl) 25%, transparent);
+}
+
+:host(.xray) .brand,
+:host(.xray) .foot-name,
+:host(.xray) .model,
+:host(.xray) .back,
+:host(.xray) .tool,
+:host(.xray) .reset,
+:host(.xray) .model-chip {
+  color: var(--xtext);
+}
+
+:host(.xray) .summary,
+:host(.xray) .brand-sub,
+:host(.xray) .hint,
+:host(.xray) .small,
+:host(.xray) .model-caption,
+:host(.xray) .chip-key,
+:host(.xray) .stats dt,
+:host(.xray) .meta,
+:host(.xray) .more,
+:host(.xray) .foot {
+  color: color-mix(in srgb, var(--xtext) 65%, transparent);
+}
+
+:host(.xray) .label,
+:host(.xray) .kicker,
+:host(.xray) .monogram,
+:host(.xray) .type,
+:host(.xray) .field-value,
+:host(.xray) .stats dd {
+  color: var(--xl);
+}
+
+:host(.xray) .title {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--xp);
+}
+
+:host(.xray) .rule,
+:host(.xray) .node::before,
+:host(.xray) .node::after {
+  border-color: color-mix(in srgb, var(--xl) 40%, transparent);
+  background: color-mix(in srgb, var(--xl) 40%, transparent);
+}
+
+/* La scène perd son fond : le plan de la page se voit à travers les volumes. */
+:host(.xray) .stage {
+  border: 1px dashed color-mix(in srgb, var(--xl) 60%, transparent);
+  background: transparent;
+  box-shadow: none;
+}
+
+:host(.xray) .monogram,
+:host(.xray) .back,
+:host(.xray) .tool,
+:host(.xray) .reset,
+:host(.xray) .model-chip,
+:host(.xray) .model,
+:host(.xray) .group,
+:host(.xray) .stats div,
+:host(.xray) .notice {
+  border-color: color-mix(in srgb, var(--xl) 45%, transparent);
+  background: color-mix(in srgb, var(--xbg-2) 80%, transparent);
+  backdrop-filter: none;
+}
+
+:host(.xray) .tool[aria-pressed='true'] {
+  border-color: var(--xl);
+  color: var(--xl);
+}
+
+:host(.xray) .model[aria-pressed='true'] {
+  border-color: var(--xl);
+  box-shadow: inset 3px 0 0 var(--xn);
+}
+
+:host(.xray) .import {
+  border-color: var(--xl);
+  background: transparent;
+  color: var(--xtext);
+}
+
+:host(.xray) .field input {
+  accent-color: var(--xl);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

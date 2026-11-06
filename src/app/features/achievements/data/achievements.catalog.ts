@@ -22,6 +22,8 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   { id: 'lecteur-de-plans', label: 'Lecteur de plans', hint: 'Regarder le schéma de principe de chaque projet qui en a un.' },
   { id: 'pilule-rouge', label: 'Pilule rouge', hint: 'Entrer dans la matrice depuis le terminal.' },
   { id: 'code-ouvert', label: 'Code ouvert', hint: 'Ouvrir un dépôt GitHub depuis une page projet.' },
+  { id: 'vision-3d', label: 'Vision 3D', hint: 'Regarder le visualiseur 3D à travers la loupe.' },
+  { id: 'modeliste', label: 'Modéliste', hint: 'Importer son propre fichier OBJ dans le visualiseur 3D.' },
 ];
 
 export const ACHIEVEMENT_BY_ID: ReadonlyMap<string, AchievementDef> = new Map(ACHIEVEMENTS.map((a) => [a.id, a]));

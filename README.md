@@ -47,8 +47,9 @@ src/app/
 │   ├── page/         la page portfolio et ses sections (hero, profil, parcours…)
 │   ├── secrets/      catalogue, progression, directive appSecret, notification
 │   ├── lens/         rôle de la fenêtre, vue loupe, HUD, halos
+│   ├── viewer/       le visualiseur 3D (Three.js), et sa copie aux rayons X
 │   └── singularity/  l'écran final
-└── shell/      assemble le tout : bascule portfolio ↔ loupe, bouton mode nuit, curseur
+└── shell/      assemble le tout : bascule portfolio ↔ loupe, bouton mode nuit
 ```
 
 | Couche | Peut importer |
@@ -59,7 +60,8 @@ src/app/
 | `features/x` | `core`, `domain`, `shared`, `x`, et les fonctionnalités listées dans `FEATURE_DEPS` |
 | `shell` | tout |
 
-Les fonctionnalités ne se connaissent que dans un sens : `lens → page → secrets`. Quand une couche
+Les fonctionnalités ne se connaissent que dans un sens (par exemple `lens → page → secrets`,
+`lens → viewer → achievements`), sans cycle. Quand une couche
 basse a besoin de quelque chose d'une couche haute, elle déclare un contrat et la couche haute le
 fournit : `SecretHost` (secrets) et `ScrollStage` (shared) sont implémentés par `PortfolioPage`.
 Les imports entre couches passent par les alias `@core`, `@domain`, `@shared`, `@features`.
@@ -71,6 +73,11 @@ Les imports entre couches passent par les alias `@core`, `@domain`, `@shared`, `
   et des opacités, jamais la mise en page : les deux exemplaires restent identiques au pixel près.
   Les tailles s'appuient sur des container queries (`cqi`) et sur `--vh`, la hauteur de la fenêtre
   portfolio, pour ne jamais dépendre de la taille de la loupe.
+- **Le visualiseur 3D.** La démo du projet « Visualiseur 3D » (`/projets/visu3d/demo`) charge
+  Three.js à part, seulement sur cette page. Elle annonce l'état de sa scène (modèle, caméra,
+  lumière, position) avec sa présence ; une loupe posée dessus redessine la même vue aux rayons X,
+  calée à chaque image (`ViewerPage.sync`). Un fichier OBJ importé passe aux loupes par le
+  `BroadcastChannel` : il ne quitte pas le navigateur.
 - **Le rôle de chaque fenêtre.** Chaque fenêtre annonce sur un `BroadcastChannel` sa position, sa
   taille, son défilement et si elle est « petite » (`core/sync`). Une fenêtre petite, alors qu'une
   grande fenêtre du site est ouverte, devient une loupe (`features/lens/data/window-role.store.ts`).

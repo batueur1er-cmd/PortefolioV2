@@ -41,14 +41,16 @@ src/app/
 ├── core/      infrastructure : dom/, geometry/, sync/ (bus entre fenêtres), theme/, time/
 ├── domain/    profile/ (contenu), career/, geo/, skills/ : TypeScript pur, testé
 ├── shared/    motion/ (apparitions, compteurs, effets) et ui/ (en-tête de section, bandeau…)
-├── features/  page/ (la page et ses sections), secrets/, lens/ (loupe), singularity/
+├── features/  page/ (la page et ses sections), secrets/, lens/ (loupe), viewer/ (visualiseur 3D),
+│              project/, terminal/, achievements/, cv/, singularity/
 └── shell/     racine de chaque fenêtre : bascule portfolio ↔ loupe, bouton mode nuit
 ```
 
 - `core` → `core` ; `domain` → `core`, `domain` ; `shared` → `core`, `shared` ;
   `features/x` → `core`, `domain`, `shared`, `x` et `FEATURE_DEPS[x]` ; `shell` → tout.
-- `FEATURE_DEPS` (dans `scripts/check-architecture.mjs`) : `lens → page, secrets`,
-  `page → secrets`, rien d'autre. Le script tourne avant chaque `npm test`.
+- `FEATURE_DEPS` (dans `scripts/check-architecture.mjs`) liste qui dépend de qui, sans cycle
+  (par exemple `lens → page, project, viewer…`, `viewer → achievements`). Le script tourne avant
+  chaque `npm test`.
 - Une couche basse qui a besoin d'une couche haute déclare un contrat (classe abstraite servant de
   jeton) que la couche haute fournit : `SecretHost` et `ScrollStage`, fournis par `PortfolioPage`.
 - Imports entre couches par les alias `@core/`, `@domain/`, `@shared/`, `@features/` ; relatifs à
@@ -75,7 +77,11 @@ taille, autre moment d'ouverture, pas de pointeur, pas de défilement propre). D
 7. **La loupe reste secrète** : elle n'existe que dans une autre fenêtre du navigateur, rétrécie
    par le visiteur lui-même. Aucun bouton ne l'ouvre ni ne montre la vue rayons X ; les seuls boutons
    flottants sont la version simple et le mode nuit. Ne réintroduis pas de loupe intégrée à la page.
-8. Le seuil de la loupe (`LENS_WINDOW`, 680 × 620 px, dans `core/sync/window-size.ts`) fait partie
+8. Une scène 3D (`features/viewer`) ne regarde jamais sa propre fenêtre : la copie de la loupe
+   reçoit la caméra et les réglages du portfolio à chaque image (`ViewerPage.sync`, présence
+   `viewer`), et un fichier importé par le bus (`viewer-model`). Three.js reste dans un chargement
+   à part (`import()` dans `ViewerPage`), jamais dans le bundle initial.
+9. Le seuil de la loupe (`LENS_WINDOW`, 680 × 620 px, dans `core/sync/window-size.ts`) fait partie
    du protocole entre fenêtres : toutes appliquent la même règle (`decideRole`).
 
 ## Contenu

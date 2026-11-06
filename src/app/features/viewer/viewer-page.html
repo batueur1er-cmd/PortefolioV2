@@ -1,0 +1,188 @@
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" routerLink="/">
+      <span class="monogram" aria-hidden="true">BN</span>
+      <span class="brand-text">
+        <span class="brand-name">{{ fullName }}</span>
+        <span class="brand-sub">Portfolio</span>
+      </span>
+    </a>
+    <a class="back" [routerLink]="projectPath">
+      <span aria-hidden="true">←</span>
+      <span>Le projet</span>
+    </a>
+  </div>
+</header>
+
+<main id="contenu" tabindex="-1" class="wrap">
+  <section class="intro">
+    <p class="kicker">
+      <span>Démo</span>
+      <span class="rule" aria-hidden="true"></span>
+      <span>Three.js · Angular</span>
+    </p>
+    <h1 class="title">Visualiseur 3D</h1>
+    <p class="summary">
+      Importez un modèle au format OBJ, tournez autour, puis réglez la lumière et la position du modèle.
+      Le fichier reste dans votre navigateur.
+    </p>
+  </section>
+
+  <section class="viewer" aria-label="Visualiseur">
+    <div
+      #stage
+      class="stage"
+      [class.dragging]="dragging()"
+      (dragenter)="onDragOver($event)"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
+      <canvas #canvas class="canvas" tabindex="0" role="img" [attr.aria-label]="canvasLabel()"></canvas>
+
+      <div class="stage-top">
+        <p class="model-chip"><span class="chip-key">Modèle</span>{{ model().name }}</p>
+        <div class="tools">
+          <button type="button" class="tool" (click)="recenter()">Recentrer</button>
+          <button type="button" class="tool" [attr.aria-pressed]="autoRotate()" (click)="toggleAutoRotate()">
+            Rotation auto
+          </button>
+        </div>
+      </div>
+
+      @if (unsupported()) {
+        <p class="notice">WebGL n'est pas disponible dans ce navigateur : la scène ne peut pas s'afficher.</p>
+      } @else if (status()) {
+        <p class="notice" role="status">{{ status() }}</p>
+      }
+      <p class="drop" aria-hidden="true">Déposez le fichier .obj ici</p>
+      <p class="hint">Glisser : tourner · Molette : zoomer · Clic droit : déplacer</p>
+    </div>
+
+    <aside class="controls" aria-label="Réglages">
+      <section class="group" aria-labelledby="g-modele">
+        <h2 id="g-modele" class="group-title">Modèle</h2>
+        <ul class="models">
+          @for (demo of demos; track demo.id) {
+            <li>
+              <button type="button" class="model" [attr.aria-pressed]="demoId() === demo.id" (click)="pickDemo(demo)">
+                <span class="model-name">{{ demo.name }}</span>
+                <span class="model-caption">{{ demo.caption }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+        <button type="button" class="import" (click)="pickFile()">
+          Importer un fichier OBJ <span aria-hidden="true">↑</span>
+        </button>
+        <input #file class="file" type="file" accept=".obj" hidden (change)="onFileChosen($event)" />
+        <p class="small">Ou déposez-le sur la scène · {{ maxSize }} au plus · rien n'est envoyé.</p>
+        @if (error(); as message) {
+          <p class="error" role="alert">{{ message }}</p>
+        }
+        @if (info(); as i) {
+          <dl class="stats">
+            <div>
+              <dt>Objets</dt>
+              <dd>{{ count(i.objects) }}</dd>
+            </div>
+            <div>
+              <dt>Triangles</dt>
+              <dd>{{ count(i.triangles) }}</dd>
+            </div>
+            <div class="wide">
+              <dt>Dimensions</dt>
+              <dd>{{ dims(i.size) }}</dd>
+            </div>
+          </dl>
+        }
+      </section>
+
+      <section class="group" aria-labelledby="g-lumiere">
+        <div class="group-head">
+          <h2 id="g-lumiere" class="group-title">Lumière</h2>
+          <button type="button" class="reset" (click)="resetLight()">Par défaut</button>
+        </div>
+        @for (s of lightSliders; track s.key) {
+          <label class="field">
+            <span class="field-name">{{ s.label }}</span>
+            <span class="field-value">{{ s.format(light()[s.key]) }}</span>
+            <input
+              type="range"
+              [min]="s.min"
+              [max]="s.max"
+              [step]="s.step"
+              [value]="light()[s.key]"
+              [attr.aria-valuetext]="s.format(light()[s.key])"
+              (input)="setLight(s, $event)"
+            />
+          </label>
+        }
+      </section>
+
+      <section class="group" aria-labelledby="g-position">
+        <div class="group-head">
+          <h2 id="g-position" class="group-title">Position du modèle</h2>
+          <button type="button" class="reset" (click)="resetTransform()">Par défaut</button>
+        </div>
+        @for (s of transformSliders; track s.key) {
+          <label class="field">
+            <span class="field-name">{{ s.label }}</span>
+            <span class="field-value">{{ s.format(transform()[s.key]) }}</span>
+            <input
+              type="range"
+              [min]="s.min"
+              [max]="s.max"
+              [step]="s.step"
+              [value]="transform()[s.key]"
+              [attr.aria-valuetext]="s.format(transform()[s.key])"
+              (input)="setTransform(s, $event)"
+            />
+          </label>
+        }
+      </section>
+    </aside>
+  </section>
+
+  <!-- Ce que Three.js tient en mémoire, pièce par pièce -->
+  <section class="graph" aria-labelledby="graphe">
+    <h2 id="graphe" class="label">Graphe de scène</h2>
+    <ul class="tree">
+      <li class="node root">Scene</li>
+      <li class="node"><span class="type">PerspectiveCamera</span> <span class="meta">champ {{ fov }}°</span></li>
+      <li class="node">
+        <span class="type">HemisphereLight</span> <span class="meta">ambiance {{ decimal(light().ambient, 2) }}</span>
+      </li>
+      <li class="node">
+        <span class="type">DirectionalLight</span>
+        <span class="meta">intensité {{ decimal(light().intensity, 1) }} · ombres portées</span>
+      </li>
+      <li class="node">
+        <span class="type">Group</span>
+        <span class="meta">
+          « {{ model().name }} »
+          @if (info(); as i) {
+            · {{ count(i.objects) }} objet{{ i.objects > 1 ? 's' : '' }} · {{ count(i.triangles) }} triangles
+          }
+        </span>
+        @if (info(); as i) {
+          <ul class="tree sub">
+            @for (part of i.parts; track $index) {
+              <li class="node">
+                <span class="type">Mesh</span> <span class="meta">{{ part.name }} · {{ count(part.triangles) }} triangles</span>
+              </li>
+            }
+            @if (i.objects > i.parts.length) {
+              <li class="node more">… et {{ count(i.objects - i.parts.length) }} autres</li>
+            }
+          </ul>
+        }
+      </li>
+    </ul>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <span class="foot-name">{{ fullName }}</span>
+  <span>© {{ year }}</span>
+</footer>

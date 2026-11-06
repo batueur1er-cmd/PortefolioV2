@@ -223,6 +223,56 @@ main {
   color: var(--accent);
 }
 
+/* La démo du projet, quand elle tourne sur le site : le bouton principal de la page. */
+.demo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 30px;
+  padding: 16px 26px;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  font: 600 12px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper);
+  text-decoration: none;
+  box-shadow: 0 16px 34px -14px color-mix(in srgb, var(--accent) 60%, transparent);
+  animation: rise 0.8s 0.24s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+  transition:
+    background 0.25s,
+    color 0.25s,
+    transform 0.25s;
+}
+
+.demo:hover,
+.demo:focus-visible {
+  background: transparent;
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.demo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+:host(.xray) .demo {
+  border-color: var(--xl);
+  background: transparent;
+  color: var(--xtext);
+  box-shadow: none;
+}
+
+:host(.xray) .demo-dot {
+  background: var(--xn);
+  box-shadow: none;
+}
+
 /* ---------- Capture principale sur son bandeau ---------- */
 
 .hero {

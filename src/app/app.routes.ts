@@ -10,6 +10,11 @@ export const routes: Routes = [
     pathMatch: 'full',
     loadComponent: () => import('./shell/window-shell/window-shell').then((m) => m.WindowShell),
   },
+  // La démo du visualiseur 3D (VIEWER_PATH) : Three.js n'est chargé qu'ici.
+  {
+    path: 'projets/visu3d/demo',
+    loadComponent: () => import('./shell/viewer-shell').then((m) => m.ViewerShell),
+  },
   {
     path: 'projets/:id',
     loadComponent: () => import('./shell/project-shell').then((m) => m.ProjectShell),

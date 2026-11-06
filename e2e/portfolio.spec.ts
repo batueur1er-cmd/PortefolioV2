@@ -160,6 +160,58 @@ test.describe('portfolio', () => {
     await expect(main.getByRole('dialog')).toHaveCount(0);
   });
 
+  test('la page du visualiseur 3D ouvre sa démo, qui affiche un modèle d’exemple', async ({ page }) => {
+    await page.goto('/projets/visu3d');
+    await page.getByRole('link', { name: /Ouvrir le visualiseur 3D/ }).click();
+    await expect(page).toHaveURL(/\/projets\/visu3d\/demo$/);
+    await expect(page).toHaveTitle(/Visualiseur 3D · démo/);
+    await expect(page.locator('h1')).toHaveText('Visualiseur 3D');
+    await expect(page.locator('.stats')).toContainText('13');
+    await page.getByRole('button', { name: /Le colis/ }).click();
+    await expect(page.locator('.model-chip')).toContainText('Le colis');
+  });
+
+  test('un fichier OBJ importé s’affiche aussi dans la loupe, aux rayons X', async ({ context }) => {
+    const main = await context.newPage();
+    await main.setViewportSize({ width: 1280, height: 800 });
+    await main.goto('/projets/visu3d/demo');
+    await expect(main.locator('.stats')).toBeVisible();
+    const lens = await context.newPage();
+    await lens.setViewportSize({ width: 520, height: 420 });
+    await lens.goto('/');
+    await expect(lens.locator('app-viewer-page.lens-page')).toHaveClass(/xray/, { timeout: 10_000 });
+    const pyramid = ['o pyramide', 'v -1 0 -1', 'v 1 0 -1', 'v 1 0 1', 'v -1 0 1', 'v 0 1.6 0'];
+    pyramid.push('f 1 2 5', 'f 2 3 5', 'f 3 4 5', 'f 4 1 5', 'f 1 3 2', 'f 1 4 3');
+    await main
+      .locator('input[type=file]')
+      .setInputFiles({ name: 'pyramide.obj', mimeType: 'text/plain', buffer: Buffer.from(pyramid.join('\n')) });
+    await expect(main.locator('.model-chip')).toContainText('pyramide');
+    await expect(main.locator('.stats')).toContainText('6');
+    await expect(lens.locator('app-viewer-page .model-chip')).toContainText('pyramide');
+    await expect(lens.locator('app-viewer-page .stats')).toContainText('6');
+    const unlocked = await main.evaluate(() => localStorage.getItem('pv2.achievements'));
+    expect(unlocked).toContain('modeliste');
+    expect(unlocked).toContain('vision-3d');
+  });
+
+  test('le visualiseur refuse un fichier qui n’est pas un OBJ', async ({ page }) => {
+    await page.goto('/projets/visu3d/demo');
+    await page
+      .locator('input[type=file]')
+      .setInputFiles({ name: 'photo.png', mimeType: 'image/png', buffer: Buffer.from('pas un modèle') });
+    await expect(page.getByRole('alert')).toContainText('n\'est pas un fichier .obj');
+  });
+
+  for (const theme of ['clair', 'nuit']) {
+    test(`passe l’audit d’accessibilité sur la démo du visualiseur 3D (thème ${theme})`, async ({ page }) => {
+      await page.goto(`/projets/visu3d/demo?simple=1&theme=${theme}`);
+      await expect(page.locator('.stats')).toBeVisible();
+      const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+      const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+      expect(serious.map((v) => `${v.id} : ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
+    });
+  }
+
   for (const theme of ['clair', 'nuit']) {
     test(`passe l’audit d’accessibilité (thème ${theme})`, async ({ page }) => {
       await page.goto(`/?simple=1&theme=${theme}`);

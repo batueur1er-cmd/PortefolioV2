@@ -23,8 +23,9 @@ puis Vitest. L'avertissement de Node 25 sur `--localstorage-file` est sans cons�
 npx ng build
 ```
 
-Surveille les avertissements de budget (`angular.json` : 600 kB au chargement initial, 10 kB par
-feuille de style de composant). Référence actuelle : environ 254 kB, 71 kB transférés.
+Surveille les avertissements de budget (`angular.json` : 600 kB au chargement initial, 14 kB par
+feuille de style de composant). Référence actuelle : environ 290 kB, 81 kB transférés. Three.js
+(environ 645 kB, 137 kB transférés) doit rester un chargement à part, nommé `viewer-scene`.
 
 ## 3. Le site dans le navigateur intégré
 
@@ -44,6 +45,8 @@ Passe en revue :
 3. **Rayons X** : aucun bouton ne les montre, volontairement ; passe par la loupe simulée de
    l'étape 4 (change `SCROLL_Y` dans le script pour viser une autre section).
 4. **Console** : `read_console_messages` avec `onlyErrors`.
+5. **Visualiseur 3D** : `/projets/visu3d/demo`. Le modèle tourne, les curseurs agissent, un .obj
+   s'importe ; une loupe posée dessus montre la même vue aux rayons X (dans « Le colis », un chat).
 
 ## 4. Loupe simulée
 

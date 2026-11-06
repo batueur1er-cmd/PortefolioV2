@@ -30,6 +30,8 @@ import { MainPresence, OverlayPresence, WindowBus, isMain } from '@core/sync/win
 import { PortfolioPage } from '@features/page/portfolio-page';
 import { ProjectsMirror } from '@features/page/projects/projects-mirror/projects-mirror';
 import { ProjectPage } from '@features/project/project-page';
+import { VIEWER_PATH } from '@features/viewer/data/viewer-state';
+import { ViewerPage } from '@features/viewer/viewer-page';
 import { SCAN_COVERAGE, ScanEngine } from '@features/secrets/data/scan-engine';
 import { PROFILE } from '@domain/profile/profile.data';
 import { SECRET_BY_ID } from '@features/secrets/data/secrets.catalog';
@@ -86,7 +88,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
  */
 @Component({
   selector: 'app-lens-view',
-  imports: [PortfolioPage, LensHud, ProjectsMirror, ProjectPage, SingularityOverlay, ScanSparkles],
+  imports: [PortfolioPage, LensHud, ProjectsMirror, ProjectPage, ViewerPage, SingularityOverlay, ScanSparkles],
   template: `
     <app-portfolio-page
       class="lens-page"
@@ -97,7 +99,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
       [vh]="vh()"
       [scrollY]="scrollY()"
       [style.width.px]="pageWidth()"
-      [class.hidden]="state() === 'searching' || projectId() !== null"
+      [class.hidden]="state() === 'searching' || projectId() !== null || viewerShown()"
     />
     <!-- Le portfolio visé est sur une page projet : la loupe affiche la copie de cette page. -->
     @if (projectId(); as id) {
@@ -108,6 +110,17 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
         [id]="id"
         [decorative]="true"
         [scrollY]="scrollY()"
+        [style.width.px]="pageWidth()"
+        [class.hidden]="state() === 'searching'"
+      />
+    }
+    <!-- Le portfolio visé montre le visualiseur 3D : la copie dessine la même scène, aux rayons X. -->
+    @if (viewerShown()) {
+      <app-viewer-page
+        #viewerCopy
+        class="lens-page"
+        mode="xray"
+        [decorative]="true"
         [style.width.px]="pageWidth()"
         [class.hidden]="state() === 'searching'"
       />
@@ -165,8 +178,12 @@ export class LensView {
   private readonly pageRef = viewChild.required(PortfolioPage, { read: ElementRef<HTMLElement> });
   private readonly overlayLayer = viewChild.required<ElementRef<HTMLElement>>('overlayLayer');
   private readonly projectCopy = viewChild('projectCopy', { read: ElementRef<HTMLElement> });
+  private readonly viewerCopy = viewChild(ViewerPage);
+  private readonly viewerCopyRef = viewChild(ViewerPage, { read: ElementRef<HTMLElement> });
   /** Projet affiché par le portfolio visé, ou null s'il est sur l'accueil. */
   protected readonly projectId = signal<string | null>(null);
+  /** Le portfolio visé montre la démo du visualiseur 3D. */
+  protected readonly viewerShown = signal(false);
 
   protected readonly zoom = signal(1);
   protected readonly vh = signal(800);
@@ -190,6 +207,7 @@ export class LensView {
   private xrayAll = false;
   protected readonly singularityOpen = signal(false);
   private readonly hunt = inject(HuntClock);
+  private readonly achievements = inject(AchievementsStore);
   protected readonly elapsed = computed(() => (this.hunt.elapsed() ? formatElapsed(this.hunt.elapsed()) : ''));
   private unlockOnKonami: (key: string) => void = () => undefined;
   private readonly audio = new GeigerAudio();
@@ -275,8 +293,11 @@ export class LensView {
       return;
     }
 
-    const project = /^\/projets\/([^/?#]+)/.exec(shown.route ?? '/')?.[1] ?? null;
+    const route = shown.route ?? '/';
+    const viewer = route === VIEWER_PATH;
+    const project = viewer ? null : (/^\/projets\/([^/?#]+)/.exec(route)?.[1] ?? null);
     this.projectId.set(project);
+    this.viewerShown.set(viewer);
     this.pageWidth.set(shown.layoutWidth);
     this.vh.set(shown.viewport.h);
     this.scrollY.set(Math.round(shown.scroll.y));
@@ -291,15 +312,24 @@ export class LensView {
     this.pageRef().nativeElement.style.transform = transform;
     const copy = this.projectCopy()?.nativeElement;
     if (copy) copy.style.transform = transform;
+    const viewerCopy = this.viewerCopyRef()?.nativeElement;
+    if (viewerCopy) {
+      viewerCopy.style.transform = transform;
+      // La caméra du portfolio, dans la même image que la position de la copie.
+      this.viewerCopy()?.sync(shown.viewer ?? null, this.zoom() * k);
+    }
 
     // La modale est fixe dans la fenêtre portfolio : même décalage, sans le défilement.
     this.overlay.set(shown.overlay ?? null);
     this.mainSize.set({ w: shown.layoutWidth, h: shown.viewport.h });
     this.overlayLayer().nativeElement.style.transform = lensTransform(gap, pivot, this.zoom(), k);
 
+    // Le visualiseur 3D regardé à travers la loupe : un succès.
+    if (viewer && best) this.achievements.unlock('vision-3d');
     // Pas de secrets sur les pages projet : la loupe ne fait que montrer leur plan.
-    if (!best || project) {
+    if (!best || project || viewer) {
       if (project && this.frame++ % 20 === 0) this.section.set(PROJECT_TITLES.get(project) ?? null);
+      if (viewer && this.frame++ % 20 === 0) this.section.set('Visualiseur 3D');
       this.strength.set(0);
       this.progress.set(0);
       this.markScanning(null, 0);
@@ -421,7 +451,7 @@ export class LensView {
 
   /** Les succès propres à la loupe, et l'annonce de tous les succès dans son viseur. */
   private watchAchievements(): void {
-    const achievements = inject(AchievementsStore);
+    const achievements = this.achievements;
     const theme = inject(ThemeStore);
     effect(() => {
       const zoom = this.zoom();
