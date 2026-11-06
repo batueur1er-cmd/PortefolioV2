@@ -46,7 +46,7 @@ Passe en revue :
    l'étape 4 (change `SCROLL_Y` dans le script pour viser une autre section).
 4. **Console** : `read_console_messages` avec `onlyErrors`.
 5. **Visualiseur 3D** : `/projets/visu3d/demo`. Le modèle tourne, les curseurs agissent, un .obj
-   s'importe ; une loupe posée dessus montre la même vue aux rayons X (dans « Le colis », un chat).
+   s'importe ; une loupe posée dessus montre la même vue aux rayons X (dans « Le colis », une sphère cachée).
 
 ## 4. Loupe simulée
 

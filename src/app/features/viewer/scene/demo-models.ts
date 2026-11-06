@@ -1,8 +1,6 @@
 import {
   BoxGeometry,
   BufferGeometry,
-  CatmullRomCurve3,
-  ConeGeometry,
   CylinderGeometry,
   ExtrudeGeometry,
   Group,
@@ -11,8 +9,6 @@ import {
   Shape,
   SphereGeometry,
   TorusGeometry,
-  TubeGeometry,
-  Vector3,
 } from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
@@ -104,27 +100,6 @@ function gearbox(): Group {
   );
 }
 
-/** Un chat endormi, roulé en boule, la tête tournée vers la caméra et la queue autour du corps. */
-function sleepingCat(): BufferGeometry[] {
-  const tail = new CatmullRomCurve3([
-    new Vector3(-0.35, 0.1, -0.3),
-    new Vector3(-0.56, 0.08, 0.05),
-    new Vector3(-0.4, 0.07, 0.42),
-    new Vector3(-0.05, 0.06, 0.6),
-    new Vector3(0.25, 0.06, 0.58),
-  ]);
-  const paw = (x: number, z: number) => new SphereGeometry(0.08, 10, 8).scale(1.3, 0.65, 1.3).translate(x, 0.05, z);
-  return [
-    new SphereGeometry(0.5, 20, 14).scale(1, 0.48, 0.82).translate(0, 0.24, 0),
-    new SphereGeometry(0.25, 16, 12).scale(1, 0.88, 1).translate(0.3, 0.3, 0.26),
-    new ConeGeometry(0.085, 0.18, 4).rotateX(-0.25).rotateZ(-0.25).translate(0.38, 0.52, 0.2),
-    new ConeGeometry(0.085, 0.18, 4).rotateX(0.25).rotateZ(0.25).translate(0.24, 0.52, 0.34),
-    new TubeGeometry(tail, 28, 0.06, 8),
-    paw(0.47, 0.37),
-    paw(0.37, 0.47),
-  ].map((g) => g.scale(1.2, 1.2, 1.2));
-}
-
 /** Un carton fermé et scotché. Ce qu'il contient ne se voit qu'aux rayons X. */
 function parcel(): Group {
   const w = 2.2;
@@ -143,7 +118,8 @@ function parcel(): Group {
       strip(-w / 2 - 0.03),
     ),
     part('etiquette', 'part', new BoxGeometry(0.7, 0.45, 0.012).translate(-0.45, h * 0.45, d / 2 + 0.006)),
-    part('contenu', 'hidden', ...sleepingCat()),
+    // Ce que le carton cache : une simple sphère, posée au fond.
+    part('contenu', 'hidden', new SphereGeometry(0.5, 32, 20).translate(0, 0.5, 0)),
   );
 }
 
