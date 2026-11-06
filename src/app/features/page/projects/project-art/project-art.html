@@ -56,6 +56,15 @@
           </div>
           <p class="tmdb">Three.js · OBJ</p>
         }
+        @case ('doom') {
+          <div class="corridor">
+            @for (column of columns; track $index) {
+              <i [style.--h]="column + '%'"></i>
+            }
+          </div>
+          <span class="scan"></span>
+          <p class="tmdb">BSP · 320 × 200</p>
+        }
         @case ('infra') {
           <div class="mesh">
             @for (node of nodes; track node) {

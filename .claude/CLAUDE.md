@@ -42,15 +42,18 @@ src/app/
 ├── domain/    profile/ (contenu), career/, geo/, skills/ : TypeScript pur, testé
 ├── shared/    motion/ (apparitions, compteurs, effets) et ui/ (en-tête de section, bandeau…)
 ├── features/  page/ (la page et ses sections), secrets/, lens/ (loupe), viewer/ (visualiseur 3D),
-│              project/, terminal/, achievements/, cv/, singularity/
+│              doom/ (démo façon Doom), project/, terminal/, achievements/, cv/, singularity/
 └── shell/     racine de chaque fenêtre : bascule portfolio ↔ loupe, bouton mode nuit
 ```
 
 - `core` → `core` ; `domain` → `core`, `domain` ; `shared` → `core`, `shared` ;
   `features/x` → `core`, `domain`, `shared`, `x` et `FEATURE_DEPS[x]` ; `shell` → tout.
 - `FEATURE_DEPS` (dans `scripts/check-architecture.mjs`) liste qui dépend de qui, sans cycle
-  (par exemple `lens → page, project, viewer…`, `viewer → achievements`). Le script tourne avant
-  chaque `npm test`.
+  (par exemple `lens → page, project, viewer, doom…`, `viewer → achievements`). Le script tourne
+  avant chaque `npm test`.
+- Le moteur de `features/doom/engine/` est en TypeScript pur, rangé en modules (`level`, `color`,
+  `graphics`, `render`, `play`, `automap`) : `PURE_MODULES` dans le même script fixe qui dépend de
+  qui, interdit Angular et les paquets npm, et oblige le reste du site à passer par `engine.ts`.
 - Une couche basse qui a besoin d'une couche haute déclare un contrat (classe abstraite servant de
   jeton) que la couche haute fournit : `SecretHost` et `ScrollStage`, fournis par `PortfolioPage`.
 - Imports entre couches par les alias `@core/`, `@domain/`, `@shared/`, `@features/` ; relatifs à
@@ -77,10 +80,12 @@ taille, autre moment d'ouverture, pas de pointeur, pas de défilement propre). D
 7. **La loupe reste secrète** : elle n'existe que dans une autre fenêtre du navigateur, rétrécie
    par le visiteur lui-même. Aucun bouton ne l'ouvre ni ne montre la vue rayons X ; les seuls boutons
    flottants sont la version simple et le mode nuit. Ne réintroduis pas de loupe intégrée à la page.
-8. Une scène 3D (`features/viewer`) ne regarde jamais sa propre fenêtre : la copie de la loupe
-   reçoit la caméra et les réglages du portfolio à chaque image (`ViewerPage.sync`, présence
-   `viewer`), et un fichier importé par le bus (`viewer-model`). Three.js reste dans un chargement
-   à part (`import()` dans `ViewerPage`), jamais dans le bundle initial.
+8. Une scène 3D (`features/viewer`, `features/doom`) ne regarde jamais sa propre fenêtre : la
+   copie de la loupe reçoit l'état du portfolio à chaque image (`ViewerPage.sync` et présence
+   `viewer` ; `DoomPage.sync` et présence `doom`), et un fichier importé par le bus
+   (`viewer-model`). Three.js reste dans un chargement à part (`import()` dans `ViewerPage`),
+   jamais dans le bundle initial. Le moteur façon Doom n'a rien d'aléatoire : ses effets suivent
+   l'horloge des tics publiée avec la présence.
 9. Le seuil de la loupe (`LENS_WINDOW`, 680 × 620 px, dans `core/sync/window-size.ts`) fait partie
    du protocole entre fenêtres : toutes appliquent la même règle (`decideRole`).
 
@@ -109,6 +114,7 @@ captures des projets sont dans `public/projects/` et s'affichent avec `NgOptimiz
 | `changer-le-style` | couleurs, thèmes, polices, maquette à appliquer |
 | `creer-une-feature` | nouveau service, store, dossier, état partagé entre fenêtres |
 | `mettre-a-jour-le-contenu` | expériences, projets, compétences, formation, textes |
+| `moteur-doom` | la démo façon Doom : niveau, textures, sprites, rendu, carte, explications |
 | `verifier-le-portfolio` | avant chaque commit : tests, build, navigateur, loupe simulée |
 | `commit-feature` | à la fin de chaque feature, pour le message de commit |
 

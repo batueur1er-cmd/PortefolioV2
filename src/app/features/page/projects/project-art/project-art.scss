@@ -331,6 +331,45 @@ span {
   color: var(--art-sheet);
 }
 
+/* ---------- Moteur façon Doom : un couloir peint colonne par colonne ---------- */
+
+:host(.art-doom) .surface {
+  background: linear-gradient(var(--art-night) 50%, var(--art-night-2) 50%);
+}
+
+.corridor {
+  inset: 14% 10% 24%;
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.corridor i {
+  position: relative;
+  flex: 1;
+  height: var(--h);
+  background: linear-gradient(var(--art-mist), var(--art-sand));
+  opacity: 0.9;
+}
+
+/* La colonne en cours de dessin balaie l'écran de gauche à droite. */
+.scan {
+  position: absolute;
+  top: 14%;
+  bottom: 24%;
+  left: 10%;
+  width: calc(80% / 24);
+  background: color-mix(in srgb, var(--art-gold) 80%, transparent);
+  animation: scan-columns 4s steps(24) infinite;
+  animation-delay: var(--clock, 0ms);
+}
+
+@keyframes scan-columns {
+  to {
+    transform: translateX(2400%);
+  }
+}
+
 /* ---------- Visualiseur 3D : un cube qui tourne ---------- */
 
 :host(.art-visu3d) .surface {

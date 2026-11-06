@@ -15,6 +15,11 @@ export const routes: Routes = [
     path: 'projets/visu3d/demo',
     loadComponent: () => import('./shell/viewer-shell').then((m) => m.ViewerShell),
   },
+  // La démo façon Doom (DOOM_PATH) : un moteur logiciel, chargé seulement ici.
+  {
+    path: 'projets/doom/demo',
+    loadComponent: () => import('./shell/doom-shell').then((m) => m.DoomShell),
+  },
   {
     path: 'projets/:id',
     loadComponent: () => import('./shell/project-shell').then((m) => m.ProjectShell),

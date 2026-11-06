@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { PROFILE } from '@domain/profile/profile.data';
 import { SECRETS } from '@features/secrets/data/secrets.catalog';
+import { DOOM_PATH, DOOM_PROJECT } from '@features/doom/data/doom-state';
 import { VIEWER_PATH } from '@features/viewer/data/viewer-state';
 
 import { App } from './app';
@@ -25,5 +26,11 @@ describe('App', () => {
     const demo = PROFILE.projects.find((p) => p.id === 'visu3d')?.demo;
     expect(demo?.path).toBe(VIEWER_PATH);
     expect(routes.some((r) => `/${r.path}` === VIEWER_PATH)).toBe(true);
+  });
+
+  it('sert la démo façon Doom à l’adresse annoncée par le projet et attendue par la loupe', () => {
+    const demo = PROFILE.projects.find((p) => p.id === DOOM_PROJECT)?.demo;
+    expect(demo?.path).toBe(DOOM_PATH);
+    expect(routes.some((r) => `/${r.path}` === DOOM_PATH)).toBe(true);
   });
 });

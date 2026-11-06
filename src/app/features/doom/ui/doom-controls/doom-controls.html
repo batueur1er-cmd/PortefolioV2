@@ -1,0 +1,68 @@
+<div class="deck">
+  <section class="block" aria-labelledby="doom-move">
+    <h2 id="doom-move" class="block-title">Se déplacer</h2>
+    <div class="pad" role="group" aria-label="Touches de déplacement">
+      @for (key of pad; track key.action) {
+        <button
+          type="button"
+          class="key"
+          [attr.aria-label]="key.label"
+          [attr.title]="key.label"
+          (pointerdown)="press(key.action, $event)"
+          (pointerup)="release(key.action)"
+          (pointercancel)="release(key.action)"
+          (lostpointercapture)="release(key.action)"
+          (click)="click(key.action, $event)"
+        >
+          <span aria-hidden="true">{{ key.glyph }}</span>
+        </button>
+      }
+    </div>
+    <p class="small">Sur la vue : flèches ou ZQSD, Maj pour courir, glisser pour tourner.</p>
+  </section>
+
+  <section class="block" aria-labelledby="doom-replay">
+    <h2 id="doom-replay" class="block-title">Une image au ralenti</h2>
+    <div class="row">
+      <button type="button" class="action" [attr.aria-pressed]="replay() === 'playing'" (click)="replayToggle.emit()">
+        {{ playLabel() }}
+      </button>
+      @if (replay() !== 'live') {
+        <button type="button" class="ghost" (click)="replayStop.emit()">Revenir au direct</button>
+      }
+    </div>
+    <input
+      class="scrub"
+      type="range"
+      min="0"
+      max="1000"
+      step="1"
+      [value]="progress() * 1000"
+      aria-label="Avancement du dessin de l’image"
+      [attr.aria-valuetext]="valueText()"
+      (input)="onScrub($event)"
+    />
+    <p class="say phase">
+      <span class="plain">{{ phaseText().plain }}</span>
+      <span class="tech" aria-hidden="true">{{ phaseText().tech }}</span>
+    </p>
+  </section>
+
+  <section class="block" aria-labelledby="doom-counts">
+    <div class="head">
+      <h2 id="doom-counts" class="block-title">Cette image</h2>
+      <button type="button" class="ghost" [attr.aria-pressed]="bsp()" (click)="bspToggle.emit()">Découpage BSP</button>
+    </div>
+    <dl class="counts">
+      @for (row of rows(); track row.key) {
+        <div class="count">
+          <dt class="say">
+            <span class="plain">{{ row.plain }}</span>
+            <span class="tech" aria-hidden="true">{{ row.tech }}</span>
+          </dt>
+          <dd>{{ row.value }}</dd>
+        </div>
+      }
+    </dl>
+  </section>
+</div>

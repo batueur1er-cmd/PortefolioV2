@@ -1,0 +1,116 @@
+@let s = stats();
+<section class="steps" aria-labelledby="doom-steps">
+  <h2 id="doom-steps" class="label">Comment l’image est fabriquée</h2>
+  <ol class="cards">
+    <li class="card">
+      <span class="num" aria-hidden="true">01</span>
+      <h3 class="card-title">Une carte en deux dimensions</h3>
+      <div class="say">
+        <p class="plain">
+          Le niveau est un plan vu de dessus : des lignes, les murs, délimitent des secteurs. Chaque secteur a une
+          hauteur de sol, une hauteur de plafond et une lumière. Pas de pièce au-dessus d’une autre, pas de pente :
+          c’est de la « 2,5D ».
+        </p>
+        <p class="tech" aria-hidden="true">
+          Les mêmes listes qu’un fichier WAD : VERTEXES (les sommets), LINEDEFS (les lignes), SIDEDEFS (leurs côtés
+          et textures), SECTORS (hauteurs, sols, lumière) et THINGS (les objets). Ici : {{ s.sectors }} secteurs,
+          {{ s.lines }} lignes dont {{ s.twoSided }} ouvertures, {{ s.things }} objets. Le joueur mesure 56 unités,
+          ses yeux sont à 41 ; une marche de plus de 24 l’arrête.
+        </p>
+      </div>
+    </li>
+    <li class="card">
+      <span class="num" aria-hidden="true">02</span>
+      <h3 class="card-title">L’arbre BSP</h3>
+      <div class="say">
+        <p class="plain">
+          Avant même de jouer, un outil découpe la carte en zones convexes et range ces découpes dans un arbre, le BSP
+          (binary space partitioning). En jeu, il suffit de savoir de quel côté de chaque découpe se tient le joueur
+          pour parcourir les zones de la plus proche à la plus lointaine.
+        </p>
+        <p class="tech" aria-hidden="true">
+          Le node builder prend des segs comme droites de découpe et coupe ceux qu’elles traversent : ici
+          {{ s.segs }} segs dont {{ s.splits }} nés d’une coupe, {{ s.nodes }} nœuds sur {{ s.depth }} niveaux et
+          {{ s.subsectors }} zones (SSECTORS). R_RenderBSPNode part de la racine, le dernier nœud du fichier, descend
+          du côté du joueur (R_PointOnSide), puis teste la boîte englobante de l’autre côté (R_CheckBBox).
+        </p>
+      </div>
+    </li>
+    <li class="card">
+      <span class="num" aria-hidden="true">03</span>
+      <h3 class="card-title">Les murs, colonne par colonne</h3>
+      <div class="say">
+        <p class="plain">
+          Un mur reste vertical à l’écran : sur une colonne, il est partout à la même distance. Doom le peint donc en
+          bandes d’un pixel de large, du plus proche au plus lointain, et retient les colonnes déjà remplies pour ne
+          jamais peindre deux fois le même pixel.
+        </p>
+        <p class="tech" aria-hidden="true">
+          R_AddLine écarte les segs vus de dos ou hors du champ de 90°. R_ClipSolidWallSegment tient la liste des
+          plages de colonnes pleines (les solidsegs, 32 au plus) ; une ouverture passe par R_ClipPassWallSegment, qui
+          ne ferme rien. R_StoreWallRange calcule l’échelle aux deux bouts, puis R_DrawColumn peint chaque bande :
+          d’une colonne à l’autre, une simple addition.
+        </p>
+      </div>
+    </li>
+    <li class="card">
+      <span class="num" aria-hidden="true">04</span>
+      <h3 class="card-title">Sols et plafonds</h3>
+      <div class="say">
+        <p class="plain">
+          Au-dessus et au-dessous de chaque mur reste un trou : le plafond et le sol. Ils sont peints après les murs,
+          en lignes horizontales, car sur une ligne de l’écran un sol plat est partout à la même distance.
+        </p>
+        <p class="tech" aria-hidden="true">
+          Les trous sont notés colonne par colonne dans des visplanes : même hauteur, même texture, même lumière. 128
+          au plus ; au-delà, Doom s’arrête sur « R_FindPlane: no more visplanes ». R_MakeSpans les change en lignes,
+          R_MapPlane calcule la distance de chaque ligne, R_DrawSpan y plaque la texture de 64 × 64. Le ciel ne suit
+          que l’angle du regard.
+        </p>
+      </div>
+    </li>
+    <li class="card">
+      <span class="num" aria-hidden="true">05</span>
+      <h3 class="card-title">Les objets, des images plates</h3>
+      <div class="say">
+        <p class="plain">
+          Les lampes, les plantes et le robot ne sont pas en 3D : ce sont des images tournées vers le joueur, les
+          sprites. Doom les trie du plus loin au plus proche et les peint par-dessus le décor, découpés par les murs
+          qui passent devant.
+        </p>
+        <p class="tech" aria-hidden="true">
+          R_ProjectSprite garde les objets devant le joueur (vissprites, 128 au plus). R_SortVisSprites les classe par
+          échelle, R_DrawSprite les découpe avec les silhouettes notées par les murs (drawsegs). Un monstre de Doom a
+          jusqu’à 8 images, une par angle de vue : le robot de la cour aussi.
+        </p>
+      </div>
+    </li>
+    <li class="card">
+      <span class="num" aria-hidden="true">06</span>
+      <h3 class="card-title">La lumière</h3>
+      <div class="say">
+        <p class="plain">
+          Chaque secteur a sa lumière, qui baisse avec la distance. L’écran n’a que 256 couleurs : pour assombrir un
+          pixel, Doom ne calcule rien, il le remplace par une couleur plus sombre lue dans une table.
+        </p>
+        <p class="tech" aria-hidden="true">
+          Le COLORMAP : 32 tables de 256 couleurs, de la pleine lumière au presque noir. La lumière du secteur tombe
+          sur 16 niveaux, croisés avec l’échelle pour les murs (48 valeurs) ou avec la distance pour les sols (128).
+          Un mur est-ouest est un cran plus sombre, un mur nord-sud un cran plus clair : ce faux contraste fait
+          ressortir les angles.
+        </p>
+      </div>
+    </li>
+  </ol>
+  <div class="aside say">
+    <p class="plain">
+      Le niveau, les textures et les objets sont inventés pour ce portfolio : seule la manière de les dessiner vient de
+      Doom. Le moteur est écrit en TypeScript et calcule chaque pixel dans le navigateur, sans WebGL.
+    </p>
+    <p class="tech" aria-hidden="true">
+      Doom calculait en virgule fixe (des entiers 16.16 : beaucoup de PC de 1993 n’avaient pas de coprocesseur
+      arithmétique) et lisait ses sinus dans des tables de 8 192 angles. Ce moteur garde la méthode, en nombres à
+      virgule. Le code source de Doom a été publié en décembre 1997.
+    </p>
+  </div>
+</section>

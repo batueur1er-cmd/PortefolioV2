@@ -1,0 +1,107 @@
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" routerLink="/">
+      <span class="monogram" aria-hidden="true">BN</span>
+      <span class="brand-text">
+        <span class="brand-name">{{ fullName }}</span>
+        <span class="brand-sub">Portfolio</span>
+      </span>
+    </a>
+    <a class="back" [routerLink]="projectPath">
+      <span aria-hidden="true">←</span>
+      <span>Le projet</span>
+    </a>
+  </div>
+</header>
+
+<main id="contenu" tabindex="-1" class="wrap">
+  <section class="intro">
+    <p class="kicker">
+      <span>Démo</span>
+      <span class="rule" aria-hidden="true"></span>
+      <span>Rendu logiciel · 1993</span>
+    </p>
+    <h1 class="title">Dans le moteur de Doom</h1>
+    <div class="say summary">
+      <p class="plain">
+        Doom (id Software, 1993) affichait un monde en 3D sur de simples PC, sans carte graphique 3D. Ce petit niveau est
+        dessiné de la même façon, pixel par pixel : promenez-vous, la carte montre ce que le moteur calcule à chaque image.
+      </p>
+      <p class="tech" aria-hidden="true">
+        Rendu logiciel en 320 × 200, palette de 256 couleurs, 35 tics par seconde, champ de vision de 90°. L’arbre BSP est
+        calculé une fois, avant de jouer (ici au chargement de la page), puis lu à chaque image. La loupe montre l’ordre de
+        dessin de chaque morceau.
+      </p>
+    </div>
+  </section>
+
+  <section class="play" aria-label="La démo">
+    <div class="screens">
+      <figure class="screen-box">
+        <div class="view-frame">
+          <canvas
+            #screen
+            class="screen"
+            width="320"
+            height="200"
+            tabindex="0"
+            role="img"
+            [attr.aria-label]="viewLabel()"
+            aria-describedby="doom-hint"
+            (keydown)="onKey($event, true)"
+            (keyup)="onKey($event, false)"
+            (blur)="releaseKeys()"
+            (pointerdown)="onPointerDown($event)"
+            (pointermove)="onPointerMove($event)"
+            (pointerup)="onPointerUp($event)"
+            (pointercancel)="onPointerUp($event)"
+          ></canvas>
+          <p class="pill" aria-hidden="true">{{ room() }}</p>
+        </div>
+        <figcaption class="caption say">
+          <span class="plain">Vue du joueur, en 320 × 200 pixels</span>
+          <span class="tech" aria-hidden="true">Murs du jaune (dessiné en premier) au rose · visplanes en bleu · sprites en jaune</span>
+        </figcaption>
+      </figure>
+
+      <figure class="map-box">
+        <div #mapBox class="map-frame">
+          <canvas #map class="map" role="img" [attr.aria-label]="mapLabel()" (click)="onMapClick($event)"></canvas>
+          @if (notice(); as text) {
+            <p class="notice" role="status">{{ text }}</p>
+          }
+        </div>
+        <figcaption class="caption say">
+          <span class="plain">Carte vue de dessus · {{ position() }} · regard vers {{ facing() }}</span>
+          <span class="tech" aria-hidden="true">Automap · découpes du BSP · zones dans l’ordre du parcours</span>
+        </figcaption>
+      </figure>
+    </div>
+
+    <p id="doom-hint" class="hint">
+      Cliquez sur la vue, puis flèches ou ZQSD (Maj pour courir) ; glissez pour tourner ; cliquez sur la carte pour vous y
+      poser.
+    </p>
+
+    <app-doom-controls
+      [replay]="replay()"
+      [progress]="progress()"
+      [phase]="phase()"
+      [bsp]="bsp()"
+      [counts]="counts()"
+      (hold)="hold($event.action, $event.down)"
+      (nudge)="step($event)"
+      (replayToggle)="toggleReplay()"
+      (replayStop)="stopReplay()"
+      (scrub)="scrub($event)"
+      (bspToggle)="toggleBsp()"
+    />
+  </section>
+
+  <app-doom-steps [stats]="stats" />
+</main>
+
+<footer class="wrap foot">
+  <span class="foot-name">{{ fullName }}</span>
+  <span>© {{ year }}</span>
+</footer>

@@ -71,6 +71,25 @@ export interface ViewerPresence {
   };
 }
 
+/**
+ * La démo du moteur façon Doom ouverte sur le portfolio : la position du joueur et l'état du rendu,
+ * de quoi redessiner exactement la même image dans la copie rayons X d'une loupe.
+ */
+export interface DoomPresence {
+  readonly x: number;
+  readonly y: number;
+  /** Hauteur des yeux. */
+  readonly z: number;
+  /** Direction du regard, en radians (0 : l'est). */
+  readonly angle: number;
+  /** Horloge des effets à 35 images par seconde (0 quand les animations sont coupées). */
+  readonly tic: number;
+  /** Rendu au ralenti : opérations de dessin déjà faites, sur le total de l'image ; null en direct. */
+  readonly replay: { readonly done: number; readonly total: number; readonly playing: boolean } | null;
+  /** Découpage de l'arbre BSP affiché sur la carte. */
+  readonly bsp: boolean;
+}
+
 /** Une fenêtre qui affiche le portfolio. */
 export interface MainPresence extends WindowBase {
   readonly kind: 'main';
@@ -83,6 +102,8 @@ export interface MainPresence extends WindowBase {
   readonly overlay?: OverlayPresence | null;
   /** Visualiseur 3D affiché, s'il y en a un. */
   readonly viewer?: ViewerPresence | null;
+  /** Démo façon Doom affichée, s'il y en a une. */
+  readonly doom?: DoomPresence | null;
 }
 
 /** Une fenêtre loupe. */

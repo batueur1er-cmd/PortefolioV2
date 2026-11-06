@@ -43,4 +43,6 @@ export class ProjectArt {
   protected readonly posters = [0, 1, 2, 3, 4, 5, 6, 7];
   protected readonly nodes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   protected readonly faces = ['front', 'back', 'right', 'left', 'top', 'bottom'];
+  /** Un couloir vu en colonnes, comme le dessine le moteur façon Doom : hautes au bord, basses au fond. */
+  protected readonly columns = [96, 90, 84, 78, 72, 66, 59, 53, 47, 41, 35, 29, 29, 35, 41, 47, 53, 59, 66, 72, 78, 84, 90, 96];
 }

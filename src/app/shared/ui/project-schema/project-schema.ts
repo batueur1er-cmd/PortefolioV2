@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 /** Les projets qui ont un plan de principe dessiné. */
-export const SCHEMA_VISUALS: readonly string[] = ['argus', 'crm', 'cine', 'drive', 'magasin', 'visu3d', 'infra'];
+export const SCHEMA_VISUALS: readonly string[] = ['argus', 'crm', 'cine', 'drive', 'magasin', 'visu3d', 'doom', 'infra'];
 
 export const hasSchema = (visual: string | undefined): boolean => !!visual && SCHEMA_VISUALS.includes(visual);
 

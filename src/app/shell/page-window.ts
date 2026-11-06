@@ -23,7 +23,7 @@ export interface PageWindow {
  */
 export function connectPageWindow(
   route: () => string,
-  extra: () => Pick<MainPresence, 'viewer'> = () => ({}),
+  extra: () => Pick<MainPresence, 'viewer' | 'doom'> = () => ({}),
 ): PageWindow {
   const bus = inject(WindowBus);
   const roles = inject(WindowRoleStore);

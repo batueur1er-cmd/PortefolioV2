@@ -28,7 +28,7 @@ export interface Experience {
 }
 
 /** Illustration d'un projet ; chacune a son plan rayons X. */
-export type ProjectVisual = 'argus' | 'crm' | 'cine' | 'drive' | 'magasin' | 'visu3d' | 'infra' | 'site';
+export type ProjectVisual = 'argus' | 'crm' | 'cine' | 'drive' | 'magasin' | 'visu3d' | 'doom' | 'infra' | 'site';
 
 /** Une capture d'écran, servie depuis `public/`. */
 export interface ProjectImage {

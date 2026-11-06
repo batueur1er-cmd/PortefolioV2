@@ -21,10 +21,31 @@ const FEATURE_DEPS = {
   cv: ['achievements'],
   achievements: [],
   terminal: ['achievements', 'secrets', 'cv'],
-  lens: ['page', 'secrets', 'project', 'achievements', 'singularity', 'viewer'],
+  lens: ['page', 'secrets', 'project', 'achievements', 'singularity', 'viewer', 'doom'],
   singularity: ['secrets'],
   project: ['achievements', 'page'],
   viewer: ['achievements'],
+  doom: ['achievements'],
+};
+
+/**
+ * Des moteurs en TypeScript pur, rangés en modules : ni Angular, ni paquet npm, ni rien d'autre de
+ * l'application. Chaque module ne dépend que de ceux listés ; un fichier posé à la racine du moteur
+ * (la façade) peut tout utiliser, et le reste de l'application ne passe que par cette façade.
+ * Les tests (.spec.ts) du moteur peuvent lire tous ses modules.
+ */
+const PURE_MODULES = {
+  'features/doom/engine': {
+    facade: 'features/doom/engine/engine',
+    modules: {
+      level: [],
+      color: [],
+      graphics: ['color', 'level'],
+      render: ['color', 'graphics', 'level'],
+      play: ['level'],
+      automap: ['level', 'render'],
+    },
+  },
 };
 
 const files = walk(ROOT).filter((f) => f.endsWith('.ts'));
@@ -36,6 +57,8 @@ for (const file of files) {
   for (const match of source.matchAll(/(?:from\s+|import\()\s*'([^']+)'/g)) {
     const spec = match[1];
     const target = resolveSpecifier(spec, file);
+    const pure = pureViolation(from, target);
+    if (pure) violations.push(`${from}  →  ${spec}  (${pure})`);
     if (target === null) continue;
     if (!allowed(layerOf(from), layerOf(target))) {
       violations.push(`${from}  →  ${spec}`);
@@ -75,6 +98,32 @@ function layerOf(path) {
   if (top === 'features') return { kind: 'feature', name: second };
   if (['core', 'domain', 'shared', 'shell'].includes(top)) return { kind: top };
   return { kind: 'app' };
+}
+
+/** Ce qu'un import enfreint dans les règles des moteurs en TypeScript pur, ou null. */
+function pureViolation(from, target) {
+  for (const [root, rule] of Object.entries(PURE_MODULES)) {
+    const inside = (path) => path.startsWith(`${root}/`);
+    // Le premier dossier sous la racine du moteur, ou null pour un fichier posé à la racine (la façade).
+    const moduleOf = (path) => {
+      const parts = path.slice(root.length + 1).split('/');
+      return parts.length > 1 ? parts[0] : null;
+    };
+    if (inside(from)) {
+      if (target === null) return 'le moteur est en TypeScript pur : aucun paquet';
+      if (!inside(target)) return 'le moteur ne dépend de rien hors de son dossier';
+      if (from.endsWith('.spec.ts')) return null;
+      const a = moduleOf(from);
+      const b = moduleOf(target);
+      if (a === null) return null;
+      if (!(a in rule.modules)) return `module « ${a} » à déclarer dans PURE_MODULES`;
+      if (b === null) return 'un module ne remonte pas vers la façade';
+      if (a !== b && !rule.modules[a].includes(b)) return `« ${a} » ne dépend pas de « ${b} »`;
+    } else if (target !== null && inside(target) && target !== rule.facade) {
+      return `passer par la façade ${rule.facade}.ts`;
+    }
+  }
+  return null;
 }
 
 function allowed(from, to) {

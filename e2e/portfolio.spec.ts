@@ -202,6 +202,73 @@ test.describe('portfolio', () => {
     await expect(page.getByRole('alert')).toContainText('n\'est pas un fichier .obj');
   });
 
+  test('la page du moteur façon Doom ouvre sa démo, où l’on se déplace au clavier', async ({ page }) => {
+    await page.goto('/projets/doom');
+    await page.getByRole('link', { name: /Ouvrir la démo/ }).click();
+    await expect(page).toHaveURL(/\/projets\/doom\/demo$/);
+    await expect(page).toHaveTitle(/façon Doom · démo/);
+    await expect(page.locator('h1')).toHaveText('Dans le moteur de Doom');
+    const caption = page.locator('.map-box figcaption .plain');
+    await expect(caption).toContainText('96 · 96');
+    await expect(page.locator('.view-frame .pill')).toHaveText('Le hall');
+    await page.locator('canvas.screen').focus();
+    await page.keyboard.down('ArrowUp');
+    await page.waitForTimeout(700);
+    await page.keyboard.up('ArrowUp');
+    await expect(caption).not.toContainText('96 · 96');
+  });
+
+  test('la démo façon Doom dessine une image au ralenti, jusqu’au bout', async ({ page }) => {
+    await page.goto('/projets/doom/demo');
+    await expect(page.locator('canvas.screen')).toBeVisible();
+    const play = page.getByRole('button', { name: /au ralenti/ });
+    await play.click();
+    await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
+    await page.locator('input.scrub').evaluate((input: HTMLInputElement) => {
+      input.value = '1000';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await expect(page.locator('.phase .plain')).toHaveText('L’image est terminée');
+    await expect(page.getByRole('button', { name: /Rejouer/ })).toBeVisible();
+    await page.getByRole('button', { name: 'Revenir au direct' }).click();
+    await expect(page.getByRole('button', { name: /au ralenti/ })).toBeVisible();
+  });
+
+  test('la loupe redessine la démo façon Doom aux rayons X, à la même place', async ({ context }) => {
+    const main = await context.newPage();
+    await main.setViewportSize({ width: 1280, height: 800 });
+    await main.goto('/projets/doom/demo');
+    await expect(main.locator('canvas.screen')).toBeVisible();
+    const lens = await context.newPage();
+    await lens.setViewportSize({ width: 520, height: 420 });
+    await lens.goto('/');
+    const copy = lens.locator('app-doom-page.lens-page');
+    await expect(copy).toHaveClass(/xray/, { timeout: 10_000 });
+    await expect(copy.locator('.summary .tech')).toBeVisible();
+    await main.locator('canvas.screen').focus();
+    await main.keyboard.down('ArrowUp');
+    await main.waitForTimeout(600);
+    await main.keyboard.up('ArrowUp');
+    await main.waitForTimeout(2000);
+    const where = /\d+ · \d+/.exec((await main.locator('.map-box figcaption .plain').textContent()) ?? '')?.[0];
+    expect(where).toBeTruthy();
+    expect(where).not.toBe('96 · 96');
+    await expect(copy.locator('.map-box figcaption .plain')).toContainText(where!);
+    const unlocked = await main.evaluate(() => localStorage.getItem('pv2.achievements'));
+    expect(unlocked).toContain('rayons-x-retro');
+  });
+
+  for (const theme of ['clair', 'nuit']) {
+    test(`passe l’audit d’accessibilité sur la démo façon Doom (thème ${theme})`, async ({ page }) => {
+      await page.goto(`/projets/doom/demo?simple=1&theme=${theme}`);
+      await expect(page.locator('canvas.screen')).toBeVisible();
+      await page.waitForTimeout(300);
+      const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+      const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+      expect(serious.map((v) => `${v.id} : ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
+    });
+  }
+
   for (const theme of ['clair', 'nuit']) {
     test(`passe l’audit d’accessibilité sur la démo du visualiseur 3D (thème ${theme})`, async ({ page }) => {
       await page.goto(`/projets/visu3d/demo?simple=1&theme=${theme}`);

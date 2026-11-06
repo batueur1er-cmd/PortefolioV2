@@ -32,6 +32,8 @@ import { ProjectsMirror } from '@features/page/projects/projects-mirror/projects
 import { ProjectPage } from '@features/project/project-page';
 import { VIEWER_PATH } from '@features/viewer/data/viewer-state';
 import { ViewerPage } from '@features/viewer/viewer-page';
+import { DOOM_PATH } from '@features/doom/data/doom-state';
+import { DoomPage } from '@features/doom/doom-page';
 import { SCAN_COVERAGE, ScanEngine } from '@features/secrets/data/scan-engine';
 import { PROFILE } from '@domain/profile/profile.data';
 import { SECRET_BY_ID } from '@features/secrets/data/secrets.catalog';
@@ -88,7 +90,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
  */
 @Component({
   selector: 'app-lens-view',
-  imports: [PortfolioPage, LensHud, ProjectsMirror, ProjectPage, ViewerPage, SingularityOverlay, ScanSparkles],
+  imports: [PortfolioPage, LensHud, ProjectsMirror, ProjectPage, ViewerPage, DoomPage, SingularityOverlay, ScanSparkles],
   template: `
     <app-portfolio-page
       class="lens-page"
@@ -99,7 +101,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
       [vh]="vh()"
       [scrollY]="scrollY()"
       [style.width.px]="pageWidth()"
-      [class.hidden]="state() === 'searching' || projectId() !== null || viewerShown()"
+      [class.hidden]="state() === 'searching' || projectId() !== null || viewerShown() || doomShown()"
     />
     <!-- Le portfolio visé est sur une page projet : la loupe affiche la copie de cette page. -->
     @if (projectId(); as id) {
@@ -118,6 +120,16 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
     @if (viewerShown()) {
       <app-viewer-page
         #viewerCopy
+        class="lens-page"
+        [mode]="lensMode()"
+        [decorative]="true"
+        [style.width.px]="pageWidth()"
+        [class.hidden]="state() === 'searching'"
+      />
+    }
+    <!-- Le portfolio visé montre la démo façon Doom : la copie redessine la même image, aux rayons X. -->
+    @if (doomShown()) {
+      <app-doom-page
         class="lens-page"
         [mode]="lensMode()"
         [decorative]="true"
@@ -184,6 +196,10 @@ export class LensView {
   protected readonly projectId = signal<string | null>(null);
   /** Le portfolio visé montre la démo du visualiseur 3D. */
   protected readonly viewerShown = signal(false);
+  private readonly doomCopy = viewChild(DoomPage);
+  private readonly doomCopyRef = viewChild(DoomPage, { read: ElementRef<HTMLElement> });
+  /** Le portfolio visé montre la démo façon Doom. */
+  protected readonly doomShown = signal(false);
 
   protected readonly zoom = signal(1);
   protected readonly vh = signal(800);
@@ -297,9 +313,11 @@ export class LensView {
 
     const route = shown.route ?? '/';
     const viewer = route === VIEWER_PATH;
-    const project = viewer ? null : (/^\/projets\/([^/?#]+)/.exec(route)?.[1] ?? null);
+    const doom = route === DOOM_PATH;
+    const project = viewer || doom ? null : (/^\/projets\/([^/?#]+)/.exec(route)?.[1] ?? null);
     this.projectId.set(project);
     this.viewerShown.set(viewer);
+    this.doomShown.set(doom);
     this.pageWidth.set(shown.layoutWidth);
     this.vh.set(shown.viewport.h);
     this.scrollY.set(Math.round(shown.scroll.y));
@@ -320,6 +338,12 @@ export class LensView {
       // La caméra du portfolio, dans la même image que la position de la copie.
       this.viewerCopy()?.sync(shown.viewer ?? null, this.zoom() * k);
     }
+    const doomCopy = this.doomCopyRef()?.nativeElement;
+    if (doomCopy) {
+      doomCopy.style.transform = transform;
+      // La position du joueur, dans la même image que la position de la copie.
+      this.doomCopy()?.sync(shown.doom ?? null, this.zoom() * k);
+    }
 
     // La modale est fixe dans la fenêtre portfolio : même décalage, sans le défilement.
     this.overlay.set(shown.overlay ?? null);
@@ -328,10 +352,12 @@ export class LensView {
 
     // Le visualiseur 3D regardé à travers la loupe : un succès.
     if (viewer && best) this.achievements.unlock('vision-3d');
+    if (doom && best) this.achievements.unlock('rayons-x-retro');
     // Pas de secrets sur les pages projet : la loupe ne fait que montrer leur plan.
-    if (!best || project || viewer) {
+    if (!best || project || viewer || doom) {
       if (project && this.frame++ % 20 === 0) this.section.set(PROJECT_TITLES.get(project) ?? null);
       if (viewer && this.frame++ % 20 === 0) this.section.set('Visualiseur 3D');
+      if (doom && this.frame++ % 20 === 0) this.section.set('Moteur façon Doom');
       this.strength.set(0);
       this.progress.set(0);
       this.markScanning(null, 0);

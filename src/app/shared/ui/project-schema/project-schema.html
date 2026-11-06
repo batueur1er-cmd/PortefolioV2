@@ -114,6 +114,28 @@
       <text x="146" y="226">OBJLoader → scène</text>
     </svg>
   }
+  @case ('doom') {
+    <svg class="wire" [attr.viewBox]="viewBox()" aria-hidden="true">
+      <rect x="14" y="14" width="150" height="150" rx="4" />
+      <path class="d" d="M89 14 L89 164 M14 89 L89 89 M89 120 L164 120" />
+      <circle class="hot" cx="44" cy="134" r="5" />
+      <path class="d" d="M44 134 L24 40 M44 134 L132 46" />
+      <text x="14" y="184">carte · découpes BSP</text>
+      <circle cx="300" cy="28" r="11" />
+      <path d="M292 36 L256 70 M308 36 L344 70" />
+      <circle cx="250" cy="80" r="9" />
+      <circle class="hot" cx="350" cy="80" r="9" />
+      <path d="M245 88 L228 112 M255 88 L272 112 M345 88 L328 112 M355 88 L372 112" />
+      <rect x="216" y="112" width="24" height="16" rx="2" />
+      <rect x="260" y="112" width="24" height="16" rx="2" />
+      <rect x="316" y="112" width="24" height="16" rx="2" />
+      <rect x="360" y="112" width="24" height="16" rx="2" />
+      <text x="244" y="150">arbre BSP → zones</text>
+      <path d="M14 193 L14 233 M23 194 L23 232 M32 195 L32 231 M41 196 L41 230 M50 197 L50 229 M59 199 L59 227 M68 200 L68 226 M77 201 L77 225 M86 202 L86 224 M104 204 L104 222 M113 205 L113 221 M122 206 L122 220 M131 207 L131 219 M140 208 L140 218 M149 208 L149 218 M158 207 L158 219 M167 206 L167 220 M176 205 L176 221 M185 204 L185 222 M194 203 L194 223 M203 202 L203 224 M212 201 L212 225 M221 200 L221 226 M230 199 L230 227 M239 197 L239 229 M248 196 L248 230 M257 195 L257 231 M266 194 L266 232 M275 193 L275 233" />
+      <path class="hot" d="M95 203 L95 223" />
+      <text x="290" y="217">murs en colonnes</text>
+    </svg>
+  }
   @case ('infra') {
     <svg class="wire" [attr.viewBox]="viewBox()" aria-hidden="true">
       <rect x="168" y="6" width="64" height="30" rx="4" />

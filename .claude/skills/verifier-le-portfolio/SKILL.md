@@ -47,6 +47,9 @@ Passe en revue :
 4. **Console** : `read_console_messages` avec `onlyErrors`.
 5. **Visualiseur 3D** : `/projets/visu3d/demo`. Le modèle tourne, les curseurs agissent, un .obj
    s'importe ; une loupe posée dessus montre la même vue aux rayons X (dans « Le colis », une sphère cachée).
+6. **Démo façon Doom** : `/projets/doom/demo`. On avance aux flèches sur la vue, on monte
+   l'escalier, la carte suit ; le rendu au ralenti dessine murs, puis sols, puis objets. Une loupe
+   posée dessus montre la même image aux rayons X, l'arbre BSP sur la carte et les textes techniques.
 
 ## 4. Loupe simulée
 

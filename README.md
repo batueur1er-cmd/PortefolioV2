@@ -48,6 +48,7 @@ src/app/
 │   ├── secrets/      catalogue, progression, directive appSecret, notification
 │   ├── lens/         rôle de la fenêtre, vue loupe, HUD, halos
 │   ├── viewer/       le visualiseur 3D (Three.js), et sa copie aux rayons X
+│   ├── doom/         la démo façon Doom : moteur logiciel en modules, page, copie aux rayons X
 │   └── singularity/  l'écran final
 └── shell/      assemble le tout : bascule portfolio ↔ loupe, bouton mode nuit
 ```
@@ -61,7 +62,7 @@ src/app/
 | `shell` | tout |
 
 Les fonctionnalités ne se connaissent que dans un sens (par exemple `lens → page → secrets`,
-`lens → viewer → achievements`), sans cycle. Quand une couche
+`lens → viewer → achievements`, `lens → doom`), sans cycle. Quand une couche
 basse a besoin de quelque chose d'une couche haute, elle déclare un contrat et la couche haute le
 fournit : `SecretHost` (secrets) et `ScrollStage` (shared) sont implémentés par `PortfolioPage`.
 Les imports entre couches passent par les alias `@core`, `@domain`, `@shared`, `@features`.
@@ -78,6 +79,13 @@ Les imports entre couches passent par les alias `@core`, `@domain`, `@shared`, `
   lumière, position) avec sa présence ; une loupe posée dessus redessine la même vue aux rayons X,
   calée à chaque image (`ViewerPage.sync`). Un fichier OBJ importé passe aux loupes par le
   `BroadcastChannel` : il ne quitte pas le navigateur.
+- **La démo façon Doom.** La démo du projet « Moteur 3D façon Doom » (`/projets/doom/demo`)
+  dessine un petit niveau original avec la méthode de Doom (1993) : arbre BSP, murs en colonnes,
+  visplanes, sprites, palette de 256 couleurs, sans WebGL. Le moteur, dans `features/doom/engine/`,
+  est en TypeScript pur et rangé en modules (`level`, `color`, `graphics`, `render`, `play`,
+  `automap`) dont le script d'architecture vérifie le sens des dépendances ; le reste du site ne
+  passe que par sa façade `engine.ts`. La loupe reçoit la position du joueur à chaque image
+  (`DoomPage.sync`) et redessine la même image aux rayons X, avec les explications techniques.
 - **Le rôle de chaque fenêtre.** Chaque fenêtre annonce sur un `BroadcastChannel` sa position, sa
   taille, son défilement et si elle est « petite » (`core/sync`). Une fenêtre petite, alors qu'une
   grande fenêtre du site est ouverte, devient une loupe (`features/lens/data/window-role.store.ts`).

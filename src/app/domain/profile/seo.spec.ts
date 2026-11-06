@@ -15,6 +15,13 @@ describe('métadonnées des pages', () => {
     expect(demo.image).toBe('/og/visu3d.png');
   });
 
+  it('donne à la démo façon Doom ses propres balises', () => {
+    const demo = metaFor('/projets/doom/demo');
+    expect(demo.path).toBe('/projets/doom/demo');
+    expect(demo.title).toContain('façon Doom');
+    expect(demo.image).toBe('/og/doom.png');
+  });
+
   it('retombe sur l’accueil pour une adresse inconnue', () => {
     expect(metaFor('/nulle-part').path).toBe('/');
   });

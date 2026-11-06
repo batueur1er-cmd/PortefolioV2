@@ -24,6 +24,9 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   { id: 'code-ouvert', label: 'Code ouvert', hint: 'Ouvrir un dépôt GitHub depuis une page projet.' },
   { id: 'vision-3d', label: 'Vision 3D', hint: 'Regarder le visualiseur 3D à travers la loupe.' },
   { id: 'modeliste', label: 'Modéliste', hint: 'Importer son propre fichier OBJ dans le visualiseur 3D.' },
+  { id: 'rayons-x-retro', label: 'Rayons X rétro', hint: 'Regarder la démo façon Doom à travers la loupe.' },
+  { id: 'image-par-image', label: 'Image par image', hint: 'Regarder une image de la démo façon Doom se dessiner jusqu’au bout.' },
+  { id: 'cartographe', label: 'Cartographe', hint: 'Passer par toutes les pièces du niveau façon Doom.' },
 ];
 
 export const ACHIEVEMENT_BY_ID: ReadonlyMap<string, AchievementDef> = new Map(ACHIEVEMENTS.map((a) => [a.id, a]));

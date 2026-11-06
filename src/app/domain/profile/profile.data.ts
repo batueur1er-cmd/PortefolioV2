@@ -256,6 +256,33 @@ export const PROFILE: Profile = {
       secretLabel: 'La scène Three.js',
     },
     {
+      id: 'doom',
+      title: 'Moteur 3D façon Doom',
+      context: 'Expérimentation · navigateur',
+      year: '2026',
+      summary:
+        'Un petit niveau en 2,5D dessiné comme dans Doom (1993) : arbre BSP, murs colonne par colonne, ' +
+        'sols et plafonds en visplanes, sans WebGL. Une carte vue de dessus montre ce que le moteur calcule.',
+      highlights: [
+        'Rendu logiciel en 320 × 200 et 256 couleurs, dans un canvas',
+        'Node builder : le niveau découpé en arbre BSP au chargement',
+        'Murs en colonnes, visplanes, sprites triés du plus loin au plus proche',
+        'Carte 2D synchronisée et image dessinée au ralenti, étape par étape',
+      ],
+      skills: ['typescript', 'angular'],
+      visual: 'doom',
+      // Fait dans ce portfolio (route déclarée dans app.routes.ts).
+      demo: {
+        path: '/projets/doom/demo',
+        label: 'Ouvrir la démo',
+        description:
+          'Un petit niveau dessiné comme dans Doom (1993), avec sa carte vue de dessus et chaque étape du rendu ' +
+          'expliquée : arbre BSP, murs en colonnes, visplanes, sprites.',
+      },
+      secret: 'BSP → murs → visplanes → sprites',
+      secretLabel: 'Le rendu façon Doom',
+    },
+    {
       id: 'infra',
       title: 'Serveurs & réseau',
       context: 'Stage · CC Saône-Beaujolais',
