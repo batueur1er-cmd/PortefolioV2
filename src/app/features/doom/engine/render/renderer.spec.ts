@@ -54,6 +54,18 @@ describe('Le rendu façon Doom', () => {
     expect(kinds().has(OWNER.SPRITE)).toBe(false);
   });
 
+  it('ne montre le coffre caché derrière le mur nord du hall qu’aux rayons X, une fois l’image finie', () => {
+    const hidden = () => [...renderer.frame.owner].filter((o) => o >> OWNER_SHIFT === OWNER.HIDDEN).length;
+    const { stats } = renderer.render(start, palette);
+    expect(hidden()).toBe(0);
+    renderer.render(start, palette, Infinity, false, true);
+    expect(hidden()).toBeGreaterThan(0);
+    // Il ne compte pas dans les opérations : les deux fenêtres rejouent la même image.
+    expect(renderer.render(start, palette, Infinity, false, true).stats.ops).toBe(stats.ops);
+    renderer.render(start, palette, stats.ops - 1, false, true);
+    expect(hidden()).toBe(0);
+  });
+
   it('cache un objet derrière un pilier', () => {
     const sprites = () => [...renderer.frame.owner].filter((o) => o >> OWNER_SHIFT === OWNER.SPRITE).length;
     // Le brasero, au centre de la salle des colonnes, vu entre deux piliers…

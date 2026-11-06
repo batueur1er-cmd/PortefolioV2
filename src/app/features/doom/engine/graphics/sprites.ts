@@ -127,11 +127,28 @@ function robot(rotation: number): Patch {
   return b.toPatch(16, 56);
 }
 
+/** Le coffre caché derrière un mur : bois, ferrures et serrure, 80 unités de large. */
+function chest(): Patch {
+  const w = 80;
+  const h = 52;
+  const lid = 18;
+  const b = new Bitmap(w, h);
+  b.rect(4, 2, w - 5, 4, () => ink(R.GOLD, 7));
+  b.rect(1, 5, w - 2, lid, (x, y) => ink(R.GOLD, (y < 8 ? 6 : 8) + (x % 16 === 0 ? 2 : 0)));
+  b.rect(0, lid + 1, w - 1, lid + 3, () => ink(R.NIGHT, 6));
+  b.rect(0, lid + 4, w - 1, h - 1, (x, y) => ink(R.GOLD, 9 + ((y - lid - 4) % 10 === 0 ? 2 : 0) + (x > w * 0.7 ? 1 : 0)));
+  for (const x of [8, w - 13]) b.rect(x, 2, x + 4, h - 1, (_x, y) => ink(R.NIGHT, y % 7 === 0 ? 3 : 5));
+  b.rect(w / 2 - 6, lid - 4, w / 2 + 5, lid + 12, () => ink(R.GREY, 4));
+  b.rect(w / 2 - 1, lid + 1, w / 2, lid + 6, () => ink(R.NIGHT, 10));
+  return b.toPatch(w / 2, h);
+}
+
 export function buildSprites(): Record<ThingKind, SpriteDef> {
   return {
     lampe: { frames: [[lamp()]], ticsPerFrame: 0, fullbright: true, radius: 10 },
     plante: { frames: [[plant()]], ticsPerFrame: 0, fullbright: false, radius: 14 },
     brasero: { frames: [0, 1, 2, 3].map((f) => [brazier(f)]), ticsPerFrame: 4, fullbright: true, radius: 16 },
     robot: { frames: [[0, 1, 2, 3, 4, 5, 6, 7].map(robot)], ticsPerFrame: 0, fullbright: false, radius: 18 },
+    coffre: { frames: [[chest()]], ticsPerFrame: 0, fullbright: true, radius: 20 },
   };
 }

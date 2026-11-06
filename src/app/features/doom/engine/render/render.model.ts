@@ -13,7 +13,7 @@ export const FOV_HALF = Math.PI / 4;
 export const NEAR = 1;
 
 /** Ce qui a peint un pixel, pour la vue rayons X : nature (4 bits) et numéro (12 bits). */
-export const OWNER = { WALL: 1, PLANE: 2, SKY: 3, SPRITE: 4 } as const;
+export const OWNER = { WALL: 1, PLANE: 2, SKY: 3, SPRITE: 4, HIDDEN: 5 } as const;
 export const OWNER_SHIFT = 12;
 
 /** Couleur des pixels pas encore peints (rendu au ralenti). */

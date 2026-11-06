@@ -45,6 +45,10 @@ yeux à 41, marche de 24 au plus).
   sur une arête la coupent automatiquement ; deux secteurs qui se recouvrent lèvent « Carte invalide ».
 - `ceilingFlat: null` : le ciel. `dimLight` : une lumière qui vacille. `lower` : la contremarche d'une marche.
 - Un point `[x, y, 'logo']` change la texture du mur qui part de ce point.
+- Un objet `hidden: true` (avec `floor`) se pose hors des secteurs, dans l'épaisseur d'un mur, comme
+  le coffre derrière le mur nord du hall : le rendu normal ne le voit jamais ; aux rayons X, il est
+  peint par-dessus l'image finie (`Things.drawHidden`) et la carte le montre. Il ne compte pas dans
+  les opérations du rendu, pour que le ralenti reste identique dans les deux fenêtres.
 - Après un changement, vérifie `level/level.spec.ts` (pièces attendues aux bons endroits).
 
 ## Textures et sprites

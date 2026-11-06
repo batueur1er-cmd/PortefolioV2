@@ -19,6 +19,8 @@ export interface MapColors {
   readonly current: string;
   readonly bsp: string;
   readonly text: string;
+  /** L'objet caché dans un mur (rayons X seulement). */
+  readonly secret: string;
 }
 
 export interface MapScene {
@@ -31,6 +33,8 @@ export interface MapScene {
   readonly bsp: boolean;
   /** Le rang de passage de chaque zone. */
   readonly numbers: boolean;
+  /** Les objets cachés dans les murs. */
+  readonly hidden: boolean;
   /** Le déroulé de l'image, et où en est son dessin (Infinity : terminée). */
   readonly trace: FrameTrace | null;
   readonly budget: number;
@@ -79,6 +83,26 @@ function centerOf(segs: readonly Seg[]): { x: number; y: number } {
     y += (s.v1.y + s.v2.y) / 2;
   }
   return { x: x / segs.length, y: y / segs.length };
+}
+
+/** L'objet caché : un point vif, un cercle en pointillés et son nom. */
+function drawSecret(ctx: CanvasRenderingContext2D, x: number, y: number, ratio: number, colors: MapColors): void {
+  ctx.save();
+  ctx.fillStyle = colors.secret;
+  ctx.strokeStyle = colors.secret;
+  ctx.beginPath();
+  ctx.arc(x, y, 3.5 * ratio, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.setLineDash([3 * ratio, 3 * ratio]);
+  ctx.lineWidth = 1.5 * ratio;
+  ctx.beginPath();
+  ctx.arc(x, y, 9 * ratio, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.font = Math.round(9 * ratio) + 'px ui-monospace, Consolas, monospace';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('coffre caché', x + 13 * ratio, y);
+  ctx.restore();
 }
 
 /** Dessine la carte ; `ratio` : pixels du canvas par pixel CSS, pour garder des traits fins. */
@@ -192,6 +216,10 @@ export function drawMap(ctx: CanvasRenderingContext2D, width: number, height: nu
   // Les objets, puis le joueur et son champ de vision de 90°.
   const sprite = trace?.sprites.find((s) => budget >= s.op0 && budget < s.op1);
   for (const thing of level.things) {
+    if (thing.hidden) {
+      if (scene.hidden) drawSecret(ctx, X(thing.x), Y(thing.y), ratio, colors);
+      continue;
+    }
     ctx.fillStyle = colors.thing;
     ctx.beginPath();
     ctx.arc(X(thing.x), Y(thing.y), Math.max(2.5 * ratio, 12 * f.scale), 0, Math.PI * 2);

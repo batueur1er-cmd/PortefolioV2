@@ -53,6 +53,14 @@ describe('Le node builder', () => {
     expect(level.things.length).toBe(level.stats.things);
   });
 
+  it('garde le coffre caché hors de tout secteur', () => {
+    const chest = level.things.find((t) => t.hidden)!;
+    expect(chest.kind).toBe('coffre');
+    expect(chest.z).toBe(0);
+    expect(level.sectors.some((s) => s.things.includes(chest))).toBe(false);
+    expect(insideSector(chest.sector, chest.x, chest.y)).toBe(false);
+  });
+
   it('refuse deux secteurs qui se chevauchent', () => {
     const base = { room: 'test', floor: 0, ceiling: 128, floorFlat: 'dalles', ceilingFlat: 'plafond', light: 160, wall: 'pierre' } as const;
     const overlap = [

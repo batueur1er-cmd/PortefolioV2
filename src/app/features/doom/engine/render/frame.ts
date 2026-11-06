@@ -56,4 +56,9 @@ export class Frame {
   spend(): boolean {
     return this.ops++ < this.budget;
   }
+
+  /** Toutes les opérations de l'image ont tenu dans le budget : l'image est finie. */
+  get complete(): boolean {
+    return this.ops <= this.budget;
+  }
 }

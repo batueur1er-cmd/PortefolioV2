@@ -9,7 +9,7 @@
 
 export type WallTexture = 'panneaux' | 'briques' | 'pierre' | 'metal' | 'logo' | 'marche' | 'cadre';
 export type FlatTexture = 'dalles' | 'plafond' | 'paves' | 'herbe' | 'eau' | 'beton' | 'voute' | 'bois';
-export type ThingKind = 'lampe' | 'plante' | 'robot' | 'brasero';
+export type ThingKind = 'lampe' | 'plante' | 'robot' | 'brasero' | 'coffre';
 
 /** Un point du contour d'un secteur ; `wall` change la texture du mur qui part de ce point. */
 export type MapPoint = readonly [x: number, y: number, wall?: WallTexture];
@@ -42,6 +42,10 @@ export interface ThingDef {
   readonly y: number;
   /** Direction du regard, en degrés (0 : l'est, 90 : le nord). */
   readonly angle?: number;
+  /** Caché dans l'épaisseur d'un mur, hors de tout secteur : seuls les rayons X le montrent. */
+  readonly hidden?: boolean;
+  /** Hauteur du sol sous l'objet, pour un objet posé hors des secteurs. */
+  readonly floor?: number;
 }
 
 /** Un rectangle, de (x0, y0) à (x1, y1). */
@@ -189,6 +193,8 @@ export const THINGS: readonly ThingDef[] = [
   { kind: 'plante', x: 544, y: 1152 },
   { kind: 'plante', x: 1344, y: 1152 },
   { kind: 'lampe', x: 1344, y: 704 },
+  // Derrière le mur nord du hall, en face du point de départ : aucun mur ne laisse passer la vue.
+  { kind: 'coffre', x: 544, y: 584, angle: -90, hidden: true, floor: 0 },
 ];
 
 /** Le point de départ : dans le hall, tourné vers le nord-est. */

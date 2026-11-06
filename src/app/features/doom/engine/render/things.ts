@@ -71,15 +71,39 @@ export class Things {
     });
   }
 
-  /** R_ProjectSprite : sa place à l'écran, son image (selon l'angle de vue) et sa lumière. */
+  /**
+   * Les objets cachés dans l'épaisseur des murs, peints par-dessus toute l'image et sans découpe :
+   * c'est ce que révèlent les rayons X. Ils ne comptent pas dans les opérations du rendu.
+   */
+  drawHidden(things: readonly Thing[]): void {
+    const order = things
+      .map((thing) => this.projectThing(thing))
+      .filter((vis): vis is VisSprite => vis !== null)
+      .sort((a, b) => a.scale - b.scale);
+    order.forEach((vis, n) => {
+      const owner = (OWNER.HIDDEN << OWNER_SHIFT) | (n & 0xfff);
+      const top = CENTER_Y - (vis.gzt - this.f.z) * vis.scale;
+      for (let x = vis.x1; x <= vis.x2; x++) {
+        const col = Math.floor((x + 0.5 - vis.left) / vis.scale);
+        if (col >= 0 && col < vis.patch.width) drawPosts(this.f, x, vis.patch.columns[col], top, vis.scale, -1, SCREEN_H, 0, owner);
+      }
+    });
+  }
+
   private project(thing: Thing): void {
+    const vis = this.projectThing(thing);
+    if (vis) this.sprites.push(vis);
+  }
+
+  /** R_ProjectSprite : sa place à l'écran, son image (selon l'angle de vue) et sa lumière. */
+  private projectThing(thing: Thing): VisSprite | null {
     const f = this.f;
     const dx = thing.x - f.x;
     const dy = thing.y - f.y;
     const tz = dx * f.cos + dy * f.sin;
-    if (tz < 4) return;
+    if (tz < 4) return null;
     const tl = dy * f.cos - dx * f.sin;
-    if (Math.abs(tl) > tz * 4) return;
+    if (Math.abs(tl) > tz * 4) return null;
     const def = this.graphics.sprites[thing.kind];
     const frame = def.frames[def.ticsPerFrame ? Math.floor(f.tic / def.ticsPerFrame) % def.frames.length : 0];
     let patch = frame[0];
@@ -92,19 +116,19 @@ export class Things {
     const left = CENTER_X - tl * scale - patch.leftOffset * scale;
     const x1 = Math.ceil(left - 0.5);
     const x2 = Math.ceil(left + patch.width * scale - 0.5) - 1;
-    if (x1 > SCREEN_W - 1 || x2 < 0 || x1 > x2) return;
+    if (x1 > SCREEN_W - 1 || x2 < 0 || x1 > x2) return null;
     const lights = lightBand(sectorLight(thing.sector, f.tic)) * MAX_LIGHT_SCALE;
-    this.sprites.push({
+    return {
       thing,
       patch,
       left,
       scale,
       x1: Math.max(0, x1),
       x2: Math.min(SCREEN_W - 1, x2),
-      gz: thing.sector.floor,
-      gzt: thing.sector.floor + patch.topOffset,
+      gz: thing.z,
+      gzt: thing.z + patch.topOffset,
       level: def.fullbright ? 0 : this.lights.scale[lights + Math.min(MAX_LIGHT_SCALE - 1, Math.floor(scale * 16))],
-    });
+    };
   }
 
   /** R_DrawSprite : la découpe par les murs qui passent devant, puis les colonnes de l'image. */

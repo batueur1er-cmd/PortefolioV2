@@ -379,7 +379,7 @@ export class DoomPage {
 
   private draw(view: View, budget: number): void {
     const xray = this.mode() === 'xray';
-    const result = this.engine.render(view, budget, true);
+    const result = this.engine.render(view, budget, true, xray);
     this.lastView = view;
     if (this.screenCtx && this.image && this.pixels && this.colors) {
       this.engine.paint(this.pixels, xray ? this.colors.xrayRgb : null);
@@ -407,6 +407,7 @@ export class DoomPage {
       colors: xray ? this.colors.xray : this.colors.surface,
       bsp: this.bsp() || xray,
       numbers: xray,
+      hidden: xray,
       trace: budget !== Infinity || xray ? result.trace : null,
       budget,
       wallOps: result.stats.wallOps,
@@ -488,6 +489,7 @@ export class DoomPage {
         current: rgba(accent2, 0.55),
         bsp: rgba(accent2, 0.9),
         text: rgba(ink, 0.75),
+        secret: rgba(accent2, 1),
       },
       xray: {
         floor: rgba(xbg2, 0.7),
@@ -501,6 +503,7 @@ export class DoomPage {
         current: rgba(xp, 0.5),
         bsp: rgba(xp, 0.85),
         text: rgba(xtext, 0.75),
+        secret: rgba(xp, 1),
       },
       xrayRgb: { bg: xbg, line: xl, note: xn, pink: xp, text: xtext },
     };

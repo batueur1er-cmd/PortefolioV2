@@ -75,8 +75,18 @@ export function buildLevel(
   };
   const things = thingDefs.map((def, index): Thing => {
     const sector = subsectorAt(level, def.x, def.y).sector;
-    const thing: Thing = { index, kind: def.kind, x: def.x, y: def.y, angle: deg(def.angle ?? 0), sector };
-    sector.things.push(thing);
+    const thing: Thing = {
+      index,
+      kind: def.kind,
+      x: def.x,
+      y: def.y,
+      angle: deg(def.angle ?? 0),
+      sector,
+      z: def.floor ?? sector.floor,
+      hidden: def.hidden ?? false,
+    };
+    // Un objet caché n'est dans la liste d'aucun secteur : le rendu normal ne le projette jamais.
+    if (!thing.hidden) sector.things.push(thing);
     return thing;
   });
   return { ...level, things };

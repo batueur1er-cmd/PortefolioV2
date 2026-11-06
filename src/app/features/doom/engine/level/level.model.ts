@@ -111,6 +111,10 @@ export interface Thing {
   /** En radians. */
   readonly angle: number;
   readonly sector: Sector;
+  /** Hauteur du sol sous l'objet. */
+  readonly z: number;
+  /** Caché dans un mur : hors des listes des secteurs, peint seulement aux rayons X. */
+  readonly hidden: boolean;
 }
 
 export interface LevelStats {

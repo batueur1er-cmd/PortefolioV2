@@ -38,6 +38,7 @@ export function paintXray(frame: Frame, palette: Palette, colors: XrayColors, wa
   }
   const planes = [...ramp(colors.bg, colors.line), ...ramp(colors.bg, mixRgb(colors.line, colors.text, 0.45))];
   const sprites = ramp(colors.bg, colors.note);
+  const hidden = ramp(colors.bg, mixRgb(colors.pink, colors.text, 0.2));
   const sky = packRgb(mixRgb(colors.bg, colors.line, 0.1));
   const edge = packRgb(mixRgb(colors.bg, colors.text, 0.92));
   const empty = packRgb(colors.bg);
@@ -63,6 +64,9 @@ export function paintXray(frame: Frame, palette: Palette, colors: XrayColors, wa
           break;
         case OWNER.SKY:
           out[i] = sky;
+          break;
+        case OWNER.HIDDEN:
+          out[i] = hidden[Math.min(LEVELS - 1, k + 3)];
           break;
         default:
           out[i] = sprites[k];

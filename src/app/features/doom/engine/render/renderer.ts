@@ -1,7 +1,7 @@
 import { LightTables } from '../color/light-tables';
 import { Palette } from '../color/palette';
 import { Graphics } from '../graphics/graphics.model';
-import { Level } from '../level/level.model';
+import { Level, Thing } from '../level/level.model';
 import { Bsp } from './bsp';
 import { Frame } from './frame';
 import { Planes } from './planes';
@@ -24,8 +24,11 @@ export class Renderer {
   private readonly segs: Segs;
   private readonly things: Things;
   private readonly bsp: Bsp;
+  /** Les objets cachés dans les murs, que seuls les rayons X montrent. */
+  private readonly hidden: readonly Thing[];
 
   constructor(level: Level, graphics: Graphics, lights: LightTables) {
+    this.hidden = level.things.filter((t) => t.hidden);
     this.planes = new Planes(this.frame, graphics, lights);
     this.segs = new Segs(this.frame, this.planes, graphics, lights);
     this.things = new Things(this.frame, this.segs, graphics, lights, level.sectors.length);
@@ -34,9 +37,10 @@ export class Renderer {
 
   /**
    * Dessine une image. `budget` borne le nombre d'opérations de dessin (rendu au ralenti) ; tout le
-   * reste du calcul est fait quand même, pour que chaque étape tombe au même moment.
+   * reste du calcul est fait quand même, pour que chaque étape tombe au même moment. Aux rayons X
+   * (`xray`), l'image finie reçoit en plus les objets cachés dans les murs.
    */
-  render(view: View, palette: Palette, budget = Infinity, trace = false): { stats: FrameStats; trace: FrameTrace | null } {
+  render(view: View, palette: Palette, budget = Infinity, trace = false, xray = false): { stats: FrameStats; trace: FrameTrace | null } {
     const f = this.frame;
     f.begin(view, palette, budget, trace);
     this.planes.reset();
@@ -50,6 +54,7 @@ export class Renderer {
     f.stats.planeOps = f.ops - f.stats.wallOps;
     this.things.draw();
     f.stats.spriteOps = f.ops - f.stats.wallOps - f.stats.planeOps;
+    if (xray && f.complete) this.things.drawHidden(this.hidden);
     f.stats.ops = f.ops;
     f.stats.visplanes = this.planes.count;
     return { stats: f.stats, trace: f.trace };

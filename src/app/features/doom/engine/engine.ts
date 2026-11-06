@@ -68,7 +68,9 @@ export class DoomEngine {
     const assets = doomAssets();
     this.level = assets.level;
     this.renderer = new Renderer(assets.level, assets.graphics, assets.lights);
-    this.obstacles = assets.level.things.map((t) => ({ x: t.x, y: t.y, radius: assets.graphics.sprites[t.kind].radius }));
+    this.obstacles = assets.level.things
+      .filter((t) => !t.hidden)
+      .map((t) => ({ x: t.x, y: t.y, radius: assets.graphics.sprites[t.kind].radius }));
     this.palette = buildPalette(RAMP_COLORS.map(([, fallback]) => parseColor(fallback, fallback)));
   }
 
@@ -81,8 +83,9 @@ export class DoomEngine {
     return true;
   }
 
-  render(view: View, budget = Infinity, trace = false): FrameResult {
-    this.last = this.renderer.render(view, this.palette, budget, trace);
+  /** Une image ; aux rayons X, avec les objets cachés dans les murs. */
+  render(view: View, budget = Infinity, trace = false, xray = false): FrameResult {
+    this.last = this.renderer.render(view, this.palette, budget, trace, xray);
     return this.last;
   }
 
