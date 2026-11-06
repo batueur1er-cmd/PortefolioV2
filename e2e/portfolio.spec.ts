@@ -170,11 +170,13 @@ test.describe('portfolio', () => {
     });
   }
 
-  test('passe l’audit d’accessibilité sur une page projet', async ({ page }) => {
-    await page.goto('/projets/drive?simple=1');
-    await page.waitForTimeout(500);
-    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
-    const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
-    expect(serious.map((v) => `${v.id} : ${v.nodes.length} élément(s)`)).toEqual([]);
-  });
+  for (const theme of ['clair', 'nuit']) {
+    test(`passe l’audit d’accessibilité sur une page projet (thème ${theme})`, async ({ page }) => {
+      await page.goto(`/projets/drive?simple=1&theme=${theme}`);
+      await page.waitForTimeout(500);
+      const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+      const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+      expect(serious.map((v) => `${v.id} : ${v.nodes.length} élément(s)`)).toEqual([]);
+    });
+  }
 });
