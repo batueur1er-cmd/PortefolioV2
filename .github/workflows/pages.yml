@@ -19,11 +19,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deployer:
+  # Deux jobs, comme le modèle officiel : relancer seulement « deployer » réutilise le paquet
+  # déjà construit, au lieu d'en envoyer un second dans le même run (deploy-pages refuse alors).
+  construire:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploiement.outputs.page_url }}
     env:
       BASE_HREF: /${{ github.event.repository.name }}/
     steps:
@@ -41,5 +40,13 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/portfolio-v2/browser
+
+  deployer:
+    needs: construire
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
       - id: deploiement
         uses: actions/deploy-pages@v4
