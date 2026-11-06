@@ -45,9 +45,11 @@
   background: var(--paper-2);
 }
 
-/* L'illustration est plus petite que sur la carte : on réduit son étiquette. */
+/* L'illustration est plus petite que sur la carte : on réduit son étiquette, et ses étiquettes du bas
+   laissent la place au numéro posé dans le coin. */
 .thumb app-project-art {
   font-size: 0.8em;
+  --art-inset: 44px;
 }
 
 .num {
