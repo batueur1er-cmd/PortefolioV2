@@ -92,7 +92,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
   template: `
     <app-portfolio-page
       class="lens-page"
-      mode="xray"
+      [mode]="lensMode()"
       aria-hidden="true"
       [decorative]="true"
       [remote]="true"
@@ -106,7 +106,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
       <app-project-page
         #projectCopy
         class="lens-page"
-        mode="xray"
+        [mode]="lensMode()"
         [id]="id"
         [decorative]="true"
         [scrollY]="scrollY()"
@@ -119,7 +119,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
       <app-viewer-page
         #viewerCopy
         class="lens-page"
-        mode="xray"
+        [mode]="lensMode()"
         [decorative]="true"
         [style.width.px]="pageWidth()"
         [class.hidden]="state() === 'searching'"
@@ -204,7 +204,9 @@ export class LensView {
   private scanFocus: string | null = null;
   private scanProgress = 0;
   private konamiIndex = 0;
-  private xrayAll = false;
+  // Après le code Konami, le portfolio passe aux rayons X et la loupe, en échange, voit la surface.
+  private readonly xrayAll = signal(false);
+  protected readonly lensMode = computed(() => (this.xrayAll() ? 'surface' : 'xray'));
   protected readonly singularityOpen = signal(false);
   private readonly hunt = inject(HuntClock);
   private readonly achievements = inject(AchievementsStore);
@@ -472,9 +474,10 @@ export class LensView {
       if (this.konamiIndex === KONAMI.length) {
         this.konamiIndex = 0;
         achievements.unlock('konami-loupe');
-        this.xrayAll = !this.xrayAll;
-        this.bus.send({ type: 'xray-all', on: this.xrayAll });
-        this.showToast(this.xrayAll ? 'Rayons X sur toute la page' : 'Retour à la surface');
+        const on = !this.xrayAll();
+        this.xrayAll.set(on);
+        this.bus.send({ type: 'xray-all', on });
+        this.showToast(on ? 'Rayons X sur toute la page, la loupe voit la surface' : 'Retour à la surface');
       }
     };
   }
