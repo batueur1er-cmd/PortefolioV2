@@ -3,7 +3,7 @@ import { BspChild, Box, Level, Seg, Subsector } from '../level/level.model';
 import { Frame } from './frame';
 import { sectorLight } from './lighting';
 import { Planes } from './planes';
-import { CENTER_X, FOCAL, FOV_HALF, NEAR, SCREEN_W } from './render.model';
+import { CENTER_X, NEAR, SCREEN_W } from './render.model';
 import { ProjectedSeg, Segs } from './segs';
 import { Things } from './things';
 
@@ -78,11 +78,12 @@ export class Bsp {
     const base = wrap(ref - this.f.angle);
     let left = base + hi;
     let right = base + lo;
-    if (right > FOV_HALF || left < -FOV_HALF) return false;
-    left = Math.min(left, FOV_HALF);
-    right = Math.max(right, -FOV_HALF);
-    const x1 = Math.max(0, Math.floor(CENTER_X - Math.tan(left) * FOCAL));
-    const x2 = Math.min(SCREEN_W - 1, Math.ceil(CENTER_X - Math.tan(right) * FOCAL));
+    const half = this.f.fovHalf;
+    if (right > half || left < -half) return false;
+    left = Math.min(left, half);
+    right = Math.max(right, -half);
+    const x1 = Math.max(0, Math.floor(CENTER_X - Math.tan(left) * this.f.focal));
+    const x2 = Math.min(SCREEN_W - 1, Math.ceil(CENTER_X - Math.tan(right) * this.f.focal));
     let i = 0;
     while (this.ranges[i].last < x1) i++;
     return !(x1 >= this.ranges[i].first && x2 <= this.ranges[i].last);
@@ -120,10 +121,11 @@ export class Bsp {
     let lb = by * f.cos - bx * f.sin;
     let ua = seg.offset;
     let ub = seg.offset + seg.length;
-    // Rogne le seg aux bords du champ de 90° (l ≤ z et -l ≤ z), puis devant les yeux.
+    // Rogne le seg aux bords du champ de vision (l ≤ z·t et -l ≤ z·t ; t = 1 à 90°), puis devant les yeux.
+    const t0 = f.tanHalf;
     for (let edge = 0; edge < 3; edge++) {
-      const fa = edge === 0 ? za - la : edge === 1 ? za + la : za - NEAR;
-      const fb = edge === 0 ? zb - lb : edge === 1 ? zb + lb : zb - NEAR;
+      const fa = edge === 0 ? za * t0 - la : edge === 1 ? za * t0 + la : za - NEAR;
+      const fb = edge === 0 ? zb * t0 - lb : edge === 1 ? zb * t0 + lb : zb - NEAR;
       if (fa < 0 && fb < 0) return;
       if (fa < 0 || fb < 0) {
         const t = fa / (fa - fb);
@@ -141,8 +143,8 @@ export class Bsp {
         }
       }
     }
-    const sxA = CENTER_X - (la / za) * FOCAL;
-    const sxB = CENTER_X - (lb / zb) * FOCAL;
+    const sxA = CENTER_X - (la / za) * f.focal;
+    const sxB = CENTER_X - (lb / zb) * f.focal;
     if (sxB - sxA < 1e-6) return;
     // Les colonnes dont le centre tombe entre les deux bouts.
     const x1 = Math.max(0, Math.ceil(sxA - 0.5));

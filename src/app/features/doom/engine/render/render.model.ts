@@ -6,9 +6,15 @@ export const SCREEN_W = 320;
 export const SCREEN_H = 200;
 export const CENTER_X = SCREEN_W / 2;
 export const CENTER_Y = SCREEN_H / 2;
-/** Distance focale de 160 pixels : un champ de vision de 90°, celui de Doom. */
-export const FOCAL = CENTER_X;
-export const FOV_HALF = Math.PI / 4;
+/** Le champ de vision de Doom : 90°, soit une distance focale de 160 pixels. */
+export const DEFAULT_FOV = 90;
+export const MIN_FOV = 60;
+export const MAX_FOV = 120;
+
+/** La distance focale, en pixels, qui donne ce champ de vision horizontal (en degrés) sur 320 colonnes. */
+export function focalOf(fov: number): number {
+  return CENTER_X / Math.tan((fov * Math.PI) / 360);
+}
 /** Rien n'est dessiné à moins d'une unité des yeux. */
 export const NEAR = 1;
 
@@ -28,6 +34,8 @@ export interface View {
   readonly angle: number;
   /** Horloge des effets (lumière qui vacille, sols et sprites animés), à 35 tics par seconde. */
   readonly tic: number;
+  /** Champ de vision horizontal, en degrés (90 si absent). */
+  readonly fov?: number;
 }
 
 export interface FrameStats {

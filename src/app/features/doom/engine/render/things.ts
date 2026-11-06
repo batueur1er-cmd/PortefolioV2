@@ -5,7 +5,7 @@ import { Sector, Thing } from '../level/level.model';
 import { drawPosts } from './draw';
 import { Frame } from './frame';
 import { sectorLight } from './lighting';
-import { CENTER_X, CENTER_Y, FOCAL, OWNER, OWNER_SHIFT, SCREEN_H, SCREEN_W } from './render.model';
+import { CENTER_X, CENTER_Y, OWNER, OWNER_SHIFT, SCREEN_H, SCREEN_W } from './render.model';
 import { SIL_BOTTOM, SIL_TOP, Segs } from './segs';
 
 /*
@@ -112,7 +112,7 @@ export class Things {
       const rel = Math.atan2(f.y - thing.y, f.x - thing.x) - thing.angle;
       patch = frame[((Math.round(rel / (Math.PI / 4)) % 8) + 8) % 8];
     }
-    const scale = FOCAL / tz;
+    const scale = f.focal / tz;
     const left = CENTER_X - tl * scale - patch.leftOffset * scale;
     const x1 = Math.ceil(left - 0.5);
     const x2 = Math.ceil(left + patch.width * scale - 0.5) - 1;
@@ -127,7 +127,7 @@ export class Things {
       x2: Math.min(SCREEN_W - 1, x2),
       gz: thing.z,
       gzt: thing.z + patch.topOffset,
-      level: def.fullbright ? 0 : this.lights.scale[lights + Math.min(MAX_LIGHT_SCALE - 1, Math.floor(scale * 16))],
+      level: def.fullbright ? 0 : this.lights.scale[lights + Math.min(MAX_LIGHT_SCALE - 1, Math.floor(scale * f.lightRatio * 16))],
     };
   }
 

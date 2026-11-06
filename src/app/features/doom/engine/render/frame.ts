@@ -1,5 +1,5 @@
 import { COLORMAPS, Palette } from '../color/palette';
-import { CENTER_X, FOCAL, FrameStats, FrameTrace, SCREEN_H, SCREEN_W, VOID_COLOR, View, emptyStats } from './render.model';
+import { CENTER_X, DEFAULT_FOV, FrameStats, FrameTrace, SCREEN_H, SCREEN_W, VOID_COLOR, View, emptyStats, focalOf } from './render.model';
 
 /**
  * L'image en cours de calcul, partagée par toutes les passes du rendu : ses pixels, ce qui les a
@@ -14,7 +14,14 @@ export class Frame {
   readonly ceilingClip = new Int16Array(SCREEN_W);
   readonly floorClip = new Int16Array(SCREEN_W);
   /** Angle de chaque colonne par rapport au regard. */
-  readonly columnAngle = Float64Array.from({ length: SCREEN_W }, (_, x) => Math.atan((CENTER_X - x - 0.5) / FOCAL));
+  readonly columnAngle = new Float64Array(SCREEN_W);
+  /** Distance focale en pixels : plus elle est courte, plus le champ de vision est large. */
+  focal = 0;
+  /** Tangente du demi-champ de vision : un point est visible si |l| ≤ z · tanHalf. */
+  tanHalf = 1;
+  fovHalf = Math.PI / 4;
+  /** Rapport à la focale de Doom : les tables de lumière restent calées sur la distance, pas sur le zoom. */
+  lightRatio = 1;
 
   x = 0;
   y = 0;
@@ -38,6 +45,7 @@ export class Frame {
     this.cos = Math.cos(view.angle);
     this.sin = Math.sin(view.angle);
     this.tic = view.tic;
+    this.setFov(view.fov ?? DEFAULT_FOV);
     this.colormaps = palette.colormaps;
     this.budget = budget;
     this.ops = 0;
@@ -47,6 +55,16 @@ export class Frame {
     this.owner.fill(0);
     this.ceilingClip.fill(-1);
     this.floorClip.fill(SCREEN_H);
+  }
+
+  private setFov(fov: number): void {
+    const focal = focalOf(fov);
+    if (focal === this.focal) return;
+    this.focal = focal;
+    this.fovHalf = (fov * Math.PI) / 360;
+    this.tanHalf = CENTER_X / focal;
+    this.lightRatio = focalOf(DEFAULT_FOV) / focal;
+    for (let x = 0; x < SCREEN_W; x++) this.columnAngle[x] = Math.atan((CENTER_X - x - 0.5) / focal);
   }
 
   /**

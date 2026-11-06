@@ -28,6 +28,16 @@ describe('Le rendu façon Doom', () => {
     expect(stats.subsectors).toBeLessThan(level.stats.subsectors);
   });
 
+  it('change de champ de vision sans laisser de trou, et voit plus de zones en grand angle', () => {
+    for (const fov of [60, 120]) {
+      renderer.render({ ...start, fov }, palette);
+      expect([...renderer.frame.owner].every((o) => o !== 0)).toBe(true);
+    }
+    const narrow = renderer.render({ ...start, fov: 60 }, palette).stats.subsectors;
+    const wide = renderer.render({ ...start, fov: 120 }, palette).stats.subsectors;
+    expect(wide).toBeGreaterThan(narrow);
+  });
+
   it('reste sous les limites de Doom', () => {
     const { stats } = renderer.render({ x: 700, y: 1100, z: 9, angle: -Math.PI / 2, tic: 0 }, palette);
     expect(stats.visplanes).toBeLessThanOrEqual(128);

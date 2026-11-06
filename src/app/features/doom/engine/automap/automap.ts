@@ -1,5 +1,5 @@
 import { Level, Seg, Sector } from '../level/level.model';
-import { FOCAL, FrameTrace, SCREEN_W } from '../render/render.model';
+import { FrameTrace, SCREEN_W, focalOf } from '../render/render.model';
 
 /*
  * La carte vue de dessus (am_map), comme l'automap de Doom : les lignes du niveau, les objets et le joueur
@@ -28,6 +28,8 @@ export interface MapScene {
   readonly x: number;
   readonly y: number;
   readonly angle: number;
+  /** Champ de vision, en degrés : l'ouverture du cône du joueur. */
+  readonly fov: number;
   readonly colors: MapColors;
   /** Les découpes de l'arbre BSP. */
   readonly bsp: boolean;
@@ -183,7 +185,7 @@ export function drawMap(ctx: CanvasRenderingContext2D, width: number, height: nu
     ctx.lineTo(X(seg.v2.x), Y(seg.v2.y));
     ctx.stroke();
     const column = Math.min(wall.x2, wall.x1 + Math.floor(budget - wall.op));
-    const a = scene.angle + Math.atan((SCREEN_W / 2 - column - 0.5) / FOCAL);
+    const a = scene.angle + Math.atan((SCREEN_W / 2 - column - 0.5) / focalOf(scene.fov));
     const dx = Math.cos(a);
     const dy = Math.sin(a);
     const ex = seg.v2.x - seg.v1.x;
@@ -238,8 +240,9 @@ export function drawMap(ctx: CanvasRenderingContext2D, width: number, height: nu
   ctx.fillStyle = colors.fov;
   ctx.beginPath();
   ctx.moveTo(px, py);
-  ctx.lineTo(X(scene.x + Math.cos(scene.angle + Math.PI / 4) * reach), Y(scene.y + Math.sin(scene.angle + Math.PI / 4) * reach));
-  ctx.lineTo(X(scene.x + Math.cos(scene.angle - Math.PI / 4) * reach), Y(scene.y + Math.sin(scene.angle - Math.PI / 4) * reach));
+  const half = (scene.fov * Math.PI) / 360;
+  ctx.lineTo(X(scene.x + Math.cos(scene.angle + half) * reach), Y(scene.y + Math.sin(scene.angle + half) * reach));
+  ctx.lineTo(X(scene.x + Math.cos(scene.angle - half) * reach), Y(scene.y + Math.sin(scene.angle - half) * reach));
   ctx.closePath();
   ctx.fill();
   const size = Math.max(6 * ratio, 28 * f.scale);

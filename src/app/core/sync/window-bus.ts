@@ -82,6 +82,8 @@ export interface DoomPresence {
   readonly z: number;
   /** Direction du regard, en radians (0 : l'est). */
   readonly angle: number;
+  /** Champ de vision horizontal, en degrés (90 dans Doom). */
+  readonly fov: number;
   /** Horloge des effets à 35 images par seconde (0 quand les animations sont coupées). */
   readonly tic: number;
   /** Rendu au ralenti : opérations de dessin déjà faites, sur le total de l'image ; null en direct. */

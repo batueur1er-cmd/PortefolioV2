@@ -5,7 +5,7 @@ import { drawColumn } from './draw';
 import { Frame } from './frame';
 import { sectorLight } from './lighting';
 import { Planes, Visplane } from './planes';
-import { CENTER_Y, FOCAL, OWNER, OWNER_SHIFT, SCREEN_H, SCREEN_W } from './render.model';
+import { CENTER_Y, OWNER, OWNER_SHIFT, SCREEN_H, SCREEN_W } from './render.model';
 
 /*
  * Les murs (r_segs). Un mur reste vertical à l'écran : sur une colonne, il est partout à la même
@@ -162,7 +162,7 @@ export class Segs {
       // Sur une colonne, une seule échelle : le mur y est partout à la même distance.
       const t = (x + 0.5 - p.sxA) / span;
       const iz = p.izA + (p.izB - p.izA) * t;
-      const scale = FOCAL * iz;
+      const scale = f.focal * iz;
       const u = (p.uzA + (p.uzB - p.uzA) * t) / iz;
       let yl = Math.ceil(CENTER_Y - worldTop * scale - 0.5);
       let yh = Math.ceil(CENTER_Y - worldBottom * scale - 0.5) - 1;
@@ -178,7 +178,7 @@ export class Segs {
         const ft = Math.max(yh + 1, topClip);
         if (ft <= bottomClip) this.planes.mark(floorPlane, x, ft, bottomClip);
       }
-      const level = this.lights.scale[lights + Math.min(MAX_LIGHT_SCALE - 1, Math.floor(scale * 16))];
+      const level = this.lights.scale[lights + Math.min(MAX_LIGHT_SCALE - 1, Math.floor(scale * f.lightRatio * 16))];
       const draw = f.spend();
       if (mid) {
         if (draw) drawColumn(f, x, yl, yh, mid, u, midAnchor, scale, level, owner);
@@ -205,8 +205,8 @@ export class Segs {
       this.openings[ds.clip + (x - start)] = f.ceilingClip[x];
       this.openings[ds.clip + count + (x - start)] = f.floorClip[x];
     }
-    ds.scale1 = FOCAL * at(start);
-    ds.scale2 = FOCAL * at(stop);
+    ds.scale1 = f.focal * at(start);
+    ds.scale2 = f.focal * at(stop);
     f.trace?.walls.push({ seg, x1: start, x2: stop, op: opStart });
   }
 

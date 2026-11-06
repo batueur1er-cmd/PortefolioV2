@@ -40,8 +40,11 @@ import {
   sameDoom,
 } from './data/doom-state';
 import {
+  DEFAULT_FOV,
   DoomEngine,
   FrameResult,
+  MAX_FOV,
+  MIN_FOV,
   MapColors,
   Player,
   PlayerInput,
@@ -130,6 +133,8 @@ export class DoomPage {
   protected readonly progress = signal(0);
   protected readonly phase = signal<ReplayPhase | null>(null);
   protected readonly bsp = signal(false);
+  /** Champ de vision, en degrés : 90 dans Doom. */
+  protected readonly fov = signal(DEFAULT_FOV);
   protected readonly notice = signal<string | null>(null);
 
   protected readonly viewLabel = computed(
@@ -197,10 +202,11 @@ export class DoomPage {
     this.remote = state;
     this.dirty = false;
     this.bsp.set(state.bsp);
+    this.fov.set(state.fov);
     this.replay.set(state.replay ? (state.replay.playing ? 'playing' : 'paused') : 'live');
     this.done = state.replay?.done ?? 0;
     this.total = state.replay?.total ?? 0;
-    this.draw({ x: state.x, y: state.y, z: state.z, angle: state.angle, tic: state.tic }, state.replay ? state.replay.done : Infinity);
+    this.draw({ x: state.x, y: state.y, z: state.z, angle: state.angle, tic: state.tic, fov: state.fov }, state.replay ? state.replay.done : Infinity);
   }
 
   // ---------------------------------------------------------------------------------------------
@@ -286,6 +292,15 @@ export class DoomPage {
     this.dirty = true;
   }
 
+  /** Un autre champ de vision change toute l'image : le ralenti en cours n'a plus de sens. */
+  protected setFov(fov: number): void {
+    const next = Math.max(MIN_FOV, Math.min(MAX_FOV, Math.round(fov)));
+    if (next === this.fov()) return;
+    this.fov.set(next);
+    if (this.replay() !== 'live') this.stopReplay();
+    this.dirty = true;
+  }
+
   protected toggleBsp(): void {
     this.bsp.update((on) => !on);
     this.dirty = true;
@@ -367,7 +382,7 @@ export class DoomPage {
   }
 
   private liveView(): View {
-    return { x: this.player.x, y: this.player.y, z: this.player.eyeZ, angle: this.player.angle, tic: this.effectsTic() };
+    return { x: this.player.x, y: this.player.y, z: this.player.eyeZ, angle: this.player.angle, tic: this.effectsTic(), fov: this.fov() };
   }
 
   /** Mesure l'image entière avant de la rejouer depuis zéro. */
@@ -404,6 +419,7 @@ export class DoomPage {
       x: view.x,
       y: view.y,
       angle: view.angle,
+      fov: view.fov ?? DEFAULT_FOV,
       colors: xray ? this.colors.xray : this.colors.surface,
       bsp: this.bsp() || xray,
       numbers: xray,
@@ -438,6 +454,7 @@ export class DoomPage {
       y: v.y,
       z: v.z,
       angle: v.angle,
+      fov: v.fov ?? DEFAULT_FOV,
       tic: v.tic,
       replay: replay === 'live' ? null : { done: Math.floor(this.done), total: this.total, playing: replay === 'playing' },
       bsp: this.bsp(),

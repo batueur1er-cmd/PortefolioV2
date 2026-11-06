@@ -60,6 +60,15 @@ yeux à 41, marche de 24 au plus).
   objet vu sous 8 angles, plusieurs `frames` pour une animation (`ticsPerFrame`).
 - Rien d'aléatoire : `hash()` / `grain()` de `graphics/noise.ts`, sinon la loupe verrait autre chose.
 
+## Le champ de vision
+
+`View.fov` (en degrés, 60 à 120, 90 par défaut comme Doom) fixe la focale (`focalOf` dans
+`render/render.model.ts`) : `Frame` en tire `focal`, `tanHalf`, `fovHalf` et l'angle de chaque
+colonne. Aucune passe du rendu n'utilise de focale en dur : lis toujours `f.focal`. Les tables de
+lumière restent calées sur la distance (`f.lightRatio`), pas sur le grossissement. Le curseur de
+`doom-controls` change le champ ; la valeur part dans `DoomPresence.fov` pour la loupe, et la carte
+ouvre le cône du joueur d'autant.
+
 ## La loupe
 
 La copie ne calcule rien d'elle-même : elle reçoit `DoomPresence` (position, angle, horloge des

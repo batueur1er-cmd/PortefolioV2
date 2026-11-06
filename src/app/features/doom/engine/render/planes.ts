@@ -4,7 +4,7 @@ import { FlatTexture } from '../level/level-data';
 import { Sector } from '../level/level.model';
 import { drawSkyColumn, drawSpan } from './draw';
 import { Frame } from './frame';
-import { CENTER_X, CENTER_Y, FOCAL, OWNER, OWNER_SHIFT, SCREEN_H, SCREEN_W } from './render.model';
+import { CENTER_X, CENTER_Y, OWNER, OWNER_SHIFT, SCREEN_H, SCREEN_W } from './render.model';
 
 /*
  * Les sols et les plafonds (r_plane). Pendant le dessin des murs, le trou laissé au-dessus et
@@ -164,12 +164,12 @@ export class Planes {
     const f = this.f;
     f.stats.spans++;
     if (!f.spend() || x2 < x1) return;
-    const z = (this.height * FOCAL) / Math.abs(y + 0.5 - CENTER_Y);
+    const z = (this.height * f.focal) / Math.abs(y + 0.5 - CENTER_Y);
     const level = this.lights.z[this.lightRow + Math.min(MAX_LIGHT_Z - 1, Math.floor(z / 16))];
-    const l = (CENTER_X - (x1 + 0.5)) / FOCAL;
+    const l = (CENTER_X - (x1 + 0.5)) / f.focal;
     const wx = f.x + z * (f.cos - l * f.sin);
     const wy = f.y + z * (f.sin + l * f.cos);
-    drawSpan(f, y, x1, x2, this.flat, wx, wy, (z * f.sin) / FOCAL, -(z * f.cos) / FOCAL, level, this.owner);
+    drawSpan(f, y, x1, x2, this.flat, wx, wy, (z * f.sin) / f.focal, -(z * f.cos) / f.focal, level, this.owner);
   }
 
   /** Le ciel suit seulement la direction du regard : 1 024 colonnes de texture pour un tour complet. */

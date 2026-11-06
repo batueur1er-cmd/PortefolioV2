@@ -81,6 +81,7 @@ export function sameDoom(a: DoomPresence | null, b: DoomPresence | null): boolea
     a.y === b.y &&
     a.z === b.z &&
     a.angle === b.angle &&
+    a.fov === b.fov &&
     a.tic === b.tic &&
     a.bsp === b.bsp &&
     a.replay?.done === b.replay?.done &&

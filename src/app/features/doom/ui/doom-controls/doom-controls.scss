@@ -134,6 +134,41 @@
   cursor: pointer;
 }
 
+.fov {
+  display: block;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
+}
+
+.fov-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font: 600 13px/1.2 var(--sans);
+}
+
+.fov-value {
+  font: 600 13px/1 var(--mono);
+  color: var(--accent);
+}
+
+.fov-range {
+  width: 100%;
+  margin: 10px 0 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.fov-note {
+  margin-top: 6px;
+}
+
+.fov-note .tech {
+  font-size: 11px;
+}
+
 .small,
 .phase {
   margin: 12px 0 0;

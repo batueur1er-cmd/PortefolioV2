@@ -19,6 +19,27 @@
       }
     </div>
     <p class="small">Sur la vue : flèches ou ZQSD, Maj pour courir, glisser pour tourner.</p>
+    <label class="fov">
+      <span class="fov-head">
+        <span class="fov-name">Champ de vision</span>
+        <output class="fov-value">{{ fov() }}°</output>
+      </span>
+      <input
+        class="fov-range"
+        aria-label="Champ de vision"
+        type="range"
+        [min]="minFov()"
+        [max]="maxFov()"
+        step="1"
+        [value]="fov()"
+        [attr.aria-valuetext]="fov() + ' degrés'"
+        (input)="onFov($event)"
+      />
+      <span class="say small fov-note">
+        <span class="plain">{{ fovNote() }}</span>
+        <span class="tech" aria-hidden="true">focale {{ focal() }} px · x = 160 − l / z × {{ focal() }}</span>
+      </span>
+    </label>
   </section>
 
   <section class="block" aria-labelledby="doom-replay">

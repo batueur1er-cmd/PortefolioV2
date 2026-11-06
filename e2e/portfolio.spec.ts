@@ -234,6 +234,16 @@ test.describe('portfolio', () => {
     await expect(page.getByRole('button', { name: /au ralenti/ })).toBeVisible();
   });
 
+  test('la démo façon Doom change de champ de vision', async ({ page }) => {
+    await page.goto('/projets/doom/demo');
+    await expect(page.locator('canvas.screen')).toBeVisible();
+    const fov = page.getByRole('slider', { name: /Champ de vision/ });
+    await expect(page.locator('.fov-value')).toHaveText('90°');
+    await fov.fill('120');
+    await expect(page.locator('.fov-value')).toHaveText('120°');
+    await expect(page.locator('.fov-note .plain')).toHaveText(/Plus large/);
+  });
+
   test('la loupe redessine la démo façon Doom aux rayons X, à la même place', async ({ context }) => {
     const main = await context.newPage();
     await main.setViewportSize({ width: 1280, height: 800 });

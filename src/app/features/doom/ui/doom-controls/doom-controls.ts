@@ -38,6 +38,10 @@ export class DoomControls {
   readonly progress = input(0);
   readonly phase = input<ReplayPhase | null>(null);
   readonly bsp = input(false);
+  /** Champ de vision, en degrés. */
+  readonly fov = input(90);
+  readonly minFov = input(60);
+  readonly maxFov = input(120);
   readonly counts = input.required<FrameCounts>();
 
   readonly hold = output<{ action: PadAction; down: boolean }>();
@@ -47,6 +51,7 @@ export class DoomControls {
   readonly replayStop = output<void>();
   readonly scrub = output<number>();
   readonly bspToggle = output<void>();
+  readonly fovChange = output<number>();
 
   protected readonly pad = PAD;
 
@@ -63,6 +68,15 @@ export class DoomControls {
   });
 
   protected readonly valueText = computed(() => `${Math.round(this.progress() * 100)} % : ${this.phaseText().plain}`);
+
+  /** La distance focale qui donne ce champ de vision sur 320 colonnes : 160 pixels à 90°. */
+  protected readonly focal = computed(() => Math.round(160 / Math.tan((this.fov() * Math.PI) / 360)));
+
+  protected readonly fovNote = computed(() => {
+    const fov = this.fov();
+    if (fov === 90) return 'Comme dans Doom.';
+    return fov < 90 ? 'Plus serré : on voit moins, mais plus gros.' : 'Plus large : on voit plus, les bords s’étirent.';
+  });
 
   protected readonly rows = computed(() => {
     const c = this.counts();
@@ -89,6 +103,10 @@ export class DoomControls {
   /** Un clic venu du clavier (Entrée, Espace) n'a pas de pointeur : il fait faire un petit pas. */
   protected click(action: PadAction, event: MouseEvent): void {
     if (event.detail === 0) this.nudge.emit(action);
+  }
+
+  protected onFov(event: Event): void {
+    this.fovChange.emit(Number((event.target as HTMLInputElement).value));
   }
 
   protected onScrub(event: Event): void {
