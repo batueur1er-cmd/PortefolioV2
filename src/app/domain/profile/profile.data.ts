@@ -128,60 +128,59 @@ const PROFILE_FR: Profile = {
   ],
 
   projects: [
+    // Dans l'ordre du site : les démos à essayer, les projets avec des captures, puis les autres.
     {
-      id: 'argus',
-      title: 'Argus',
-      context: "Projet d'équipe · DIIAGE",
+      id: 'doom',
+      title: 'Moteur 3D façon Doom',
+      context: 'Expérimentation · navigateur',
       year: '2026',
       summary:
-        "Une application de supervision : une appli Android et une API .NET qui remontent les alertes " +
-        "Zabbix en temps réel, avec connexion par l'Active Directory.",
+        'Un petit niveau en 2,5D dessiné comme dans Doom (1993) : arbre BSP, murs colonne par colonne, ' +
+        'sols et plafonds en visplanes, sans WebGL. Une carte vue de dessus montre ce que le moteur calcule.',
       highlights: [
-        'Appli Android en Kotlin · Jetpack Compose · MVI · Koin',
-        'API .NET 10 conteneurisée · JWT et refresh token haché',
-        'Connexion par bind LDAPS sur l’Active Directory',
-        'Alertes Zabbix poussées par webhook · contrat OpenAPI partagé',
+        'Rendu logiciel en 320 × 200 et 256 couleurs, dans un canvas',
+        'Node builder : le niveau découpé en arbre BSP au chargement',
+        'Murs en colonnes, visplanes, sprites triés du plus loin au plus proche',
+        'Carte 2D synchronisée et image dessinée au ralenti, étape par étape',
       ],
-      skills: ['kotlin', 'compose', 'dotnet', 'api-rest', 'sql', 'ad-ldap', 'zabbix', 'clean-archi', 'gitlab-ci', 'docker'],
-      visual: 'argus',
+      skills: ['typescript', 'angular'],
+      visual: 'doom',
       featured: true,
-      secret: '3 tiers · mobile → API → SQL Server + Zabbix',
-      secretLabel: "L'architecture d'Argus",
+      // Fait dans ce portfolio (route déclarée dans app.routes.ts).
+      demo: {
+        path: '/projets/doom/demo',
+        label: 'Ouvrir la démo',
+        description:
+          'Un petit niveau dessiné comme dans Doom (1993), avec sa carte vue de dessus et chaque étape du rendu ' +
+          'expliquée : arbre BSP, murs en colonnes, visplanes, sprites.',
+      },
+      secret: 'BSP → murs → visplanes → sprites',
+      secretLabel: 'Le rendu façon Doom',
     },
     {
-      id: 'crm',
-      title: 'CRM interne',
-      context: 'Stage · Celere Ouvertures',
-      year: '2025',
+      id: 'visu3d',
+      title: 'Visualiseur 3D',
+      context: 'Expérimentation · navigateur',
       summary:
-        'Un CRM pour les commerciaux : Angular et NgRx côté interface, une API REST Nest.js et Prisma ' +
-        'sur MySQL, conçu et développé pendant un stage de six semaines.',
+        'Charger un modèle 3D au format OBJ et le manipuler dans le navigateur, avec Three.js dans ' +
+        'une application Angular.',
       highlights: [
-        'Gestion des prospects et des clients',
-        'Suivi des interactions et des opportunités',
-        'Tableaux de bord et rapports',
-        'Authentification et rôles utilisateurs',
+        'Import de fichiers OBJ',
+        'Caméra libre : zoom, rotation, déplacement',
+        'Réglage des lumières et de la position du modèle',
       ],
-      skills: ['angular', 'typescript', 'nestjs', 'sql', 'api-rest'],
-      visual: 'crm',
-      images: [{ src: 'projects/crm-1.png', alt: "Page d'accueil du CRM Celere Ouverture" }],
-      secret: 'schéma de principe · clients ↔ rapports',
-      secretLabel: 'Le schéma du CRM',
-    },
-    {
-      id: 'cine',
-      title: 'Ciné Baptiste',
-      context: 'Épreuve · Android',
-      year: '2025',
-      summary:
-        "Une application Android qui affiche les films populaires du moment grâce à l'API TMDB, " +
-        'construite en Clean Architecture.',
-      highlights: ['Couches data · domain · ui', 'Injection de dépendances avec Koin', 'Son et vibration via un manager dédié'],
-      skills: ['kotlin', 'compose', 'api-rest', 'clean-archi'],
-      visual: 'cine',
-      repo: 'https://github.com/BaptisteNodon/EpreuveBaptisteKotlin',
-      secret: 'ui → domain ← data · les dépendances pointent vers le centre',
-      secretLabel: 'Les couches de Ciné Baptiste',
+      skills: ['threejs', 'angular', 'typescript'],
+      visual: 'visu3d',
+      // Refait dans ce portfolio (route déclarée dans app.routes.ts).
+      demo: {
+        path: '/projets/visu3d/demo',
+        label: 'Ouvrir le visualiseur 3D',
+        description:
+          'Le visualiseur 3D en démo : importer un modèle OBJ et le manipuler dans le navigateur, ' +
+          'avec Three.js dans une application Angular.',
+      },
+      secret: 'scène · caméra · lumière · OBJLoader',
+      secretLabel: 'La scène Three.js',
     },
     {
       id: 'drive',
@@ -235,56 +234,58 @@ const PROFILE_FR: Profile = {
       secretLabel: 'Les couches du magasin',
     },
     {
-      id: 'visu3d',
-      title: 'Visualiseur 3D',
-      context: 'Expérimentation · navigateur',
+      id: 'crm',
+      title: 'CRM interne',
+      context: 'Stage · Celere Ouvertures',
+      year: '2025',
       summary:
-        'Charger un modèle 3D au format OBJ et le manipuler dans le navigateur, avec Three.js dans ' +
-        'une application Angular.',
+        'Un CRM pour les commerciaux : Angular et NgRx côté interface, une API REST Nest.js et Prisma ' +
+        'sur MySQL, conçu et développé pendant un stage de six semaines.',
       highlights: [
-        'Import de fichiers OBJ',
-        'Caméra libre : zoom, rotation, déplacement',
-        'Réglage des lumières et de la position du modèle',
+        'Gestion des prospects et des clients',
+        'Suivi des interactions et des opportunités',
+        'Tableaux de bord et rapports',
+        'Authentification et rôles utilisateurs',
       ],
-      skills: ['threejs', 'angular', 'typescript'],
-      visual: 'visu3d',
-      // Refait dans ce portfolio (route déclarée dans app.routes.ts).
-      demo: {
-        path: '/projets/visu3d/demo',
-        label: 'Ouvrir le visualiseur 3D',
-        description:
-          'Le visualiseur 3D en démo : importer un modèle OBJ et le manipuler dans le navigateur, ' +
-          'avec Three.js dans une application Angular.',
-      },
-      secret: 'scène · caméra · lumière · OBJLoader',
-      secretLabel: 'La scène Three.js',
+      skills: ['angular', 'typescript', 'nestjs', 'sql', 'api-rest'],
+      visual: 'crm',
+      images: [{ src: 'projects/crm-1.png', alt: "Page d'accueil du CRM Celere Ouverture" }],
+      secret: 'schéma de principe · clients ↔ rapports',
+      secretLabel: 'Le schéma du CRM',
     },
     {
-      id: 'doom',
-      title: 'Moteur 3D façon Doom',
-      context: 'Expérimentation · navigateur',
+      id: 'argus',
+      title: 'Argus',
+      context: "Projet d'équipe · DIIAGE",
       year: '2026',
       summary:
-        'Un petit niveau en 2,5D dessiné comme dans Doom (1993) : arbre BSP, murs colonne par colonne, ' +
-        'sols et plafonds en visplanes, sans WebGL. Une carte vue de dessus montre ce que le moteur calcule.',
+        "Une application de supervision : une appli Android et une API .NET qui remontent les alertes " +
+        "Zabbix en temps réel, avec connexion par l'Active Directory.",
       highlights: [
-        'Rendu logiciel en 320 × 200 et 256 couleurs, dans un canvas',
-        'Node builder : le niveau découpé en arbre BSP au chargement',
-        'Murs en colonnes, visplanes, sprites triés du plus loin au plus proche',
-        'Carte 2D synchronisée et image dessinée au ralenti, étape par étape',
+        'Appli Android en Kotlin · Jetpack Compose · MVI · Koin',
+        'API .NET 10 conteneurisée · JWT et refresh token haché',
+        'Connexion par bind LDAPS sur l’Active Directory',
+        'Alertes Zabbix poussées par webhook · contrat OpenAPI partagé',
       ],
-      skills: ['typescript', 'angular'],
-      visual: 'doom',
-      // Fait dans ce portfolio (route déclarée dans app.routes.ts).
-      demo: {
-        path: '/projets/doom/demo',
-        label: 'Ouvrir la démo',
-        description:
-          'Un petit niveau dessiné comme dans Doom (1993), avec sa carte vue de dessus et chaque étape du rendu ' +
-          'expliquée : arbre BSP, murs en colonnes, visplanes, sprites.',
-      },
-      secret: 'BSP → murs → visplanes → sprites',
-      secretLabel: 'Le rendu façon Doom',
+      skills: ['kotlin', 'compose', 'dotnet', 'api-rest', 'sql', 'ad-ldap', 'zabbix', 'clean-archi', 'gitlab-ci', 'docker'],
+      visual: 'argus',
+      secret: '3 tiers · mobile → API → SQL Server + Zabbix',
+      secretLabel: "L'architecture d'Argus",
+    },
+    {
+      id: 'cine',
+      title: 'Ciné Baptiste',
+      context: 'Épreuve · Android',
+      year: '2025',
+      summary:
+        "Une application Android qui affiche les films populaires du moment grâce à l'API TMDB, " +
+        'construite en Clean Architecture.',
+      highlights: ['Couches data · domain · ui', 'Injection de dépendances avec Koin', 'Son et vibration via un manager dédié'],
+      skills: ['kotlin', 'compose', 'api-rest', 'clean-archi'],
+      visual: 'cine',
+      repo: 'https://github.com/BaptisteNodon/EpreuveBaptisteKotlin',
+      secret: 'ui → domain ← data · les dépendances pointent vers le centre',
+      secretLabel: 'Les couches de Ciné Baptiste',
     },
     {
       id: 'infra',

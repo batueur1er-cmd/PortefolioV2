@@ -225,3 +225,27 @@
 :host-context(.xray) .case {
   color: var(--xl);
 }
+
+/* La démo à essayer : l'action principale d'une carte qui en a une. */
+.demo {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--paper);
+  font: 600 13px/1 var(--sans);
+  text-decoration: none;
+}
+
+.demo:hover,
+.demo:focus-visible {
+  background: var(--ink);
+}
+
+:host-context(.xray) .demo {
+  border: 1px solid var(--xn);
+  background: transparent;
+  color: var(--xn);
+}

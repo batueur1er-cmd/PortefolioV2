@@ -52,8 +52,10 @@ export interface CvContent {
   readonly fileName: string;
 }
 
-/** Nombre de projets repris sur le CV : les mêmes que ceux affichés en premier sur le site. */
+/** Nombre de projets repris sur le CV. */
 export const CV_PROJECTS = 4;
+/** L'ordre du CV, propre à lui : d'abord les projets d'école et d'entreprise, là où le site commence par ses démos. */
+export const CV_PROJECT_ORDER: readonly string[] = ['argus', 'crm', 'cine', 'drive', 'magasin', 'visu3d', 'doom', 'infra', 'site'];
 
 export function cvContent(profile: Profile, today: Date, options: CvOptions = {}): CvContent {
   const name = `${profile.firstName} ${profile.lastName}`;
@@ -61,13 +63,15 @@ export function cvContent(profile: Profile, today: Date, options: CvOptions = {}
   const focus = options.focus ? CV_FOCUS[options.focus] : null;
   const wanted: ReadonlySet<string> = new Set(focus?.skills ?? []);
   const score = (skills: readonly string[]) => skills.filter((id) => wanted.has(id)).length;
-  // Orienté : les projets les plus proches du poste d'abord (ordre du site à égalité).
+  const rank = (id: string) => (CV_PROJECT_ORDER.indexOf(id) + 1 || CV_PROJECT_ORDER.length + 1);
+  const inOrder = [...profile.projects].sort((a, b) => rank(a.id) - rank(b.id));
+  // Orienté : les projets les plus proches du poste d'abord (ordre du CV à égalité).
   const projects = focus
-    ? profile.projects
+    ? inOrder
         .map((p, i) => ({ p, i }))
         .sort((a, b) => score(b.p.skills) - score(a.p.skills) || a.i - b.i)
         .map((x) => x.p)
-    : profile.projects;
+    : inOrder;
   return {
     name,
     focus: focus?.label ?? null,

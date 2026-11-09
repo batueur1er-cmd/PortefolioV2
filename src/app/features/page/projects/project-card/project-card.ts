@@ -46,6 +46,9 @@ export interface ProjectView extends Project {
         </ul>
         <p class="case" aria-hidden="true">Voir le projet <span>→</span></p>
         <div class="foot">
+          @if (project().demo; as demo) {
+            <a class="demo" [routerLink]="demo.path">{{ demo.label }} <span aria-hidden="true">→</span></a>
+          }
           <app-tag-list [tags]="project().skillLabels" />
           @if (project().repo; as repo) {
             <a class="repo" [href]="repo" target="_blank" rel="noopener">
