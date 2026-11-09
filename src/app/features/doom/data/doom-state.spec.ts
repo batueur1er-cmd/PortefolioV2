@@ -20,7 +20,7 @@ describe('L’état de la démo façon Doom', () => {
   });
 
   it('reconnaît deux états qui donnent la même image', () => {
-    const a: DoomPresence = { x: 1, y: 2, z: 41, angle: 0.5, fov: 90, tic: 3, replay: null, bsp: false, doors: [0, -32], painter: false };
+    const a: DoomPresence = { x: 1, y: 2, z: 41, angle: 0.5, fov: 90, tic: 3, replay: null, bsp: false, doors: [0, -32], painter: false, crashed: false };
     expect(sameDoom(a, { ...a })).toBe(true);
     expect(sameDoom(a, { ...a, tic: 4 })).toBe(false);
     expect(sameDoom(a, { ...a, replay: { done: 0, total: 10, playing: true } })).toBe(false);

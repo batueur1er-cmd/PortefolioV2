@@ -94,6 +94,8 @@ export interface DoomPresence {
   readonly doors: readonly number[];
   /** Algorithme du peintre, à la place de la méthode de Doom. */
   readonly painter: boolean;
+  /** La démo s'est arrêtée sur la limite des visplanes. */
+  readonly crashed: boolean;
 }
 
 /** Une fenêtre qui affiche le portfolio. */

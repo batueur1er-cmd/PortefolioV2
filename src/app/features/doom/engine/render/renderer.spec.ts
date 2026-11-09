@@ -39,6 +39,12 @@ describe('Le rendu façon Doom', () => {
     expect(wide).toBeGreaterThan(narrow);
   });
 
+  it('dépasse la limite des visplanes dans le damier, et nulle part ailleurs', () => {
+    const { stats } = renderer.render({ x: 430, y: 1096, z: 9, angle: Math.PI, tic: 0 }, palette);
+    expect(stats.visplanes).toBeGreaterThan(128);
+    expect([...renderer.frame.owner].every((o) => o !== 0)).toBe(true);
+  });
+
   it('reste sous les limites de Doom', () => {
     const { stats } = renderer.render({ x: 700, y: 1100, z: 9, angle: -Math.PI / 2, tic: 0 }, palette);
     expect(stats.visplanes).toBeLessThanOrEqual(128);

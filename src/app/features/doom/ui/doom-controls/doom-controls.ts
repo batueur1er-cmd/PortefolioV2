@@ -39,6 +39,7 @@ export class DoomControls {
   readonly phase = input<ReplayPhase | null>(null);
   readonly bsp = input(false);
   readonly painter = input(false);
+  readonly limits = input(true);
   /** Champ de vision, en degrés. */
   readonly fov = input(90);
   readonly minFov = input(60);
@@ -54,6 +55,7 @@ export class DoomControls {
   readonly scrub = output<number>();
   readonly bspToggle = output<void>();
   readonly painterToggle = output<void>();
+  readonly limitsToggle = output<void>();
   readonly fovChange = output<number>();
 
   protected readonly pad = PAD;

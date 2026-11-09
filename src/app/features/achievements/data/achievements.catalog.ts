@@ -26,6 +26,7 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   { id: 'modeliste', label: 'Modéliste', hint: 'Importer son propre fichier OBJ dans le visualiseur 3D.' },
   { id: 'rayons-x-retro', label: 'Rayons X rétro', hint: 'Regarder la démo façon Doom à travers la loupe.' },
   { id: 'image-par-image', label: 'Image par image', hint: 'Regarder une image de la démo façon Doom se dessiner jusqu’au bout.' },
+  { id: 'plus-de-visplanes', label: 'Plus de visplanes', hint: 'Faire planter la démo façon Doom en entrant dans le damier.' },
   { id: 'cartographe', label: 'Cartographe', hint: 'Passer par toutes les pièces du niveau façon Doom.' },
 ];
 

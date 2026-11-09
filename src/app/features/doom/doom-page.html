@@ -57,6 +57,25 @@
             (pointercancel)="onPointerUp($event)"
           ></canvas>
           <p class="pill" aria-hidden="true">{{ room() }}</p>
+          @if (crashed()) {
+            <div class="crash" role="alert">
+              <p class="crash-line">R_FindPlane: no more visplanes</p>
+              <p class="say crash-text">
+                <span class="plain">
+                  Doom s’arrêtait net, retour au DOS. Cette image demande {{ counts().visplanes }} sols et plafonds différents, et
+                  le tableau prévu en 1993 n’en contient que 128.
+                </span>
+                <span class="tech" aria-hidden="true">
+                  MAXVISPLANES = 128, réservés à la compilation. {{ counts().visplanes }} demandés : I_Error() depuis R_FindPlane.
+                  Chaque case du damier a sa lumière, donc ses propres visplanes.
+                </span>
+              </p>
+              <div class="crash-actions">
+                <button type="button" class="crash-button" (click)="restart()">Relancer</button>
+                <button type="button" class="crash-button" (click)="toggleLimits()">Retirer la limite</button>
+              </div>
+            </div>
+          }
         </div>
         <figcaption class="caption say">
           <span class="plain">Vue du joueur, en 320 × 200 pixels</span>
@@ -89,6 +108,7 @@
       [phase]="phase()"
       [bsp]="bsp()"
       [painter]="painter()"
+      [limits]="limits()"
       [fov]="fov()"
       [counts]="counts()"
       (hold)="hold($event.action, $event.down)"
@@ -99,6 +119,7 @@
       (scrub)="scrub($event)"
       (bspToggle)="toggleBsp()"
       (painterToggle)="togglePainter()"
+      (limitsToggle)="toggleLimits()"
       (fovChange)="setFov($event)"
     />
   </section>

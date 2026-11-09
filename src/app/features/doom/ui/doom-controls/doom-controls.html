@@ -74,6 +74,7 @@
     <div class="head">
       <h2 id="doom-counts" class="block-title">Cette image</h2>
       <div class="tools">
+        <button type="button" class="ghost" [attr.aria-pressed]="limits()" (click)="limitsToggle.emit()">Limites de 1993</button>
         <button type="button" class="ghost" [attr.aria-pressed]="painter()" (click)="painterToggle.emit()">Algorithme du peintre</button>
         <button type="button" class="ghost" [attr.aria-pressed]="bsp()" (click)="bspToggle.emit()">Découpage BSP</button>
       </div>

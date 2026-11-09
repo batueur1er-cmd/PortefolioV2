@@ -88,6 +88,12 @@ export class Player {
     this.angle = wrapAngle(this.angle + radians);
   }
 
+  /** Retour au point de départ, comme au lancement du niveau. */
+  respawn(): void {
+    this.teleport(this.level.start.x, this.level.start.y);
+    this.angle = this.level.start.angle;
+  }
+
   /** Se rend directement à un point de la carte, s'il y a la place. */
   teleport(x: number, y: number): boolean {
     const sector = subsectorAt(this.level, x, y).sector;

@@ -117,6 +117,21 @@
         </p>
       </div>
     </li>
+    <li class="card">
+      <span class="num" aria-hidden="true">08</span>
+      <h3 class="card-title">Les limites de 1993</h3>
+      <div class="say">
+        <p class="plain">
+          Doom réservait à l’avance des tableaux de taille fixe. Une salle trop complexe pouvait dépasser celui des sols
+          et plafonds : le jeu s’arrêtait aussitôt. Le damier, derrière une porte dans le mur ouest de la cour, le fait
+          exprès.
+        </p>
+        <p class="tech" aria-hidden="true">
+          MAXVISPLANES 128, MAXDRAWSEGS 256, MAXSEGS 32, MAXVISSPRITES 128. Seuls les visplanes arrêtent le jeu :
+          R_FindPlane appelle I_Error. Le moteur de cette page n’a pas cette limite, il la recopie volontairement.
+        </p>
+      </div>
+    </li>
   </ol>
   <div class="aside say">
     <p class="plain">

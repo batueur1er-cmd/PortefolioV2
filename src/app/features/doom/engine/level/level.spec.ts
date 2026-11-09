@@ -42,6 +42,8 @@ describe('Le node builder', () => {
     expect(subsectorAt(level, 900, 900).sector.id).toBe('bassin');
     expect(subsectorAt(level, 300, 600).sector.id).toBe('marche-2');
     expect(subsectorAt(level, 460, 830).sector.id).toBe('fenetre');
+    expect(subsectorAt(level, 460, 1096).sector.id).toBe('porte-damier');
+    expect(subsectorAt(level, 76, 988).sector.id).toBe('damier-0');
     // Un pilier n'appartient à aucun secteur : la zone trouvée ne le contient pas.
     expect(insideSector(subsectorAt(level, 320, 256).sector, 320, 256)).toBe(false);
   });

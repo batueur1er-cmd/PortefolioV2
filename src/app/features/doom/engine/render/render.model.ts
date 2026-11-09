@@ -17,6 +17,8 @@ export function focalOf(fov: number): number {
 }
 /** Rien n'est dessiné à moins d'une unité des yeux. */
 export const NEAR = 1;
+/** La taille du tableau de visplanes de Doom : au-delà, le jeu s'arrête. */
+export const MAX_VISPLANES = 128;
 
 /** Ce qui a peint un pixel, pour la vue rayons X : nature (4 bits) et numéro (12 bits). */
 export const OWNER = { WALL: 1, PLANE: 2, SKY: 3, SPRITE: 4, HIDDEN: 5 } as const;

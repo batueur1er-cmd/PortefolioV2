@@ -93,6 +93,7 @@ export function sameDoom(a: DoomPresence | null, b: DoomPresence | null): boolea
     a.tic === b.tic &&
     a.bsp === b.bsp &&
     a.painter === b.painter &&
+    a.crashed === b.crashed &&
     a.doors.length === b.doors.length &&
     a.doors.every((h, i) => h === b.doors[i]) &&
     a.replay?.done === b.replay?.done &&

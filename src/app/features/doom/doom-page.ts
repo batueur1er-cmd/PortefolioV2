@@ -45,6 +45,7 @@ import {
   Doors,
   FrameResult,
   MAX_FOV,
+  MAX_VISPLANES,
   MIN_FOV,
   MapColors,
   Player,
@@ -139,6 +140,9 @@ export class DoomPage {
   protected readonly bsp = signal(false);
   /** Algorithme du peintre, pour comparer avec la méthode de Doom. */
   protected readonly painter = signal(false);
+  /** Les limites de 1993 : au-delà de 128 visplanes, la démo s'arrête comme Doom. */
+  protected readonly limits = signal(true);
+  protected readonly crashed = signal(false);
   /** Champ de vision, en degrés : 90 dans Doom. */
   protected readonly fov = signal(DEFAULT_FOV);
   protected readonly notice = signal<string | null>(null);
@@ -209,6 +213,7 @@ export class DoomPage {
     this.dirty = false;
     this.bsp.set(state.bsp);
     this.painter.set(state.painter);
+    this.crashed.set(state.crashed);
     this.fov.set(state.fov);
     this.replay.set(state.replay ? (state.replay.playing ? 'playing' : 'paused') : 'live');
     this.done = state.replay?.done ?? 0;
@@ -292,6 +297,7 @@ export class DoomPage {
   }
 
   protected toggleReplay(): void {
+    if (this.crashed()) return;
     const state = this.replay();
     if (state === 'playing') this.replay.set('paused');
     else if (state === 'paused' && this.done < this.total) this.replay.set('playing');
@@ -331,6 +337,20 @@ export class DoomPage {
     this.dirty = true;
   }
 
+  protected toggleLimits(): void {
+    this.limits.update((on) => !on);
+    this.crashed.set(false);
+    this.dirty = true;
+  }
+
+  /** Comme relancer le jeu après le plantage : retour au début du niveau. */
+  protected restart(): void {
+    this.player.respawn();
+    this.crashed.set(false);
+    this.moved();
+    this.screen().nativeElement.focus();
+  }
+
   protected toggleBsp(): void {
     this.bsp.update((on) => !on);
     this.dirty = true;
@@ -359,6 +379,10 @@ export class DoomPage {
 
   /** Une image du navigateur : les tics écoulés, le ralenti, puis le dessin si quelque chose a changé. */
   private frame(dt: number): void {
+    if (this.crashed()) {
+      this.session.publish(this.presence());
+      return;
+    }
     this.clock = Math.min(this.clock + dt, TIC_MS * 4);
     let moved = false;
     let ticked = false;
@@ -433,6 +457,13 @@ export class DoomPage {
   private draw(view: View, budget: number): void {
     const xray = this.mode() === 'xray';
     const result = this.engine.render(view, budget, true, xray);
+    this.counts.set(countsOf(result.stats));
+    if (!this.decorative() && budget === Infinity && this.limits() && result.stats.visplanes > MAX_VISPLANES) {
+      // Comme I_Error : tout s'arrête, la dernière image reste à l'écran.
+      this.crashed.set(true);
+      this.achievements.unlock('plus-de-visplanes');
+      return;
+    }
     this.lastView = view;
     if (this.screenCtx && this.image && this.pixels && this.colors) {
       this.engine.paint(this.pixels, xray ? this.colors.xrayRgb : null);
@@ -442,7 +473,6 @@ export class DoomPage {
     this.room.set(subsectorAt(this.engine.level, view.x, view.y).sector.room);
     this.facing.set(heading(view.angle));
     this.position.set(this.positionOf(view.x, view.y));
-    this.counts.set(countsOf(result.stats));
     const replaying = budget !== Infinity;
     this.progress.set(replaying && this.total ? Math.min(1, budget / this.total) : 0);
     this.phase.set(!replaying ? null : view.painter && budget < result.stats.ops ? 'peintre' : phaseOf(result.stats, budget));
@@ -498,6 +528,7 @@ export class DoomPage {
       bsp: this.bsp(),
       doors: v.doors ?? this.doors.heights,
       painter: !!v.painter,
+      crashed: this.crashed(),
     };
   }
 

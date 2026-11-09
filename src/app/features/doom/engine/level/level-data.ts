@@ -73,6 +73,32 @@ const step = (n: number, y0: number): SectorDef => ({
 
 const pillar = (x: number, y: number) => ({ wall: 'metal' as const, points: rect(x, y, x + 64, y + 64) });
 
+/*
+ * Le damier, la salle piégée : 160 petites cases, chacune avec sa propre lumière. Des lumières
+ * différentes interdisent de partager un visplane, et l'image dépasse la limite de 128 de Doom.
+ */
+const CHECKER_CELL = 24;
+const checker = (): SectorDef[] =>
+  Array.from({ length: 160 }, (_, n) => {
+    const col = n % 16;
+    const row = Math.floor(n / 16);
+    const odd = (col + row) % 2 === 1;
+    const x = 64 + col * CHECKER_CELL;
+    const y = 976 + row * CHECKER_CELL;
+    return {
+      id: `damier-${n}`,
+      room: 'Le damier',
+      floor: odd ? -28 : -32,
+      ceiling: odd ? 104 : 96,
+      floorFlat: odd ? 'beton' : 'dalles',
+      ceilingFlat: odd ? 'beton' : 'plafond',
+      light: 96 + n,
+      wall: 'briques',
+      lower: 'marche',
+      outline: rect(x, y, x + CHECKER_CELL, y + CHECKER_CELL),
+    };
+  });
+
 export const SECTORS: readonly SectorDef[] = [
   {
     id: 'hall',
@@ -186,6 +212,20 @@ export const SECTORS: readonly SectorDef[] = [
     wall: 'pierre',
     outline: rect(832, 832, 1024, 1024),
   },
+  // La porte du damier, dans le mur ouest de la cour.
+  {
+    id: 'porte-damier',
+    room: 'La cour',
+    floor: -32,
+    ceiling: -32,
+    floorFlat: 'paves',
+    ceilingFlat: 'beton',
+    light: 200,
+    wall: 'cadre',
+    door: 'porte',
+    outline: rect(448, 1072, 480, 1120),
+  },
+  ...checker(),
   {
     id: 'passage-1',
     room: 'Le passage',

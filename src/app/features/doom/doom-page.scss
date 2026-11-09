@@ -145,6 +145,58 @@
   line-height: 1.7;
 }
 
+/* ---------- Le plantage ---------- */
+
+.crash {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  padding: clamp(14px, 3cqi, 32px);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+}
+
+.crash-line {
+  margin: 0;
+  font-size: clamp(14px, 1.7cqi, 20px);
+  font-weight: 700;
+}
+
+.crash-text {
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.crash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.crash-button {
+  padding: 8px 14px;
+  border: 1px solid currentcolor;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.crash-button:hover,
+.crash-button:focus-visible {
+  background: color-mix(in srgb, var(--paper) 18%, transparent);
+}
+
+:host(.xray) .crash {
+  background: var(--xbg);
+  color: var(--xtext);
+}
+
 /* ---------- La vue et la carte ---------- */
 
 .play {
