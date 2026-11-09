@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
+import type { Stratum } from '../data/history.data';
+
 const PHASES = ['Acquisition', 'Analyse', 'Décodage', 'Révélation'];
 
 export type LensState = 'searching' | 'off' | 'on';
@@ -27,6 +29,8 @@ export class LensHud {
   readonly toast = input<string | null>(null);
   /** Chronomètre de la chasse (« 02:14 »), vide avant le premier secret. */
   readonly elapsed = input('');
+  /** Au plus fort grossissement : un ancien texte de la section visée. */
+  readonly stratum = input<Stratum | null>(null);
 
   readonly toggleSound = output<void>();
   /** Clic sur le facteur de zoom : retour à ×1. */

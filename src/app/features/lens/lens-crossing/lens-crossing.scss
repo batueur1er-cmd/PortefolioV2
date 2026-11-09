@@ -1,0 +1,59 @@
+:host {
+  position: fixed;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--xp);
+  background: var(--xbg);
+  color: var(--xtext);
+  font-family: var(--mono);
+  pointer-events: none;
+}
+
+/* Une largeur fixe : un petit croisement n'en laisse voir qu'une partie. */
+.plan {
+  flex: none;
+  width: 440px;
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.title {
+  margin: 0 0 6px;
+  color: var(--xp);
+  text-align: center;
+}
+
+.layer {
+  display: grid;
+  gap: 2px;
+  padding: 8px 12px;
+  border: 1px solid var(--xl);
+}
+
+.layer b {
+  color: var(--xl);
+}
+
+.layer.accent {
+  border-color: var(--xn);
+}
+
+.layer.accent b {
+  color: var(--xn);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.arrow {
+  justify-self: center;
+  width: 1px;
+  height: 12px;
+  background: var(--xl);
+}

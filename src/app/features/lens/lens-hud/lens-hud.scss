@@ -402,3 +402,29 @@ p {
     animation: none;
   }
 }
+
+/* La couche historique : un ancien texte, au-dessus du réticule. */
+.strata {
+  position: absolute;
+  top: 72px;
+  left: 40px;
+  right: 40px;
+  max-width: 460px;
+  margin-inline: auto;
+  padding: 10px 14px;
+  border: 1px dashed var(--xn);
+  background: color-mix(in srgb, var(--xbg) 90%, transparent);
+  color: var(--xtext);
+}
+
+.strata-head {
+  margin: 0 0 4px;
+  color: var(--xn);
+  font-size: 11px;
+}
+
+.strata-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}

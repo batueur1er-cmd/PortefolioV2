@@ -46,6 +46,7 @@ import { ThemeStore } from '@core/theme/theme.store';
 import { SingularityOverlay } from '@features/singularity/singularity-overlay';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { HISTORY, HISTORY_ZOOM } from '../data/history.data';
 import { WindowRoleStore } from '../data/window-role.store';
 import { GeigerAudio } from '../geiger-audio';
 import { LensHud, LensState } from '../lens-hud/lens-hud';
@@ -167,6 +168,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
       [muted]="muted()"
       [toast]="toast()"
       [elapsed]="elapsed()"
+      [stratum]="stratum()"
       (toggleSound)="toggleSound()"
       (resetZoom)="zoom.set(1)"
     />
@@ -214,6 +216,12 @@ export class LensView {
   protected readonly toast = signal<string | null>(null);
   /** Fenêtre modale ouverte sur le portfolio visé, et taille de ce portfolio. */
   protected readonly overlay = signal<OverlayPresence | null>(null, { equal: sameOverlay });
+  /** Grossie assez fort sur l'accueil du portfolio, la loupe montre un ancien texte de la section visée. */
+  protected readonly stratum = computed(() => {
+    const onHome = !this.projectId() && !this.viewerShown() && !this.doomShown();
+    const name = this.section();
+    return onHome && name && this.zoom() >= HISTORY_ZOOM ? (HISTORY.get(name) ?? null) : null;
+  });
   protected readonly mainSize = signal({ w: 0, h: 0 }, { equal: (a, b) => a.w === b.w && a.h === b.h });
 
   private readonly scanner = new ScanEngine();
@@ -509,6 +517,9 @@ export class LensView {
       const zoom = this.zoom();
       achievements.noteZoom(zoom);
       if (zoom >= MAX_ZOOM - 0.001 || zoom <= MIN_ZOOM + 0.001) achievements.unlock('zoom-extreme');
+    });
+    effect(() => {
+      if (this.stratum()) achievements.unlock('archeologue');
     });
     effect(() => {
       if (theme.theme() === 'nuit') achievements.unlock('nuit-rayons-x');

@@ -38,6 +38,13 @@
   Signal
 </div>
 
+@if (stratum(); as old) {
+  <aside class="strata" aria-label="Ancienne version de cette section">
+    <p class="strata-head">Couche précédente · jusqu’au {{ old.until }} · {{ old.commit }}</p>
+    <p class="strata-text">{{ old.text }}</p>
+  </aside>
+}
+
 <p class="bottom-left">Secrets {{ found() }}/{{ total() }}@if (elapsed()) { · ⏱ {{ elapsed() }}}</p>
 
 <button type="button" class="sound" [attr.aria-pressed]="!muted()" (click)="toggleSound.emit()">

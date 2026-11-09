@@ -28,6 +28,7 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   { id: 'image-par-image', label: 'Image par image', hint: 'Regarder une image de la démo façon Doom se dessiner jusqu’au bout.' },
   { id: 'plus-de-visplanes', label: 'Plus de visplanes', hint: 'Faire planter la démo façon Doom en entrant dans le damier.' },
   { id: 'coffres-caches', label: 'Pilleur de murs', hint: 'Trouver à la loupe tous les coffres cachés de la démo façon Doom.' },
+  { id: 'archeologue', label: 'Archéologue', hint: 'Pousser la loupe assez fort pour lire un ancien texte du site.' },
   { id: 'cartographe', label: 'Cartographe', hint: 'Passer par toutes les pièces du niveau façon Doom.' },
 ];
 
