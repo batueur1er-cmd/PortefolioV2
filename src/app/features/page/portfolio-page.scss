@@ -7,6 +7,12 @@
   color: var(--ink);
 }
 
+/* Devant l'objet 3D qui accompagne le défilement. */
+main {
+  position: relative;
+  z-index: 1;
+}
+
 main:focus {
   outline: none;
 }

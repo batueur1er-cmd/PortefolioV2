@@ -1,0 +1,25 @@
+/*
+ * Une tranche de hauteur nulle, collée en haut de la fenêtre : la mise en page ne bouge pas, et le
+ * contenu de la page passe devant. La copie d'une loupe ne défile pas : elle recopie ce décalage.
+ */
+:host {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  display: block;
+  height: 0;
+  pointer-events: none;
+}
+
+:host-context(.remote) {
+  position: relative;
+  transform: translateY(calc(var(--sy, 0) * 1px));
+}
+
+.model {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  will-change: transform;
+}

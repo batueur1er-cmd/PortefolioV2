@@ -92,7 +92,7 @@ taille, autre moment d'ouverture, pas de pointeur, pas de défilement propre). D
    copie de la loupe reçoit l'état du portfolio à chaque image (`ViewerPage.sync` et présence
    `viewer` ; `DoomPage.sync` et présence `doom`), et un fichier importé par le bus
    (`viewer-model`). Three.js reste dans un chargement à part (`import()` dans `ViewerPage`),
-   jamais dans le bundle initial. Le moteur façon Doom n'a rien d'aléatoire : ses effets suivent
+   jamais dans le bundle initial (de même pour l'objet 3D de l'accueil, `features/page/scroll-model`, qui ne dépend que du défilement). Le moteur façon Doom n'a rien d'aléatoire : ses effets suivent
    l'horloge des tics publiée avec la présence.
 9. Le seuil de la loupe (`LENS_WINDOW`, 680 × 620 px, dans `core/sync/window-size.ts`) fait partie
    du protocole entre fenêtres : toutes appliquent la même règle (`decideRole`).

@@ -24,6 +24,7 @@ import { HeroSection } from './hero/hero-section/hero-section';
 import { SiteNav } from './nav/site-nav';
 import { PageContext, PageMode } from './page-context';
 import { ProjectsSection } from './projects/projects-section/projects-section';
+import { ScrollModel } from './scroll-model/scroll-model';
 import { SkillsSection } from './skills/skills-section';
 
 /**
@@ -34,6 +35,7 @@ import { SkillsSection } from './skills/skills-section';
 @Component({
   selector: 'app-portfolio-page',
   imports: [
+    ScrollModel,
     SiteNav,
     HeroSection,
     AboutSection,
@@ -49,6 +51,7 @@ import { SkillsSection } from './skills/skills-section';
     { provide: ScrollStage, useExisting: forwardRef(() => PortfolioPage) },
   ],
   template: `
+    <app-scroll-model />
     <app-site-nav />
     <main [attr.id]="anchor('contenu')" tabindex="-1">
       <app-hero-section />
