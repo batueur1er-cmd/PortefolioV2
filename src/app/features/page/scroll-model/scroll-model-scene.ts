@@ -4,8 +4,12 @@ import {
   Color,
   CylinderGeometry,
   DirectionalLight,
+  EdgesGeometry,
   Group,
   HemisphereLight,
+  IcosahedronGeometry,
+  LineBasicMaterial,
+  LineSegments,
   Material,
   Mesh,
   MeshStandardMaterial,
@@ -24,12 +28,13 @@ import { XrayUniforms, xrayMaterial } from '@features/viewer/scene/xray-material
 import type { ModelPose } from './scroll-model.pose';
 
 /*
- * Le coffre de la démo façon Doom, en volume : mêmes proportions que son sprite (80 × 48 × 52,
- * divisé par 40), mêmes planches, mêmes ferrures. À la surface, il s'ouvre sur du vide : son trésor
- * ne se voit qu'aux rayons X. Ce fichier n'est chargé qu'à la demande : Three.js reste hors du bundle initial.
+ * À la surface, une simple forme en fil de fer, discrète, qui tourne avec le défilement. Aux rayons X,
+ * elle contient le coffre de la démo façon Doom, en volume : mêmes proportions que son sprite
+ * (80 × 48 × 52, divisé par 40), et un trésor qui se révèle quand il s'ouvre. Ce fichier n'est chargé qu'à la demande : Three.js reste hors du bundle initial.
  */
 
 export interface ScrollModelColors {
+  readonly wire: string;
   readonly wood: string;
   readonly iron: string;
   readonly lock: string;
@@ -90,6 +95,9 @@ export class ScrollModelScene {
   private readonly camera = new PerspectiveCamera(30, 1, 0.1, 50);
   private readonly root = new Group();
   private readonly model = new Group();
+  private readonly wireMaterial = new LineBasicMaterial();
+  private readonly wire = new LineSegments(new EdgesGeometry(new IcosahedronGeometry(1.8, 1)), this.wireMaterial);
+  private wireColors: { surface: string; xray: string } | null = null;
   /** Pivote sur les charnières, à l'arrière du coffre. */
   private readonly lid = new Group();
   private readonly treasure = new Group();
@@ -105,7 +113,8 @@ export class ScrollModelScene {
     const sun = new DirectionalLight(0xffffff, 2.2);
     sun.position.set(3, 7, 6);
     this.scene.add(sun, this.root);
-    this.root.add(this.model);
+    this.root.add(this.wire, this.model);
+    this.model.visible = false;
     this.lid.position.set(0, BODY, -DEPTH / 2);
     this.model.add(this.lid, this.treasure);
     this.buildBody();
@@ -165,13 +174,13 @@ export class ScrollModelScene {
     });
     const { material, uniforms } = xrayMaterial();
     const mesh = new Mesh(geometry, surface);
-    // Le trésor n'existe pas à la surface.
-    mesh.visible = role !== 'treasure';
     parent.add(mesh);
     this.pieces.push({ mesh, role, surface, xray: material, uniforms });
   }
 
   setColors(colors: ScrollModelColors): void {
+    this.wireColors = { surface: colors.wire, xray: colors.xrayLine };
+    this.paintWire();
     const surface: Record<Role, string> = { wood: colors.wood, iron: colors.iron, lock: colors.lock, inner: colors.inner, treasure: colors.wood };
     const xray: Record<Role, string> = { wood: colors.xrayLine, iron: colors.xrayLine, lock: colors.xrayNote, inner: colors.xrayLine, treasure: colors.xrayPink };
     for (const piece of this.pieces) {
@@ -183,10 +192,14 @@ export class ScrollModelScene {
 
   setXray(xray: boolean): void {
     this.xray = xray;
-    for (const piece of this.pieces) {
-      piece.mesh.material = xray ? piece.xray : piece.surface;
-      if (piece.role === 'treasure') piece.mesh.visible = xray;
-    }
+    // Le coffre et son trésor n'existent qu'aux rayons X.
+    this.model.visible = xray;
+    for (const piece of this.pieces) piece.mesh.material = xray ? piece.xray : piece.surface;
+    this.paintWire();
+  }
+
+  private paintWire(): void {
+    if (this.wireColors) this.wireMaterial.color.set(this.xray ? this.wireColors.xray : this.wireColors.surface);
   }
 
   resize(side: number, ratio: number): void {
@@ -196,7 +209,8 @@ export class ScrollModelScene {
 
   draw(pose: ModelPose): void {
     // Penché vers le spectateur quand il s'ouvre, pour montrer l'intérieur.
-    this.root.rotation.set(pose.tilt + pose.open * 0.3, pose.turn, 0);
+    this.root.rotation.set(pose.tilt, pose.turn, 0);
+    this.model.rotation.x = pose.open * 0.3;
     this.model.position.y = -0.65 - pose.open * 0.25;
     this.lid.rotation.x = -pose.open * LID_OPEN;
     this.treasure.position.y = WALL + pose.open * 0.35;
@@ -210,6 +224,8 @@ export class ScrollModelScene {
       surface.dispose();
       xray.dispose();
     }
+    this.wire.geometry.dispose();
+    this.wireMaterial.dispose();
     this.planks.dispose();
     this.renderer.dispose();
     this.renderer.forceContextLoss();

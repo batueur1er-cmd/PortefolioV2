@@ -17,9 +17,14 @@ describe('L’objet 3D qui suit le défilement', () => {
     expect(at(1).open).toBe(0);
   });
 
-  it('traverse la page d’un bord à l’autre', () => {
-    expect(at(0).x).toBeGreaterThan(W * 0.5);
-    expect(at(1 / 3).x).toBeLessThan(W * 0.1);
+  it('reste au bord de la page, sans la traverser', () => {
+    expect(at(0).x).toBe(at(0.5).x);
+    expect(at(0).y).toBe(at(1).y);
+    expect(at(0).x).toBeGreaterThan(W * 0.8);
+  });
+
+  it('ne fait qu’un seul tour sur toute la descente', () => {
+    expect(at(1).turn - at(0).turn).toBeCloseTo(2 * Math.PI);
   });
 
   it('donne le même résultat pour le même défilement : la loupe recopie sans rien recevoir de plus', () => {

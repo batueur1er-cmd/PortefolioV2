@@ -13,11 +13,11 @@ import { modelPose } from './scroll-model.pose';
 const MIN_PAGE_WIDTH = 900;
 /** Three.js ne se charge qu'une fois la page affichée. */
 const LOAD_DELAY_MS = 800;
-/** À la surface, l'objet reste en retrait du texte qui passe devant. */
-const SURFACE_OPACITY = 0.55;
+/** À la surface, à peine visible : un détail qu'on remarque après coup. */
+const SURFACE_OPACITY = 0.2;
 
 /**
- * Un objet 3D qui accompagne la descente de la page, derrière le contenu. Tout dépend du seul
+ * Une forme discrète qui tourne pendant la descente de la page, derrière le contenu. Tout dépend du seul
  * défilement de `ScrollStage` : la copie d'une loupe calcule donc la même image, aux rayons X.
  */
 @Component({
@@ -117,6 +117,7 @@ export class ScrollModel {
     const styles = this.doc.defaultView?.getComputedStyle(this.doc.documentElement);
     const read = (name: string, fallback: string) => styles?.getPropertyValue(name).trim() || fallback;
     return {
+      wire: read('--muted', '#4b5563'),
       wood: read('--art-gold', '#f0b35a'),
       iron: read('--art-night', '#2a3a52'),
       lock: read('--muted', '#4b5563'),

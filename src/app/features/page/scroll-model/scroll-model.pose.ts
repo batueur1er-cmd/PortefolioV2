@@ -22,16 +22,16 @@ const smooth = (from: number, to: number, v: number): number => {
 
 export function modelPose(scrollY: number, vh: number, pageWidth: number, pageHeight: number): ModelPose {
   const p = clamp01(scrollY / Math.max(1, pageHeight - vh));
-  const side = Math.min(pageWidth * 0.42, vh * 0.72);
+  const side = Math.min(pageWidth * 0.36, vh * 0.62);
   return {
     side,
-    // Un bord de la page à l'autre, trois traversées sur toute la descente.
-    x: (pageWidth - side) * (0.5 + 0.54 * Math.cos(p * 3 * Math.PI)),
-    y: (vh - side) * (0.5 + 0.2 * Math.sin(p * 2 * Math.PI)),
+    // À demeure contre le bord droit, à moitié hors de la page : seule sa rotation suit le défilement.
+    x: pageWidth - side * 0.62,
+    y: (vh - side) * 0.55,
     appear: clamp01((scrollY - vh * 0.25) / (vh * 0.5)),
     open: smooth(0.3, 0.5, p) * (1 - smooth(0.72, 0.9, p)),
-    turn: 0.6 + p * 4 * Math.PI,
-    tilt: 0.28 + 0.16 * Math.sin(p * 2 * Math.PI),
+    turn: 0.6 + p * 2 * Math.PI,
+    tilt: 0.28 + 0.08 * Math.sin(p * 2 * Math.PI),
     spin: p * 12,
   };
 }
