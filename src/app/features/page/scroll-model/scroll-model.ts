@@ -1,24 +1,28 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ElementRef, afterNextRender, inject, viewChild } from '@angular/core';
 
+import { offsetWithin, safeStorage } from '@core/dom/dom';
 import { FrameLoop } from '@core/dom/frame-loop';
 import { MotionPreference } from '@core/dom/motion-preference';
 import { ThemeStore } from '@core/theme/theme.store';
+import { PROFILE } from '@domain/profile/profile.data';
+import { PROJECTS_ON_PAGE } from '@domain/profile/projects';
 import { ScrollStage } from '@shared/motion/scroll-stage';
 
 import { PageContext } from '../page-context';
+import { SectionBox, litSkills, starMap } from './constellation';
 import type { ScrollModelColors, ScrollModelScene } from './scroll-model-scene';
-import { modelPose } from './scroll-model.pose';
+import { ModelForm, modelPose, parseForm } from './scroll-model.pose';
 
-/** Sous cette largeur de page, pas d'objet 3D : il passerait sur le texte, et un téléphone n'a pas à le payer. */
+/** Sous cette largeur de page, rien : la forme passerait sur le texte, et un téléphone n'a pas à la payer. */
 const MIN_PAGE_WIDTH = 900;
 /** Three.js ne se charge qu'une fois la page affichée. */
 const LOAD_DELAY_MS = 800;
-/** À la surface, à peine visible : un détail qu'on remarque après coup. */
-const SURFACE_OPACITY = 0.2;
+/** La forme retenue, gardée pour que toutes les fenêtres, loupes comprises, montrent la même. */
+const FORM_KEY = 'pv2.forme';
 
 /**
- * Une forme discrète qui tourne pendant la descente de la page, derrière le contenu. Tout dépend du seul
- * défilement de `ScrollStage` : la copie d'une loupe calcule donc la même image, aux rayons X.
+ * Une forme discrète en traits fins, derrière le contenu, qui suit la descente de la page. Tout
+ * dépend du seul défilement de `ScrollStage` : la copie d'une loupe calcule donc la même image.
  */
 @Component({
   selector: 'app-scroll-model',
@@ -36,6 +40,7 @@ export class ScrollModel {
   private readonly destroyRef = inject(DestroyRef);
   private readonly canvas = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
 
+  private form: ModelForm = this.readForm();
   private scene: ScrollModelScene | null = null;
   private loading = false;
   private destroyed = false;
@@ -43,10 +48,18 @@ export class ScrollModel {
   private lastTheme: string | null = null;
   private lastSide = 0;
   private pageHeight = 0;
+  private sections: SectionBox[] = [];
   private layoutSeen = -1;
 
   constructor() {
     afterNextRender(() => {
+      const win = this.doc.defaultView;
+      const onStorage = (event: StorageEvent) => {
+        if (event.key !== FORM_KEY) return;
+        this.form = parseForm(event.newValue) ?? this.form;
+        this.lastKey = '';
+      };
+      win?.addEventListener('storage', onStorage);
       const timer = setTimeout(() => {
         const stop = this.frames.add(() => this.tick());
         this.destroyRef.onDestroy(stop);
@@ -54,9 +67,23 @@ export class ScrollModel {
       this.destroyRef.onDestroy(() => {
         this.destroyed = true;
         clearTimeout(timer);
+        win?.removeEventListener('storage', onStorage);
         this.scene?.dispose();
       });
     });
+  }
+
+  /** `?forme=bn` ou `?forme=constellation` dans l'adresse choisit, et la fenêtre s'en souvient. */
+  private readForm(): ModelForm {
+    const win = this.doc.defaultView;
+    const storage = safeStorage(win);
+    const asked = parseForm(new URLSearchParams(win?.location.search ?? '').get('forme'));
+    try {
+      if (asked) storage?.setItem(FORM_KEY, asked);
+      return asked ?? parseForm(storage?.getItem(FORM_KEY)) ?? 'constellation';
+    } catch {
+      return asked ?? 'constellation';
+    }
   }
 
   private tick(): void {
@@ -76,12 +103,17 @@ export class ScrollModel {
     if (layout !== this.layoutSeen) {
       this.layoutSeen = layout;
       this.pageHeight = element.offsetHeight;
+      this.sections = Array.from(element.querySelectorAll<HTMLElement>('[data-section]'), (el) => ({
+        id: el.dataset['section'] ?? '',
+        top: offsetWithin(el, element).y,
+      }));
+      this.lastKey = '';
     }
     const scrollY = this.stage.scrollY();
     const vh = this.stage.vh();
     const xray = this.page.mode() === 'xray';
     const theme = this.theme.theme();
-    const key = `${scrollY}|${vh}|${width}|${this.pageHeight}|${xray}|${theme}`;
+    const key = `${this.form}|${scrollY}|${vh}|${width}|${this.pageHeight}|${xray}|${theme}`;
     if (key === this.lastKey) return;
     this.lastKey = key;
 
@@ -90,15 +122,15 @@ export class ScrollModel {
       this.scene.setColors(this.readColors());
     }
     this.scene.setXray(xray);
-    const pose = modelPose(scrollY, vh, width, this.pageHeight);
+    const pose = modelPose(this.form, scrollY, vh, width, this.pageHeight);
     if (pose.side !== this.lastSide) {
       this.lastSide = pose.side;
       canvas.style.width = canvas.style.height = `${pose.side}px`;
       this.scene.resize(pose.side, Math.min(2, this.doc.defaultView?.devicePixelRatio ?? 1));
     }
     canvas.style.transform = `translate3d(${pose.x}px, ${pose.y}px, 0)`;
-    canvas.style.opacity = String(pose.appear * (xray ? 1 : SURFACE_OPACITY));
-    if (pose.appear > 0) this.scene.draw(pose);
+    canvas.style.opacity = String(pose.appear);
+    if (pose.appear > 0) this.scene.draw(this.form, pose, litSkills(PROFILE, PROJECTS_ON_PAGE, this.sections, scrollY + vh / 2));
   }
 
   private async load(canvas: HTMLCanvasElement): Promise<void> {
@@ -106,9 +138,9 @@ export class ScrollModel {
     this.loading = true;
     try {
       const { ScrollModelScene: Scene } = await import('./scroll-model-scene');
-      if (!this.destroyed) this.scene = new Scene(canvas);
+      if (!this.destroyed) this.scene = new Scene(canvas, starMap(PROFILE));
     } catch {
-      // Pas de WebGL : la page reste entière, sans l'objet.
+      // Pas de WebGL : la page reste entière, sans la forme.
     }
   }
 
@@ -117,11 +149,8 @@ export class ScrollModel {
     const styles = this.doc.defaultView?.getComputedStyle(this.doc.documentElement);
     const read = (name: string, fallback: string) => styles?.getPropertyValue(name).trim() || fallback;
     return {
-      wire: read('--muted', '#4b5563'),
-      wood: read('--art-gold', '#f0b35a'),
-      iron: read('--art-night', '#2a3a52'),
-      lock: read('--muted', '#4b5563'),
-      inner: read('--art-plum-2', '#2a1420'),
+      dim: read('--muted', '#4b5563'),
+      lit: read('--accent', '#4f46e5'),
       xrayLine: read('--xl', '#7fe9ff'),
       xrayNote: read('--xn', '#ffd84d'),
       xrayPink: read('--xp', '#ff5bd0'),

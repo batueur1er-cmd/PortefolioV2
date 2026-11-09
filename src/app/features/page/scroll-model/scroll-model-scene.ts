@@ -1,205 +1,163 @@
 import {
-  BoxGeometry,
-  CanvasTexture,
-  Color,
-  CylinderGeometry,
-  DirectionalLight,
-  EdgesGeometry,
+  BufferGeometry,
   Group,
-  HemisphereLight,
-  IcosahedronGeometry,
   LineBasicMaterial,
   LineSegments,
-  Material,
-  Mesh,
-  MeshStandardMaterial,
-  NearestFilter,
-  OctahedronGeometry,
   PerspectiveCamera,
-  SRGBColorSpace,
+  Points,
+  PointsMaterial,
   Scene,
-  TorusGeometry,
+  Vector3,
   WebGLRenderer,
 } from 'three';
-import type { BufferGeometry } from 'three';
 
-import { XrayUniforms, xrayMaterial } from '@features/viewer/scene/xray-material';
-
-import type { ModelPose } from './scroll-model.pose';
+import type { StarMap } from './constellation';
+import type { ModelForm, ModelPose } from './scroll-model.pose';
 
 /*
- * À la surface, une simple forme en fil de fer, discrète, qui tourne avec le défilement. Aux rayons X,
- * elle contient le coffre de la démo façon Doom, en volume : mêmes proportions que son sprite
- * (80 × 48 × 52, divisé par 40), et un trésor qui se révèle quand il s'ouvre. Ce fichier n'est chargé qu'à la demande : Three.js reste hors du bundle initial.
+ * Deux formes en traits fins, à l'essai : la constellation des compétences, et une anamorphose du
+ * monogramme. Ce fichier n'est chargé qu'à la demande : Three.js reste hors du bundle initial.
  */
 
 export interface ScrollModelColors {
-  readonly wire: string;
-  readonly wood: string;
-  readonly iron: string;
-  readonly lock: string;
-  readonly inner: string;
+  readonly dim: string;
+  readonly lit: string;
   readonly xrayLine: string;
   readonly xrayNote: string;
   readonly xrayPink: string;
 }
 
-type Role = 'wood' | 'iron' | 'lock' | 'inner' | 'treasure';
+const CAMERA_Z = 9;
+const STAR_RADIUS = 2;
+const DASH = 0.075;
+const GAP = 0.02;
 
-const LENGTH = 2;
-const DEPTH = 1.2;
-const BODY = 0.85;
-const LID = 0.45;
-const WALL = 0.06;
-const STRAPS = [-0.72, 0.72];
-/** Le couvercle bascule autour de ses charnières, jusqu'à passer un peu la verticale. */
-const LID_OPEN = 1.85;
+/** Le monogramme, en lignes brisées, dans le plan de l'écran. */
+const LETTERS: readonly (readonly (readonly [number, number])[])[] = [
+  [[-1.6, 1], [-1.6, -1]],
+  [[-1.6, 1], [-0.65, 1], [-0.32, 0.76], [-0.32, 0.3], [-0.65, 0.05], [-1.6, 0.05]],
+  [[-0.65, 0.05], [-0.2, -0.2], [-0.2, -0.75], [-0.65, -1], [-1.6, -1]],
+  [[0.3, -1], [0.3, 1], [1.6, -1], [1.6, 1]],
+];
 
-interface Piece {
-  readonly mesh: Mesh;
-  readonly role: Role;
-  readonly surface: MeshStandardMaterial;
-  readonly xray: Material;
-  readonly uniforms: XrayUniforms;
+/** Un nombre entre 0 et 1, toujours le même pour un même rang : les deux fenêtres dessinent la même chose. */
+const noise = (i: number): number => (Math.imul(i + 11, 2654435761) >>> 0) / 4294967296;
+
+/** Les étoiles, réparties régulièrement sur une sphère. */
+function spherePoints(count: number): Vector3[] {
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  return Array.from({ length: count }, (_, i) => {
+    const y = 1 - ((i + 0.5) / count) * 2;
+    const r = Math.sqrt(1 - y * y);
+    return new Vector3(Math.cos(i * golden) * r, y, Math.sin(i * golden) * r).multiplyScalar(STAR_RADIUS);
+  });
 }
-
-/** Des planches en gris, à gros pixels comme le sprite : la teinte vient du thème. Aucun aléa, pour que la loupe voie la même chose. */
-function planksTexture(): CanvasTexture {
-  const canvas = document.createElement('canvas');
-  canvas.width = 80;
-  canvas.height = 40;
-  const ctx = canvas.getContext('2d');
-  if (ctx) {
-    for (let y = 0; y < 40; y++) {
-      for (let x = 0; x < 80; x++) {
-        const seam = y % 10 === 0 || (x + (Math.floor(y / 10) % 2) * 20) % 40 === 0;
-        const grain = ((x * 7 + y * 13) % 5) * 5;
-        const value = seam ? 120 : 215 + grain;
-        ctx.fillStyle = `rgb(${value}, ${value}, ${value})`;
-        ctx.fillRect(x, y, 1, 1);
-      }
-    }
-  }
-  const texture = new CanvasTexture(canvas);
-  texture.magFilter = NearestFilter;
-  texture.minFilter = NearestFilter;
-  texture.colorSpace = SRGBColorSpace;
-  return texture;
-}
-
-const box = (w: number, h: number, d: number, x: number, y: number, z: number): BufferGeometry => new BoxGeometry(w, h, d).translate(x, y, z);
 
 export class ScrollModelScene {
   private readonly renderer: WebGLRenderer;
   private readonly scene = new Scene();
   private readonly camera = new PerspectiveCamera(30, 1, 0.1, 50);
   private readonly root = new Group();
-  private readonly model = new Group();
-  private readonly wireMaterial = new LineBasicMaterial();
-  private readonly wire = new LineSegments(new EdgesGeometry(new IcosahedronGeometry(1.8, 1)), this.wireMaterial);
-  private wireColors: { surface: string; xray: string } | null = null;
-  /** Pivote sur les charnières, à l'arrière du coffre. */
-  private readonly lid = new Group();
-  private readonly treasure = new Group();
-  private readonly planks = planksTexture();
-  private readonly pieces: Piece[] = [];
+  private readonly stars = new Group();
+  private readonly monogram = new Group();
+
+  private readonly stations: Vector3[];
+  private readonly baseLinksMat = new LineBasicMaterial({ transparent: true });
+  private readonly basePointsMat = new PointsMaterial({ size: 2.5, sizeAttenuation: false, transparent: true });
+  private readonly litLinksMat = new LineBasicMaterial({ transparent: true });
+  private readonly litPointsMat = new PointsMaterial({ size: 5, sizeAttenuation: false, transparent: true });
+  private readonly litLinks = new LineSegments(new BufferGeometry(), this.litLinksMat);
+  private readonly litPoints = new Points(new BufferGeometry(), this.litPointsMat);
+  private litKey = '';
+
+  private readonly dashesMat = new LineBasicMaterial({ transparent: true });
+  private readonly raysMat = new LineBasicMaterial({ transparent: true, opacity: 0.55 });
+  private readonly rays: LineSegments;
+
+  private colors: ScrollModelColors | null = null;
   private xray = false;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    private readonly map: StarMap,
+  ) {
     this.renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true });
     this.renderer.setClearColor(0x000000, 0);
-    this.camera.position.set(0, 0, 7);
-    this.scene.add(new HemisphereLight(0xffffff, 0xbbbbbb, 1.1));
-    const sun = new DirectionalLight(0xffffff, 2.2);
-    sun.position.set(3, 7, 6);
-    this.scene.add(sun, this.root);
-    this.root.add(this.wire, this.model);
-    this.model.visible = false;
-    this.lid.position.set(0, BODY, -DEPTH / 2);
-    this.model.add(this.lid, this.treasure);
-    this.buildBody();
-    this.buildLid();
-    this.buildTreasure();
+    this.camera.position.set(0, 0, CAMERA_Z);
+    this.scene.add(this.root);
+    this.root.add(this.stars, this.monogram);
+
+    this.stations = spherePoints(map.ids.length);
+    this.stars.add(
+      new LineSegments(new BufferGeometry().setFromPoints(map.links.flatMap(([a, b]) => [this.stations[a], this.stations[b]])), this.baseLinksMat),
+      new Points(new BufferGeometry().setFromPoints(this.stations), this.basePointsMat),
+      this.litLinks,
+      this.litPoints,
+    );
+
+    const { dashes, rays } = this.buildMonogram();
+    this.monogram.add(new LineSegments(new BufferGeometry().setFromPoints(dashes), this.dashesMat));
+    this.rays = new LineSegments(new BufferGeometry().setFromPoints(rays), this.raysMat);
+    this.monogram.add(this.rays);
   }
 
-  /** Une caisse creuse : on doit pouvoir regarder dedans. */
-  private buildBody(): void {
-    const add = (role: Role, geometry: BufferGeometry) => this.add(this.model, role, geometry);
-    add('inner', box(LENGTH - WALL * 2, WALL, DEPTH - WALL * 2, 0, WALL / 2, 0));
-    add('wood', box(LENGTH, BODY, WALL, 0, BODY / 2, DEPTH / 2 - WALL / 2));
-    add('wood', box(LENGTH, BODY, WALL, 0, BODY / 2, -DEPTH / 2 + WALL / 2));
-    add('wood', box(WALL, BODY, DEPTH, -LENGTH / 2 + WALL / 2, BODY / 2, 0));
-    add('wood', box(WALL, BODY, DEPTH, LENGTH / 2 - WALL / 2, BODY / 2, 0));
-    for (const x of STRAPS) {
-      add('iron', box(0.12, BODY + 0.02, DEPTH + 0.03, x, BODY / 2, 0));
-    }
-    // La gâche de la serrure et les deux poignées.
-    add('lock', box(0.3, 0.26, 0.05, 0, BODY - 0.13, DEPTH / 2 + 0.02));
-    for (const side of [-1, 1]) {
-      add('iron', new TorusGeometry(0.13, 0.03, 8, 20).rotateY(Math.PI / 2).translate(side * (LENGTH / 2 + 0.02), BODY * 0.6, 0));
-    }
-  }
-
-  /** Le couvercle, dessiné depuis ses charnières : l'origine est l'arête arrière. */
-  private buildLid(): void {
-    const add = (role: Role, geometry: BufferGeometry) => this.add(this.lid, role, geometry);
-    add('wood', box(LENGTH, LID, DEPTH, 0, LID / 2, DEPTH / 2));
-    add('inner', box(LENGTH - 0.02, 0.01, DEPTH - 0.02, 0, -0.005, DEPTH / 2));
-    for (const x of STRAPS) add('iron', box(0.12, LID + 0.03, DEPTH + 0.03, x, LID / 2, DEPTH / 2));
-    add('lock', box(0.2, 0.18, 0.05, 0, 0.09, DEPTH + 0.02));
-    for (const x of [-0.45, 0.45]) add('lock', new CylinderGeometry(0.05, 0.05, 0.2, 12).rotateZ(Math.PI / 2).translate(x, 0, -0.01));
-  }
-
-  /** Ce qu'il cache : des piles de pièces et une gemme. */
-  private buildTreasure(): void {
-    const piles: readonly (readonly [number, number, number])[] = [
-      [-0.5, 0.1, 6],
-      [0.45, -0.15, 4],
-      [0.1, 0.25, 3],
-    ];
-    for (const [x, z, count] of piles) {
-      for (let i = 0; i < count; i++) {
-        this.add(this.treasure, 'treasure', new CylinderGeometry(0.17, 0.17, 0.05, 16).translate(x + (i % 2) * 0.03, i * 0.055, z));
+  /**
+   * L'anamorphose : chaque tiret du dessin est repoussé le long du rayon qui le relie à l'œil. Vu
+   * de cet œil, rien ne change ; vu de n'importe où ailleurs, il ne reste qu'un nuage de traits.
+   */
+  private buildMonogram(): { dashes: Vector3[]; rays: Vector3[] } {
+    const eye = new Vector3(0, 0, CAMERA_Z);
+    const dashes: Vector3[] = [];
+    const rays: Vector3[] = [];
+    let rank = 0;
+    const place = (x: number, y: number, depth: number) => eye.clone().add(new Vector3(x, y, 0).sub(eye).multiplyScalar(depth));
+    for (const line of LETTERS) {
+      for (let i = 0; i + 1 < line.length; i++) {
+        const [ax, ay] = line[i];
+        const [bx, by] = line[i + 1];
+        const length = Math.hypot(bx - ax, by - ay);
+        for (let d = 0; d + DASH <= length; d += DASH + GAP) {
+          const from = d / length;
+          const to = (d + DASH) / length;
+          const depth = 0.75 + noise(rank++) * 0.5;
+          const start = place(ax + (bx - ax) * from, ay + (by - ay) * from, depth);
+          const end = place(ax + (bx - ax) * to, ay + (by - ay) * to, depth);
+          dashes.push(start, end);
+          if (rank % 5 === 0) {
+            // Aux rayons X : l'amorce de la ligne de visée qui part vers l'œil.
+            rays.push(start, start.clone().add(eye.clone().sub(start).setLength(1.4)));
+          }
+        }
       }
     }
-    this.add(this.treasure, 'treasure', new OctahedronGeometry(0.28).translate(0, 0.42, -0.1));
-    this.treasure.position.y = WALL;
-  }
-
-  private add(parent: Group, role: Role, geometry: BufferGeometry): void {
-    const surface = new MeshStandardMaterial({
-      map: role === 'wood' ? this.planks : null,
-      metalness: role === 'iron' || role === 'lock' ? 0.6 : 0.05,
-      roughness: role === 'wood' ? 0.85 : 0.45,
-    });
-    const { material, uniforms } = xrayMaterial();
-    const mesh = new Mesh(geometry, surface);
-    parent.add(mesh);
-    this.pieces.push({ mesh, role, surface, xray: material, uniforms });
+    return { dashes, rays };
   }
 
   setColors(colors: ScrollModelColors): void {
-    this.wireColors = { surface: colors.wire, xray: colors.xrayLine };
-    this.paintWire();
-    const surface: Record<Role, string> = { wood: colors.wood, iron: colors.iron, lock: colors.lock, inner: colors.inner, treasure: colors.wood };
-    const xray: Record<Role, string> = { wood: colors.xrayLine, iron: colors.xrayLine, lock: colors.xrayNote, inner: colors.xrayLine, treasure: colors.xrayPink };
-    for (const piece of this.pieces) {
-      piece.surface.color.set(surface[piece.role]);
-      piece.uniforms.uColor.value = new Color(xray[piece.role]);
-      piece.uniforms.uOpacity.value = piece.role === 'treasure' ? 1 : piece.role === 'wood' || piece.role === 'inner' ? 0.4 : 0.8;
-    }
+    this.colors = colors;
+    this.paint();
   }
 
   setXray(xray: boolean): void {
     this.xray = xray;
-    // Le coffre et son trésor n'existent qu'aux rayons X.
-    this.model.visible = xray;
-    for (const piece of this.pieces) piece.mesh.material = xray ? piece.xray : piece.surface;
-    this.paintWire();
+    this.paint();
   }
 
-  private paintWire(): void {
-    if (this.wireColors) this.wireMaterial.color.set(this.xray ? this.wireColors.xray : this.wireColors.surface);
+  private paint(): void {
+    const c = this.colors;
+    if (!c) return;
+    const x = this.xray;
+    this.baseLinksMat.color.set(x ? c.xrayLine : c.dim);
+    this.baseLinksMat.opacity = x ? 0.5 : 0.16;
+    this.basePointsMat.color.set(x ? c.xrayLine : c.dim);
+    this.basePointsMat.opacity = x ? 0.9 : 0.4;
+    this.litLinksMat.color.set(x ? c.xrayNote : c.lit);
+    this.litLinksMat.opacity = x ? 1 : 0.55;
+    this.litPointsMat.color.set(x ? c.xrayPink : c.lit);
+    this.litPointsMat.opacity = x ? 1 : 0.85;
+    this.dashesMat.color.set(x ? c.xrayLine : c.dim);
+    this.raysMat.color.set(c.xrayNote);
+    this.rays.visible = x;
   }
 
   resize(side: number, ratio: number): void {
@@ -207,26 +165,30 @@ export class ScrollModelScene {
     this.renderer.setSize(side, side, false);
   }
 
-  draw(pose: ModelPose): void {
-    // Penché vers le spectateur quand il s'ouvre, pour montrer l'intérieur.
+  draw(form: ModelForm, pose: ModelPose, lit: ReadonlySet<string>): void {
+    this.stars.visible = form === 'constellation';
+    this.monogram.visible = form === 'bn';
     this.root.rotation.set(pose.tilt, pose.turn, 0);
-    this.model.rotation.x = pose.open * 0.3;
-    this.model.position.y = -0.65 - pose.open * 0.25;
-    this.lid.rotation.x = -pose.open * LID_OPEN;
-    this.treasure.position.y = WALL + pose.open * 0.35;
-    this.treasure.rotation.y = pose.spin;
+    if (form === 'bn') this.dashesMat.opacity = this.xray ? 1 : 0.2 + pose.glow * 0.45;
+    else this.light(lit);
     this.renderer.render(this.scene, this.camera);
   }
 
+  /** Les géométries des étoiles allumées ne changent que quand la liste change. */
+  private light(lit: ReadonlySet<string>): void {
+    const key = [...lit].sort().join('|');
+    if (key === this.litKey) return;
+    this.litKey = key;
+    const on = (i: number) => lit.has(this.map.ids[i]);
+    this.litPoints.geometry.setFromPoints(this.stations.filter((_, i) => on(i)));
+    this.litLinks.geometry.setFromPoints(this.map.links.filter(([a, b]) => on(a) && on(b)).flatMap(([a, b]) => [this.stations[a], this.stations[b]]));
+  }
+
   dispose(): void {
-    for (const { mesh, surface, xray } of this.pieces) {
-      mesh.geometry.dispose();
-      surface.dispose();
-      xray.dispose();
-    }
-    this.wire.geometry.dispose();
-    this.wireMaterial.dispose();
-    this.planks.dispose();
+    this.root.traverse((node) => {
+      if (node instanceof LineSegments || node instanceof Points) node.geometry.dispose();
+    });
+    for (const material of [this.baseLinksMat, this.basePointsMat, this.litLinksMat, this.litPointsMat, this.dashesMat, this.raysMat]) material.dispose();
     this.renderer.dispose();
     this.renderer.forceContextLoss();
   }
