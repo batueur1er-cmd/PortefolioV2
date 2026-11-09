@@ -27,7 +27,11 @@ export class Renderer {
   /** Les objets cachés dans les murs, que seuls les rayons X montrent. */
   private readonly hidden: readonly Thing[];
 
-  constructor(level: Level, graphics: Graphics, lights: LightTables) {
+  constructor(
+    private readonly level: Level,
+    graphics: Graphics,
+    lights: LightTables,
+  ) {
     this.hidden = level.things.filter((t) => t.hidden);
     this.planes = new Planes(this.frame, graphics, lights);
     this.segs = new Segs(this.frame, this.planes, graphics, lights);
@@ -42,6 +46,7 @@ export class Renderer {
    */
   render(view: View, palette: Palette, budget = Infinity, trace = false, xray = false): { stats: FrameStats; trace: FrameTrace | null } {
     const f = this.frame;
+    view.doors?.forEach((height, i) => (this.level.doors[i].ceiling = height));
     f.begin(view, palette, budget, trace);
     this.planes.reset();
     this.segs.reset();

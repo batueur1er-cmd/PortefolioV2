@@ -42,6 +42,7 @@ import {
 import {
   DEFAULT_FOV,
   DoomEngine,
+  Doors,
   FrameResult,
   MAX_FOV,
   MIN_FOV,
@@ -68,6 +69,8 @@ import { DoomSteps } from './ui/doom-steps/doom-steps';
 const MOVE_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ShiftLeft', 'ShiftRight']);
 /** Un appui au clavier sur une touche du pavé fait marcher quelques tics. */
 const NUDGE_TICS = 6;
+/** Espace ou E : la touche « utiliser » de Doom. */
+const USE_KEYS = new Set(['Space', 'KeyE']);
 /** Rotation quand on glisse sur la vue, en radians par pixel. */
 const DRAG_TURN = 0.008;
 
@@ -123,6 +126,7 @@ export class DoomPage {
 
   private readonly engine = new DoomEngine();
   private readonly player = new Player(this.engine.level, this.engine.obstacles);
+  private readonly doors = new Doors(this.engine.level);
   protected readonly stats = this.engine.level.stats;
 
   protected readonly room = signal(this.player.sector.room);
@@ -206,7 +210,7 @@ export class DoomPage {
     this.replay.set(state.replay ? (state.replay.playing ? 'playing' : 'paused') : 'live');
     this.done = state.replay?.done ?? 0;
     this.total = state.replay?.total ?? 0;
-    this.draw({ x: state.x, y: state.y, z: state.z, angle: state.angle, tic: state.tic, fov: state.fov }, state.replay ? state.replay.done : Infinity);
+    this.draw({ x: state.x, y: state.y, z: state.z, angle: state.angle, tic: state.tic, fov: state.fov, doors: state.doors }, state.replay ? state.replay.done : Infinity);
   }
 
   // ---------------------------------------------------------------------------------------------
@@ -214,7 +218,13 @@ export class DoomPage {
   // ---------------------------------------------------------------------------------------------
 
   protected onKey(event: KeyboardEvent, down: boolean): void {
-    if (this.decorative() || !MOVE_KEYS.has(event.code) || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (this.decorative() || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (USE_KEYS.has(event.code)) {
+      event.preventDefault();
+      if (down && !event.repeat) this.useDoor();
+      return;
+    }
+    if (!MOVE_KEYS.has(event.code)) return;
     event.preventDefault();
     if (down) this.keys.add(event.code);
     else this.keys.delete(event.code);
@@ -257,6 +267,16 @@ export class DoomPage {
     const { x, y } = mapToWorld(mapFrame(this.engine.level, canvas.width, canvas.height), px, py);
     if (this.player.teleport(x, y)) this.moved();
     else this.say('Pas de place ici : c’est un mur, un pilier ou le vide.');
+  }
+
+  /** La touche « utiliser » : la porte devant le joueur s'ouvre, ou se referme. */
+  protected useDoor(): void {
+    if (this.decorative()) return;
+    if (!this.doors.use(this.player.x, this.player.y, this.player.angle)) {
+      this.say('Aucune porte à portée : placez-vous juste devant.');
+      return;
+    }
+    if (this.replay() !== 'live') this.stopReplay();
   }
 
   protected hold(action: PadAction, down: boolean): void {
@@ -332,14 +352,17 @@ export class DoomPage {
     this.clock = Math.min(this.clock + dt, TIC_MS * 4);
     let moved = false;
     let ticked = false;
+    let ticks = 0;
     while (this.clock >= TIC_MS) {
       this.clock -= TIC_MS;
       this.tic++;
       ticked = true;
+      ticks++;
       if (this.player.tic(this.input())) moved = true;
       if (this.nudge && --this.nudge.tics <= 0) this.nudge = null;
     }
     if (moved) this.moved();
+    if (ticked && this.replay() === 'live') this.tickDoors(ticks);
     if (this.replay() === 'playing') {
       this.done = Math.min(this.total, this.done + (this.total / REPLAY_MS) * dt);
       this.dirty = true;
@@ -364,6 +387,11 @@ export class DoomPage {
     this.noteRoom();
   }
 
+  /** Les portes avancent en direct seulement : le ralenti rejoue une image figée. */
+  private tickDoors(ticks: number): void {
+    for (let i = 0; i < ticks; i++) if (this.doors.tic(this.player.x, this.player.y)) this.dirty = true;
+  }
+
   private input(): PlayerInput {
     const k = this.keys;
     const on = (action: PadAction) => this.held.has(action) || this.nudge?.action === action;
@@ -382,7 +410,7 @@ export class DoomPage {
   }
 
   private liveView(): View {
-    return { x: this.player.x, y: this.player.y, z: this.player.eyeZ, angle: this.player.angle, tic: this.effectsTic(), fov: this.fov() };
+    return { x: this.player.x, y: this.player.y, z: this.player.eyeZ, angle: this.player.angle, tic: this.effectsTic(), fov: this.fov(), doors: this.doors.heights };
   }
 
   /** Mesure l'image entière avant de la rejouer depuis zéro. */
@@ -458,6 +486,7 @@ export class DoomPage {
       tic: v.tic,
       replay: replay === 'live' ? null : { done: Math.floor(this.done), total: this.total, playing: replay === 'playing' },
       bsp: this.bsp(),
+      doors: v.doors ?? this.doors.heights,
     };
   }
 

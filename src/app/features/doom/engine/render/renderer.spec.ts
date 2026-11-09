@@ -10,6 +10,7 @@ describe('Le rendu façon Doom', () => {
   const palette = buildPalette(RAMP_COLORS.map(([, fallback]) => parseColor(fallback, fallback)));
   const renderer = new Renderer(level, buildGraphics(), buildLightTables());
   const start: View = { x: 96, y: 96, z: 41, angle: Math.PI / 4, tic: 0 };
+  const COUR: View = { x: 1200, y: 760, z: 9, angle: Math.PI * 0.75, tic: 0 };
   const kinds = () => new Set([...renderer.frame.owner].map((o) => o >> OWNER_SHIFT));
 
   it('peint chaque pixel de l’image', () => {
@@ -33,8 +34,8 @@ describe('Le rendu façon Doom', () => {
       renderer.render({ ...start, fov }, palette);
       expect([...renderer.frame.owner].every((o) => o !== 0)).toBe(true);
     }
-    const narrow = renderer.render({ ...start, fov: 60 }, palette).stats.subsectors;
-    const wide = renderer.render({ ...start, fov: 120 }, palette).stats.subsectors;
+    const narrow = renderer.render({ ...COUR, fov: 60 }, palette).stats.subsectors;
+    const wide = renderer.render({ ...COUR, fov: 120 }, palette).stats.subsectors;
     expect(wide).toBeGreaterThan(narrow);
   });
 

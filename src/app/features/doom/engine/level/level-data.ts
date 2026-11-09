@@ -7,7 +7,7 @@
  * Le niveau est original : seules la façon de le décrire et celle de le dessiner viennent de Doom.
  */
 
-export type WallTexture = 'panneaux' | 'briques' | 'pierre' | 'metal' | 'logo' | 'marche' | 'cadre';
+export type WallTexture = 'panneaux' | 'briques' | 'pierre' | 'metal' | 'logo' | 'marche' | 'cadre' | 'porte';
 export type FlatTexture = 'dalles' | 'plafond' | 'paves' | 'herbe' | 'eau' | 'beton' | 'voute' | 'bois';
 export type ThingKind = 'lampe' | 'plante' | 'robot' | 'brasero' | 'coffre';
 
@@ -31,6 +31,8 @@ export interface SectorDef {
   readonly wall: WallTexture;
   readonly upper?: WallTexture;
   readonly lower?: WallTexture;
+  /** Une porte : un secteur fermé (plafond posé sur le sol) dont seul le plafond bouge, avec la texture de son battant. */
+  readonly door?: WallTexture;
   readonly outline: readonly MapPoint[];
   /** Trous dans le secteur (piliers, ou un autre secteur posé dedans), avec leur texture. */
   readonly holes?: readonly { readonly wall: WallTexture; readonly points: readonly MapPoint[] }[];
@@ -95,7 +97,32 @@ export const SECTORS: readonly SectorDef[] = [
     light: 176,
     dimLight: 96,
     wall: 'pierre',
-    outline: rect(640, 192, 896, 320),
+    outline: rect(640, 192, 800, 320),
+  },
+  // Une porte, comme dans Doom : un secteur dont le plafond monte. Ni le plan ni l'arbre ne changent.
+  {
+    id: 'porte-couloir',
+    room: 'Le couloir',
+    floor: 0,
+    ceiling: 0,
+    floorFlat: 'paves',
+    ceilingFlat: 'beton',
+    light: 176,
+    wall: 'cadre',
+    door: 'porte',
+    outline: rect(800, 192, 832, 320),
+  },
+  {
+    id: 'couloir-2',
+    room: 'Le couloir',
+    floor: 0,
+    ceiling: 128,
+    floorFlat: 'paves',
+    ceilingFlat: 'beton',
+    light: 176,
+    dimLight: 96,
+    wall: 'pierre',
+    outline: rect(832, 192, 896, 320),
   },
   {
     id: 'colonnes',
@@ -181,7 +208,19 @@ export const SECTORS: readonly SectorDef[] = [
     light: 160,
     wall: 'briques',
     lower: 'marche',
-    outline: rect(1216, 576, 1344, 640),
+    outline: rect(1216, 576, 1344, 608),
+  },
+  {
+    id: 'porte-passage',
+    room: 'Le passage',
+    floor: -32,
+    ceiling: -32,
+    floorFlat: 'paves',
+    ceilingFlat: 'voute',
+    light: 160,
+    wall: 'cadre',
+    door: 'porte',
+    outline: rect(1216, 608, 1344, 640),
   },
 ];
 

@@ -164,10 +164,11 @@ export function drawMap(ctx: CanvasRenderingContext2D, width: number, height: nu
   for (const line of level.lines) {
     const back = line.back?.sector;
     const front = line.front.sector;
-    const style = !back ? 'wall' : back.floor !== front.floor ? 'step' : back.ceiling !== front.ceiling ? 'soft' : null;
+    const door = back && (front.door || back.door);
+    const style = !back ? 'wall' : door ? 'door' : back.floor !== front.floor ? 'step' : back.ceiling !== front.ceiling ? 'soft' : null;
     if (!style) continue;
-    ctx.strokeStyle = style === 'wall' ? colors.wall : style === 'step' ? colors.step : colors.soft;
-    ctx.lineWidth = (style === 'wall' ? 2 : 1.25) * ratio;
+    ctx.strokeStyle = style === 'wall' ? colors.wall : style === 'door' ? colors.thing : style === 'step' ? colors.step : colors.soft;
+    ctx.lineWidth = (style === 'wall' || style === 'door' ? 2 : 1.25) * ratio;
     ctx.beginPath();
     ctx.moveTo(X(line.v1.x), Y(line.v1.y));
     ctx.lineTo(X(line.v2.x), Y(line.v2.y));

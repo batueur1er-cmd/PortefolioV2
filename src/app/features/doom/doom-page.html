@@ -79,8 +79,8 @@
     </div>
 
     <p id="doom-hint" class="hint">
-      Cliquez sur la vue, puis flèches ou ZQSD (Maj pour courir) ; glissez pour tourner ; cliquez sur la carte pour vous y
-      poser.
+      Cliquez sur la vue, puis flèches ou ZQSD (Maj pour courir), Espace ou E pour ouvrir une porte ; glissez pour tourner ;
+      cliquez sur la carte pour vous y poser.
     </p>
 
     <app-doom-controls
@@ -92,6 +92,7 @@
       [counts]="counts()"
       (hold)="hold($event.action, $event.down)"
       (nudge)="step($event)"
+      (useDoor)="useDoor()"
       (replayToggle)="toggleReplay()"
       (replayStop)="stopReplay()"
       (scrub)="scrub($event)"

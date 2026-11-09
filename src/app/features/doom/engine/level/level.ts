@@ -58,6 +58,7 @@ export function buildLevel(
     nodes: tree.nodes,
     root: tree.root,
     things: [],
+    doors: map.sectors.filter((s) => s.door),
     bounds,
     start: { x: start.x, y: start.y, angle: deg(start.angle) },
     rooms: [...new Set(map.sectors.map((s) => s.room))],

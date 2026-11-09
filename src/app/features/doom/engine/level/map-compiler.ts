@@ -72,6 +72,7 @@ function buildSectors(defs: readonly SectorDef[], vertices: Vertices) {
       upper: def.upper ?? null,
       lower: def.lower ?? null,
       wall: def.wall,
+      door: def.door ?? null,
       loops,
       things: [],
     };
@@ -90,11 +91,11 @@ function buildSectors(defs: readonly SectorDef[], vertices: Vertices) {
 
 /**
  * Les textures d'un côté. Mur plein : celle du mur. Ouverture : au-dessus, le mur du secteur où
- * l'on se tient ; au-dessous, la contremarche du secteur d'en face (une marche porte la sienne).
+ * l'on se tient (ou le battant, face à une porte) ; au-dessous, la contremarche du secteur d'en face (une marche porte la sienne).
  */
 function sideOfSector(sector: Sector, other: Sector | null, wall: WallTexture | null): Side {
   if (!other) return { sector, upper: null, mid: wall ?? sector.wall, lower: null };
-  return { sector, upper: sector.upper ?? sector.wall, mid: null, lower: other.lower ?? sector.lower ?? sector.wall };
+  return { sector, upper: other.door ?? sector.upper ?? sector.wall, mid: null, lower: other.lower ?? sector.lower ?? sector.wall };
 }
 
 function buildLines(edges: readonly Edge[]): Line[] {

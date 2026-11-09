@@ -51,6 +51,12 @@ yeux à 41, marche de 24 au plus).
   les opérations du rendu, pour que le ralenti reste identique dans les deux fenêtres.
 - Après un changement, vérifie `level/level.spec.ts` (pièces attendues aux bons endroits).
 
+## Les portes
+
+Un secteur avec `door: <texture>` est une porte : `ceiling` égal à `floor` au départ, et tout le reste
+du niveau inchangé. `play/doors.ts` fait monter le plafond (seule hauteur mutable du niveau) ; les
+hauteurs partent dans `View.doors` et `DoomPresence.doors`. Elles ne bougent pas pendant le ralenti.
+
 ## Textures et sprites
 
 - Couleurs : uniquement `ink(RAMP.X, nuance)` (16 teintes du thème × 16 nuances, 0 clair, 3 pur,

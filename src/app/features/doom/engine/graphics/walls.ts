@@ -75,6 +75,14 @@ export function buildWalls(): Record<WallTexture, WallTex> {
     marche: wall(64, 16, (x, y) =>
       y < 2 ? ink(R.GOLD, y === 0 ? 2 : 4) : ink(R.MUTED, 4 + (y > 12 ? 2 : 0) + grain(x, y, 8, 0.2)),
     ),
+    // Le battant d'une porte : des lames d'acier, une bande d'avertissement et des rivets.
+    porte: wall(64, 128, (x, y) => {
+      if (y >= 56 && y < 72) return (x + y) & 8 ? ink(R.GOLD, 3) : ink(R.NIGHT, 8);
+      if ((y & 15) === 15) return ink(R.BLUE, 11);
+      if ((y & 15) === 0) return ink(R.BLUE, 2);
+      if ((x === 6 || x === 57) && (y & 15) === 8) return ink(R.MIST, 2);
+      return ink(R.BLUE, 6 + grain(x, y, 10, 0.1));
+    }),
     cadre: wall(64, 64, (x, y) => ink(R.GOLD, 8 + Math.round(Math.sin(x * 0.8 + Math.sin(y * 0.15) * 2) * 1.5) + grain(x, y, 9, 0.1))),
   };
 }

@@ -90,6 +90,8 @@ export interface DoomPresence {
   readonly replay: { readonly done: number; readonly total: number; readonly playing: boolean } | null;
   /** Découpage de l'arbre BSP affiché sur la carte. */
   readonly bsp: boolean;
+  /** Hauteur du plafond de chaque porte. */
+  readonly doors: readonly number[];
 }
 
 /** Une fenêtre qui affiche le portfolio. */

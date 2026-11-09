@@ -102,6 +102,21 @@
         </p>
       </div>
     </li>
+    <li class="card">
+      <span class="num" aria-hidden="true">07</span>
+      <h3 class="card-title">Les portes</h3>
+      <div class="say">
+        <p class="plain">
+          Une porte de Doom ne pivote pas : c’est une petite pièce au plafond posé sur le sol, qui monte et redescend.
+          Un mur ne peut pas se déplacer de côté, car l’arbre a été calculé une fois pour toutes ; une hauteur, si.
+        </p>
+        <p class="tech" aria-hidden="true">
+          EV_VerticalDoor lance T_VerticalDoor : le plafond du secteur monte de 2 unités par tic jusqu’à 4 sous le plus
+          bas des plafonds voisins (P_FindLowestCeilingSurrounding), attend 150 tics, puis redescend. Les nœuds ne
+          changent pas : seul R_AddLine voit une ouverture, ou un mur plein quand back.ceiling ≤ front.floor.
+        </p>
+      </div>
+    </li>
   </ol>
   <div class="aside say">
     <p class="plain">

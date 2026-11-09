@@ -10,6 +10,11 @@ export const PLAYER_RADIUS = 16;
 export const PLAYER_HEIGHT = 56;
 export const VIEW_HEIGHT = 41;
 export const MAX_STEP = 24;
+/** La distance à laquelle le joueur atteint une porte. */
+export const USE_RANGE = 64;
+/** Une porte bouge de 2 unités par tic et reste ouverte 150 tics. */
+export const DOOR_SPEED = 2;
+export const DOOR_WAIT = 150;
 
 /** Frottement au sol : l'élan est multiplié par 0xE800 / 0x10000 à chaque tic. */
 export const FRICTION = 0xe800 / 0x10000;

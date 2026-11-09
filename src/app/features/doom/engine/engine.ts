@@ -30,6 +30,7 @@ export type { FrameStats, FrameTrace, View } from './render/render.model';
 export { DEFAULT_FOV, MAX_FOV, MIN_FOV, SCREEN_H, SCREEN_W } from './render/render.model';
 export type { XrayColors } from './render/screen';
 export { Player } from './play/player';
+export { Doors } from './play/doors';
 export type { PlayerInput } from './play/player';
 export { TICRATE, TIC_MS } from './play/physics';
 export { drawMap, mapFrame, mapToWorld } from './automap/automap';

@@ -47,6 +47,7 @@ export class DoomControls {
   readonly hold = output<{ action: PadAction; down: boolean }>();
   /** Une touche du pavé activée au clavier : un petit pas. */
   readonly nudge = output<PadAction>();
+  readonly useDoor = output<void>();
   readonly replayToggle = output<void>();
   readonly replayStop = output<void>();
   readonly scrub = output<number>();

@@ -23,7 +23,8 @@ export interface Sector {
   readonly id: string;
   readonly room: string;
   readonly floor: number;
-  readonly ceiling: number;
+  /** Le plafond : la seule hauteur qui bouge en jeu, pour les portes. */
+  ceiling: number;
   readonly floorFlat: FlatTexture;
   readonly ceilingFlat: FlatTexture | null;
   /** Le plafond est le ciel. */
@@ -33,6 +34,8 @@ export interface Sector {
   readonly upper: WallTexture | null;
   readonly lower: WallTexture | null;
   readonly wall: WallTexture;
+  /** La texture du battant, si ce secteur est une porte. */
+  readonly door: WallTexture | null;
   /** Contours orientés : l'intérieur du secteur est toujours à droite. */
   readonly loops: readonly (readonly Vertex[])[];
   readonly things: Thing[];
@@ -138,6 +141,8 @@ export interface Level {
   readonly nodes: readonly BspNode[];
   readonly root: BspChild;
   readonly things: readonly Thing[];
+  /** Les secteurs qui sont des portes, dans l'ordre de la carte. */
+  readonly doors: readonly Sector[];
   readonly bounds: Box;
   readonly start: { readonly x: number; readonly y: number; readonly angle: number };
   /** Les pièces, dans l'ordre de la carte. */

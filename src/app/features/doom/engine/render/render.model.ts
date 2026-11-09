@@ -36,6 +36,8 @@ export interface View {
   readonly tic: number;
   /** Champ de vision horizontal, en degrés (90 si absent). */
   readonly fov?: number;
+  /** Hauteur du plafond de chaque porte (telle quelle si absent). */
+  readonly doors?: readonly number[];
 }
 
 export interface FrameStats {
