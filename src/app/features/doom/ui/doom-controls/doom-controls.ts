@@ -45,6 +45,8 @@ export class DoomControls {
   readonly minFov = input(60);
   readonly maxFov = input(120);
   readonly counts = input.required<FrameCounts>();
+  readonly chestsFound = input(0);
+  readonly chestsTotal = input(0);
 
   readonly hold = output<{ action: PadAction; down: boolean }>();
   /** Une touche du pavé activée au clavier : un petit pas. */
@@ -93,6 +95,7 @@ export class DoomControls {
       { key: 'sprites', plain: 'Objets peints', tech: 'vissprites / 128', value: c.sprites },
       { key: 'ops', plain: 'Bandes et lignes', tech: 'colonnes + spans', value: c.ops },
       { key: 'pixels', plain: 'Pixels peints', tech: `écrits / ${SCREEN_PIXELS}`, value: c.pixels },
+      { key: 'chests', plain: 'Coffres trouvés', tech: 'THINGS hors secteur', value: `${this.chestsFound()} / ${this.chestsTotal()}` },
       { key: 'waste', plain: 'Peints pour rien', tech: 'overdraw', value: Math.max(0, c.pixels - SCREEN_PIXELS) },
     ];
   });

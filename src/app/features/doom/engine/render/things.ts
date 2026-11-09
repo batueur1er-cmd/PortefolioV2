@@ -31,7 +31,18 @@ interface VisSprite {
   level: number;
 }
 
+/** Où un objet caché est tombé sur l'écran, en pixels de l'image. */
+export interface HiddenBox {
+  readonly id: number;
+  readonly x1: number;
+  readonly x2: number;
+  readonly y1: number;
+  readonly y2: number;
+}
+
 export class Things {
+  /** Les objets cachés peints sur la dernière image. */
+  hiddenBoxes: HiddenBox[] = [];
   private readonly sprites: VisSprite[] = [];
   private readonly stamp: Uint32Array;
   private frameId = 0;
@@ -50,6 +61,7 @@ export class Things {
 
   reset(): void {
     this.sprites.length = 0;
+    this.hiddenBoxes = [];
     this.frameId = (this.frameId + 1) >>> 0;
   }
 
@@ -83,6 +95,9 @@ export class Things {
     order.forEach((vis, n) => {
       const owner = (OWNER.HIDDEN << OWNER_SHIFT) | (n & 0xfff);
       const top = CENTER_Y - (vis.gzt - this.f.z) * vis.scale;
+      const y1 = Math.max(0, Math.round(top));
+      const y2 = Math.min(SCREEN_H - 1, Math.round(top + vis.patch.topOffset * vis.scale));
+      if (y1 <= y2) this.hiddenBoxes.push({ id: vis.thing.index, x1: vis.x1, x2: vis.x2, y1, y2 });
       for (let x = vis.x1; x <= vis.x2; x++) {
         const col = Math.floor((x + 0.5 - vis.left) / vis.scale);
         if (col >= 0 && col < vis.patch.width) drawPosts(this.f, x, vis.patch.columns[col], top, vis.scale, -1, SCREEN_H, 0, owner);

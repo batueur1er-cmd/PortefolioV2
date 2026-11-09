@@ -24,6 +24,9 @@ import { PROFILE } from '@domain/profile/profile.data';
 import { projectLink } from '@domain/profile/projects';
 import { AchievementsStore } from '@features/achievements/data/achievements.store';
 
+import { Rect, coverage } from '@core/geometry/geometry';
+
+import { DoomChestsStore } from './data/doom-chests.store';
 import { DoomSession } from './data/doom-session';
 import {
   DOOM_PROJECT,
@@ -118,6 +121,7 @@ export class DoomPage {
   private readonly theme = inject(ThemeStore);
   private readonly frames = inject(FrameLoop);
   private readonly achievements = inject(AchievementsStore);
+  protected readonly chests = inject(DoomChestsStore);
   private readonly doc = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -219,6 +223,20 @@ export class DoomPage {
     this.done = state.replay?.done ?? 0;
     this.total = state.replay?.total ?? 0;
     this.draw({ x: state.x, y: state.y, z: state.z, angle: state.angle, tic: state.tic, fov: state.fov, doors: state.doors, painter: state.painter }, state.replay ? state.replay.done : Infinity);
+  }
+
+  /** Copie de loupe : les coffres cachés dont au moins la moitié tombe dans cette zone (pixels de la loupe). */
+  chestsUnder(zone: Rect | null): string[] {
+    if (!zone) return [];
+    const r = this.screen().nativeElement.getBoundingClientRect();
+    const kx = r.width / SCREEN_W;
+    const ky = r.height / SCREEN_H;
+    return this.engine.hiddenBoxes
+      .filter((b) => {
+        const box = { x: r.left + b.x1 * kx, y: r.top + b.y1 * ky, w: (b.x2 - b.x1 + 1) * kx, h: (b.y2 - b.y1 + 1) * ky };
+        return coverage(box, zone) >= 0.5;
+      })
+      .map((b) => String(b.id));
   }
 
   // ---------------------------------------------------------------------------------------------

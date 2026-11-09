@@ -102,6 +102,16 @@ describe('Le rendu façon Doom', () => {
     expect(different / doom.length).toBeLessThan(0.1);
   });
 
+  it('situe sur l’écran les coffres cachés peints aux rayons X', () => {
+    renderer.render(start, palette, Infinity, false, true);
+    // Depuis le départ du hall, le coffre derrière le mur nord est dans le champ.
+    const box = renderer.hiddenBoxes.find((b) => level.things[b.id].kind === 'coffre');
+    expect(box).toBeDefined();
+    expect(box!.x2).toBeGreaterThan(box!.x1);
+    renderer.render(start, palette);
+    expect(renderer.hiddenBoxes.length).toBe(0);
+  });
+
   it('cache un objet derrière un pilier', () => {
     const sprites = () => [...renderer.frame.owner].filter((o) => o >> OWNER_SHIFT === OWNER.SPRITE).length;
     // Le brasero, au centre de la salle des colonnes, vu entre deux piliers…

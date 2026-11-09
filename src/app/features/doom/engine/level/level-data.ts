@@ -274,6 +274,10 @@ export const THINGS: readonly ThingDef[] = [
   { kind: 'lampe', x: 1344, y: 704 },
   // Derrière le mur nord du hall, en face du point de départ : aucun mur ne laisse passer la vue.
   { kind: 'coffre', x: 544, y: 584, angle: -90, hidden: true, floor: 0 },
+  // Les trois autres : sous le couloir, derrière la salle des colonnes, et à l'ouest du balcon.
+  { kind: 'coffre', x: 736, y: 128, angle: 90, hidden: true, floor: 0 },
+  { kind: 'coffre', x: 1472, y: 256, angle: 180, hidden: true, floor: 0 },
+  { kind: 'coffre', x: 128, y: 832, angle: 0, hidden: true, floor: 64 },
 ];
 
 /** Le point de départ : dans le hall, tourné vers le nord-est. */

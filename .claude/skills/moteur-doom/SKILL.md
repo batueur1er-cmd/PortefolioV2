@@ -49,6 +49,8 @@ yeux à 41, marche de 24 au plus).
   le coffre derrière le mur nord du hall : le rendu normal ne le voit jamais ; aux rayons X, il est
   peint par-dessus l'image finie (`Things.drawHidden`) et la carte le montre. Il ne compte pas dans
   les opérations du rendu, pour que le ralenti reste identique dans les deux fenêtres.
+- Il y a `DOOM_CHESTS` coffres (`data/doom-state.ts`) : la loupe les repère avec `DoomPage.chestsUnder`,
+  et `DoomChestsStore` les retient. Un coffre de plus : monte aussi cette constante.
 - Après un changement, vérifie `level/level.spec.ts` (pièces attendues aux bons endroits).
 
 ## Les portes

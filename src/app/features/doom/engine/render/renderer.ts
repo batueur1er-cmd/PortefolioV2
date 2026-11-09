@@ -8,7 +8,7 @@ import { Painter } from './painter';
 import { Planes } from './planes';
 import { FrameStats, FrameTrace, View } from './render.model';
 import { Segs } from './segs';
-import { Things } from './things';
+import { HiddenBox, Things } from './things';
 
 /*
  * Une image, étape par étape, comme Doom (1993) dans R_RenderPlayerView (r_main) :
@@ -40,6 +40,11 @@ export class Renderer {
     this.things = new Things(this.frame, this.segs, graphics, lights, level.sectors.length);
     this.bsp = new Bsp(level, this.frame, this.planes, this.segs, this.things);
     this.painter = new Painter(level, this.frame, graphics, lights, this.things);
+  }
+
+  /** Où sont tombés les objets cachés sur la dernière image aux rayons X. */
+  get hiddenBoxes(): readonly HiddenBox[] {
+    return this.things.hiddenBoxes;
   }
 
   /**

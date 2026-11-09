@@ -9,6 +9,9 @@ export const DOOM_PROJECT = 'doom';
 /** Durée d'une image dessinée au ralenti, du premier mur au dernier objet. */
 export const REPLAY_MS = 8000;
 
+/** Les coffres cachés dans les murs du niveau (vérifié par level.spec.ts). */
+export const DOOM_CHESTS = 4;
+
 export type ReplayState = 'live' | 'playing' | 'paused';
 export type ReplayPhase = 'murs' | 'sols' | 'objets' | 'peintre' | 'fini';
 export type PadAction = 'avancer' | 'reculer' | 'gauche' | 'droite' | 'pas-gauche' | 'pas-droite';

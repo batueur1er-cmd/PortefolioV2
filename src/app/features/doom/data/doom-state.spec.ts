@@ -1,6 +1,7 @@
 import { DoomPresence } from '@core/sync/window-bus';
 
-import { degrees, heading, phaseOf, sameDoom } from './doom-state';
+import { doomAssets } from '../engine/engine';
+import { DOOM_CHESTS, degrees, heading, phaseOf, sameDoom } from './doom-state';
 
 describe('L’état de la démo façon Doom', () => {
   it('donne la direction du regard en clair', () => {
@@ -25,5 +26,9 @@ describe('L’état de la démo façon Doom', () => {
     expect(sameDoom(a, { ...a, tic: 4 })).toBe(false);
     expect(sameDoom(a, { ...a, replay: { done: 0, total: 10, playing: true } })).toBe(false);
     expect(sameDoom(a, null)).toBe(false);
+  });
+
+  it('annonce autant de coffres qu’il y en a dans le niveau', () => {
+    expect(doomAssets().level.things.filter((t) => t.hidden).length).toBe(DOOM_CHESTS);
   });
 });

@@ -152,6 +152,8 @@ export type BusCommand =
   | { readonly type: 'achievement'; readonly id: string }
   /** Les succès ont été oubliés (commande « oublier succes »). */
   | { readonly type: 'achievements-reset' }
+  /** Un coffre caché de la démo façon Doom vient d'être repéré à la loupe. */
+  | { readonly type: 'doom-chest'; readonly id: string }
   /** Code Konami tapé dans la loupe : le portfolio bascule tout entier en rayons X. */
   | { readonly type: 'xray-all'; readonly on: boolean }
   /** Un fichier OBJ importé dans le visualiseur 3D, envoyé aux loupes pour leur copie. */

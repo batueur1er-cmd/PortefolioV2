@@ -6,6 +6,7 @@ import { buildLevel } from './level/level';
 import { Level } from './level/level.model';
 import { Obstacle } from './play/collision';
 import { Renderer } from './render/renderer';
+import { HiddenBox } from './render/things';
 import { FrameStats, FrameTrace, View } from './render/render.model';
 import { XrayColors, paintHeat, paintSurface, paintXray } from './render/screen';
 
@@ -29,6 +30,7 @@ export { RAMP_COLORS, parseColor } from './color/palette';
 export type { FrameStats, FrameTrace, View } from './render/render.model';
 export { DEFAULT_FOV, MAX_FOV, MAX_VISPLANES, MIN_FOV, SCREEN_H, SCREEN_W } from './render/render.model';
 export type { XrayColors } from './render/screen';
+export type { HiddenBox } from './render/things';
 export { Player } from './play/player';
 export { Doors } from './play/doors';
 export type { PlayerInput } from './play/player';
@@ -90,6 +92,11 @@ export class DoomEngine {
     this.painter = !!view.painter;
     this.last = this.renderer.render(view, this.palette, budget, trace, xray);
     return this.last;
+  }
+
+  /** Les objets cachés visibles sur la dernière image aux rayons X. */
+  get hiddenBoxes(): readonly HiddenBox[] {
+    return this.renderer.hiddenBoxes;
   }
 
   /** Passe la dernière image en couleurs, telle quelle ou aux rayons X. */

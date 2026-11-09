@@ -33,6 +33,7 @@ import { ProjectPage } from '@features/project/project-page';
 import { VIEWER_PATH } from '@features/viewer/data/viewer-state';
 import { ViewerPage } from '@features/viewer/viewer-page';
 import { DOOM_PATH } from '@features/doom/data/doom-state';
+import { DoomChestsStore } from '@features/doom/data/doom-chests.store';
 import { DoomPage } from '@features/doom/doom-page';
 import { SCAN_COVERAGE, ScanEngine } from '@features/secrets/data/scan-engine';
 import { PROFILE } from '@domain/profile/profile.data';
@@ -216,6 +217,9 @@ export class LensView {
   protected readonly mainSize = signal({ w: 0, h: 0 }, { equal: (a, b) => a.w === b.w && a.h === b.h });
 
   private readonly scanner = new ScanEngine();
+  /** Un coffre se repère plus vite qu'un secret : il faut déjà le viser en marchant. */
+  private readonly chestScanner = new ScanEngine(1500);
+  private readonly chests = inject(DoomChestsStore);
   private scanElement: HTMLElement | null = null;
   private scanFocus: string | null = null;
   private scanProgress = 0;
@@ -353,11 +357,26 @@ export class LensView {
     // Le visualiseur 3D regardé à travers la loupe : un succès.
     if (viewer && best) this.achievements.unlock('vision-3d');
     if (doom && best) this.achievements.unlock('rayons-x-retro');
+    const zone = best
+      ? intersect(
+          { x: 0, y: 0, w: win.innerWidth, h: win.innerHeight },
+          {
+            x: (best.origin.x - origin.x) / zoom,
+            y: (best.origin.y - origin.y) / zoom,
+            w: best.layoutWidth * (best.pageZoom / zoom),
+            h: best.viewport.h * (best.pageZoom / zoom),
+          },
+        )
+      : null;
+    if (doom && best) {
+      if (this.frame++ % 20 === 0) this.section.set('Moteur façon Doom');
+      this.scanChests(zone, dt);
+      return;
+    }
     // Pas de secrets sur les pages projet : la loupe ne fait que montrer leur plan.
     if (!best || project || viewer || doom) {
       if (project && this.frame++ % 20 === 0) this.section.set(PROJECT_TITLES.get(project) ?? null);
       if (viewer && this.frame++ % 20 === 0) this.section.set('Visualiseur 3D');
-      if (doom && this.frame++ % 20 === 0) this.section.set('Moteur façon Doom');
       this.strength.set(0);
       this.progress.set(0);
       this.markScanning(null, 0);
@@ -366,16 +385,21 @@ export class LensView {
     // La détection mesure le DOM : une image sur deux suffit largement.
     if (++this.frame % 2) return;
     if (this.frame % 20 === 0) this.section.set(this.sectionAt((pivot.y - offset.y) / k));
-    const zone = intersect(
-      { x: 0, y: 0, w: win.innerWidth, h: win.innerHeight },
-      {
-        x: (best.origin.x - origin.x) / zoom,
-        y: (best.origin.y - origin.y) / zoom,
-        w: best.layoutWidth * (best.pageZoom / zoom),
-        h: best.viewport.h * (best.pageZoom / zoom),
-      },
-    );
     this.scan(zone, pivot, dt * 2);
+  }
+
+  /** Les coffres cachés de la démo façon Doom, repérés quand ils restent un instant sous la loupe. */
+  private scanChests(zone: Rect | null, dt: number): void {
+    const found = this.chests.found();
+    const candidates = new Set((this.doomCopy()?.chestsUnder(zone) ?? []).filter((id) => !found.has(id)));
+    const result = this.chestScanner.step(candidates, dt);
+    for (const id of result.completed) {
+      this.chests.markFound(id);
+      this.showToast(`Coffre trouvé · ${this.chests.count()} sur ${this.chests.total}`);
+    }
+    this.progress.set(round2(result.progress));
+    this.strength.set(candidates.size ? 1 : 0);
+    this.markScanning(null, 0);
   }
 
   /** Section de la page sous une ordonnée (coordonnées de la page). */

@@ -79,7 +79,7 @@
         </div>
         <figcaption class="caption say">
           <span class="plain">Vue du joueur, en 320 × 200 pixels</span>
-          <span class="tech" aria-hidden="true">Murs du jaune (dessiné en premier) au rose · visplanes en bleu · sprites en jaune · caché dans un mur : rose vif</span>
+          <span class="tech" aria-hidden="true">Murs du jaune (dessiné en premier) au rose · visplanes en bleu · sprites en jaune · cachés dans les murs : rose vif</span>
         </figcaption>
       </figure>
 
@@ -111,6 +111,8 @@
       [limits]="limits()"
       [fov]="fov()"
       [counts]="counts()"
+      [chestsFound]="chests.count()"
+      [chestsTotal]="chests.total"
       (hold)="hold($event.action, $event.down)"
       (nudge)="step($event)"
       (useDoor)="useDoor()"
