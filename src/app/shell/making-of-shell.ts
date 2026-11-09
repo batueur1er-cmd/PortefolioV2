@@ -9,16 +9,21 @@ import { TerminalOverlay } from '@features/terminal/terminal-overlay';
 
 import { ControlDock } from './control-dock/control-dock';
 import { connectPageWindow } from './page-window';
+import { RoleSwitch } from './role-switch/role-switch';
 
 /** La fenêtre du colophon : elle s'annonce comme une page secondaire, qu'une loupe posée dessus rend lisible. */
 @Component({
   selector: 'app-making-of-shell',
-  imports: [MakingOfPage, ControlDock, AchievementToast, TerminalOverlay],
+  imports: [RoleSwitch, MakingOfPage, ControlDock, AchievementToast, TerminalOverlay],
   template: `
-    <app-making-of-page [mode]="page.xrayAll() ? 'xray' : 'surface'" />
-    <app-control-dock />
-    <app-achievement-toast />
-    <app-terminal-overlay (singularity)="page.openSingularity()" />
+    <app-role-switch>
+      <ng-template>
+        <app-making-of-page [mode]="page.xrayAll() ? 'xray' : 'surface'" />
+        <app-control-dock />
+        <app-achievement-toast />
+        <app-terminal-overlay (singularity)="page.openSingularity()" />
+      </ng-template>
+    </app-role-switch>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

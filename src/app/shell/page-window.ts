@@ -16,8 +16,8 @@ export interface PageWindow {
 }
 
 /**
- * Branche une page secondaire (page projet, démo) sur les autres fenêtres. La fenêtre est un
- * portfolio : à chaque image, elle annonce sa position, son défilement et son adresse (une loupe
+ * Branche une page secondaire (page projet, démo) sur les autres fenêtres. Tant que la fenêtre est
+ * un portfolio (une petite fenêtre peut devenir loupe, à cette adresse comme à l'accueil), à chaque image, elle annonce sa position, son défilement et son adresse (une loupe
  * posée dessus suit le changement de page), avec ce que la page y ajoute (`extra`). Elle défile sur
  * ordre d'une loupe et passe en rayons X sur ordre du code Konami. À appeler dans un constructeur.
  */
@@ -32,7 +32,6 @@ export function connectPageWindow(
   const router = inject(Router);
   const destroyRef = inject(DestroyRef);
   const xrayAll = signal(false);
-  bus.role.set('main');
 
   // La molette d'une loupe posée dessus fait défiler cette page.
   bus.commands$.pipe(takeUntilDestroyed()).subscribe((command) => {
@@ -47,6 +46,8 @@ export function connectPageWindow(
     const win = doc.defaultView;
     if (!win) return;
     const stop = frames.add(() => {
+      // Une loupe s'annonce elle-même : elle ne doit pas se faire passer pour un portfolio.
+      if (roles.role() !== 'main') return;
       const zoom = pageZoom(win);
       bus.windows.publish({
         kind: 'main',

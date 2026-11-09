@@ -10,6 +10,7 @@ import { TerminalOverlay } from '@features/terminal/terminal-overlay';
 
 import { ControlDock } from './control-dock/control-dock';
 import { connectPageWindow } from './page-window';
+import { RoleSwitch } from './role-switch/role-switch';
 
 /**
  * La fenêtre de la démo façon Doom. Elle s'annonce comme une page projet, avec en plus la position
@@ -17,12 +18,16 @@ import { connectPageWindow } from './page-window';
  */
 @Component({
   selector: 'app-doom-shell',
-  imports: [DoomPage, ControlDock, AchievementToast, TerminalOverlay],
+  imports: [RoleSwitch, DoomPage, ControlDock, AchievementToast, TerminalOverlay],
   template: `
-    <app-doom-page [mode]="page.xrayAll() ? 'xray' : 'surface'" />
-    <app-control-dock />
-    <app-achievement-toast />
-    <app-terminal-overlay (singularity)="page.openSingularity()" />
+    <app-role-switch>
+      <ng-template>
+        <app-doom-page [mode]="page.xrayAll() ? 'xray' : 'surface'" />
+        <app-control-dock />
+        <app-achievement-toast />
+        <app-terminal-overlay (singularity)="page.openSingularity()" />
+      </ng-template>
+    </app-role-switch>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

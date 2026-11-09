@@ -10,6 +10,7 @@ import { TerminalOverlay } from '@features/terminal/terminal-overlay';
 
 import { ControlDock } from './control-dock/control-dock';
 import { connectPageWindow } from './page-window';
+import { RoleSwitch } from './role-switch/role-switch';
 
 /**
  * La fenêtre d'une page projet : la page et le bouton mode nuit. Elle annonce, comme l'accueil,
@@ -17,12 +18,16 @@ import { connectPageWindow } from './page-window';
  */
 @Component({
   selector: 'app-project-shell',
-  imports: [ProjectPage, ControlDock, AchievementToast, TerminalOverlay],
+  imports: [RoleSwitch, ProjectPage, ControlDock, AchievementToast, TerminalOverlay],
   template: `
-    <app-project-page [id]="id()" [mode]="page.xrayAll() ? 'xray' : 'surface'" />
-    <app-control-dock />
-    <app-achievement-toast />
-    <app-terminal-overlay (singularity)="page.openSingularity()" />
+    <app-role-switch>
+      <ng-template>
+        <app-project-page [id]="id()" [mode]="page.xrayAll() ? 'xray' : 'surface'" />
+        <app-control-dock />
+        <app-achievement-toast />
+        <app-terminal-overlay (singularity)="page.openSingularity()" />
+      </ng-template>
+    </app-role-switch>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

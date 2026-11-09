@@ -10,6 +10,7 @@ import { ViewerPage } from '@features/viewer/viewer-page';
 
 import { ControlDock } from './control-dock/control-dock';
 import { connectPageWindow } from './page-window';
+import { RoleSwitch } from './role-switch/role-switch';
 
 /**
  * La fenêtre de la démo du visualiseur 3D. Elle s'annonce comme une page projet, avec en plus
@@ -17,12 +18,16 @@ import { connectPageWindow } from './page-window';
  */
 @Component({
   selector: 'app-viewer-shell',
-  imports: [ViewerPage, ControlDock, AchievementToast, TerminalOverlay],
+  imports: [RoleSwitch, ViewerPage, ControlDock, AchievementToast, TerminalOverlay],
   template: `
-    <app-viewer-page [mode]="page.xrayAll() ? 'xray' : 'surface'" />
-    <app-control-dock />
-    <app-achievement-toast />
-    <app-terminal-overlay (singularity)="page.openSingularity()" />
+    <app-role-switch>
+      <ng-template>
+        <app-viewer-page [mode]="page.xrayAll() ? 'xray' : 'surface'" />
+        <app-control-dock />
+        <app-achievement-toast />
+        <app-terminal-overlay (singularity)="page.openSingularity()" />
+      </ng-template>
+    </app-role-switch>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
