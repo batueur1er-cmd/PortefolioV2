@@ -127,20 +127,80 @@ function robot(rotation: number): Patch {
   return b.toPatch(16, 56);
 }
 
-/** Le coffre caché derrière un mur : bois, ferrures et serrure, 80 unités de large. */
-function chest(): Patch {
-  const w = 80;
-  const h = 52;
-  const lid = 18;
-  const b = new Bitmap(w, h);
-  b.rect(4, 2, w - 5, 4, () => ink(R.GOLD, 7));
-  b.rect(1, 5, w - 2, lid, (x, y) => ink(R.GOLD, (y < 8 ? 6 : 8) + (x % 16 === 0 ? 2 : 0)));
-  b.rect(0, lid + 1, w - 1, lid + 3, () => ink(R.NIGHT, 6));
-  b.rect(0, lid + 4, w - 1, h - 1, (x, y) => ink(R.GOLD, 9 + ((y - lid - 4) % 10 === 0 ? 2 : 0) + (x > w * 0.7 ? 1 : 0)));
-  for (const x of [8, w - 13]) b.rect(x, 2, x + 4, h - 1, (_x, y) => ink(R.NIGHT, y % 7 === 0 ? 3 : 5));
-  b.rect(w / 2 - 6, lid - 4, w / 2 + 5, lid + 12, () => ink(R.GREY, 4));
-  b.rect(w / 2 - 1, lid + 1, w / 2, lid + 6, () => ink(R.NIGHT, 10));
-  return b.toPatch(w / 2, h);
+const CHEST_HEIGHT = 52;
+const CHEST_LID = 18;
+const CHEST_LENGTH = 80;
+const CHEST_DEPTH = 48;
+
+/** Ce que toutes les faces du coffre partagent : couvercle, bandeau, planches et cornières. `tone` assombrit la face. */
+function chestPlanks(width: number, px: number, y: number, tone: number): number {
+  if (y < 2) return -1;
+  if (px < 2 || px >= width - 2) return ink(R.NIGHT, 4);
+  if (y < 5) return ink(R.GOLD, 7 + tone);
+  if (y <= CHEST_LID) return ink(R.GOLD, (y < 8 ? 6 : 8) + tone + (px % 16 === 0 ? 2 : 0));
+  if (y <= CHEST_LID + 3) return ink(R.NIGHT, 6);
+  return ink(R.GOLD, 9 + tone + ((y - CHEST_LID - 4) % 10 === 0 ? 2 : 0));
+}
+
+const inBand = (px: number, from: number, size: number): boolean => px >= from && px < from + size;
+
+/** La face avant : deux sangles de fer et la serrure. */
+function chestFront(px: number, y: number): number {
+  const w = CHEST_LENGTH;
+  if (y >= 2 && (inBand(px, 8, 5) || inBand(px, w - 13, 5))) return ink(R.NIGHT, y % 7 === 0 ? 3 : 5);
+  if (inBand(px, w / 2 - 1, 2) && y > CHEST_LID && y <= CHEST_LID + 6) return ink(R.NIGHT, 10);
+  if (inBand(px, w / 2 - 6, 12) && y >= CHEST_LID - 4 && y <= CHEST_LID + 12) return ink(R.GREY, 4);
+  return chestPlanks(w, px, y, 0);
+}
+
+/** La face arrière : les mêmes sangles, et les charnières du couvercle à la place de la serrure. */
+function chestBack(px: number, y: number): number {
+  const w = CHEST_LENGTH;
+  if ((inBand(px, 22, 8) || inBand(px, w - 30, 8)) && y >= CHEST_LID - 2 && y <= CHEST_LID + 5) return ink(R.GREY, y === CHEST_LID - 2 ? 3 : 6);
+  if (y >= 2 && (inBand(px, 8, 5) || inBand(px, w - 13, 5))) return ink(R.NIGHT, y % 7 === 0 ? 4 : 6);
+  return chestPlanks(w, px, y, 2);
+}
+
+/** Un côté : plus étroit, avec sa poignée. */
+function chestSide(px: number, y: number, tone: number): number {
+  const w = CHEST_DEPTH;
+  const middle = w / 2;
+  const inHandle = inBand(px, middle - 9, 18) && y >= CHEST_LID + 8 && y <= CHEST_LID + 17;
+  const hollow = inBand(px, middle - 6, 12) && y >= CHEST_LID + 11 && y <= CHEST_LID + 14;
+  if (inHandle && !hollow) return ink(R.GREY, y < CHEST_LID + 11 ? 3 : 5);
+  return chestPlanks(w, px, y, tone);
+}
+
+/** Le coffre, vu sous 8 angles : une vraie boîte, dont chaque face visible a son dessin. L'avant regarde vers +x, sa gauche est +y. */
+function chest(rotation: number): Patch {
+  const width = 96;
+  const b = new Bitmap(width, CHEST_HEIGHT);
+  const alpha = (rotation * Math.PI) / 4;
+  const s = Math.sin(alpha);
+  const c = Math.cos(alpha);
+  const hx = CHEST_DEPTH / 2;
+  const hy = CHEST_LENGTH / 2;
+  const at = (x: number, y: number) => -x * s + y * c;
+  const faces: { a: number; b: number; size: number; paint: (px: number, y: number) => number }[] = [];
+  if (c > 0.02) faces.push({ a: at(hx, -hy), b: at(hx, hy), size: CHEST_LENGTH, paint: chestFront });
+  if (c < -0.02) faces.push({ a: at(-hx, -hy), b: at(-hx, hy), size: CHEST_LENGTH, paint: chestBack });
+  if (s > 0.02) faces.push({ a: at(-hx, hy), b: at(hx, hy), size: CHEST_DEPTH, paint: (px, y) => chestSide(px, y, 1) });
+  if (s < -0.02) faces.push({ a: at(-hx, -hy), b: at(hx, -hy), size: CHEST_DEPTH, paint: (px, y) => chestSide(px, y, 2) });
+  for (let x = 0; x < width; x++) {
+    const u = x + 0.5 - width / 2;
+    for (const face of faces) {
+      const lo = Math.min(face.a, face.b);
+      const hi = Math.max(face.a, face.b);
+      if (u < lo || u >= hi) continue;
+      const px = Math.min(face.size - 1, Math.floor(((u - lo) / (hi - lo)) * face.size));
+      for (let y = 0; y < CHEST_HEIGHT; y++) {
+        const color = face.paint(px, y);
+        if (color >= 0) b.set(x, y, color);
+      }
+      break;
+    }
+  }
+  return b.toPatch(width / 2, CHEST_HEIGHT);
 }
 
 export function buildSprites(): Record<ThingKind, SpriteDef> {
@@ -149,6 +209,6 @@ export function buildSprites(): Record<ThingKind, SpriteDef> {
     plante: { frames: [[plant()]], ticsPerFrame: 0, fullbright: false, radius: 14 },
     brasero: { frames: [0, 1, 2, 3].map((f) => [brazier(f)]), ticsPerFrame: 4, fullbright: true, radius: 16 },
     robot: { frames: [[0, 1, 2, 3, 4, 5, 6, 7].map(robot)], ticsPerFrame: 0, fullbright: false, radius: 18 },
-    coffre: { frames: [[chest()]], ticsPerFrame: 0, fullbright: true, radius: 20 },
+    coffre: { frames: [[0, 1, 2, 3, 4, 5, 6, 7].map(chest)], ticsPerFrame: 0, fullbright: true, radius: 20 },
   };
 }
