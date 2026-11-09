@@ -6,9 +6,9 @@ export interface ModelPose {
   readonly y: number;
   /** De 0 à 1 : l'objet apparaît une fois le haut de la page passé. */
   readonly appear: number;
-  /** De 0 (assemblé) à 1 (en pièces détachées). */
-  readonly explode: number;
-  /** Rotation autour de la verticale, inclinaison, et tour des engrenages (radians). */
+  /** De 0 (coffre fermé) à 1 (couvercle grand ouvert). */
+  readonly open: number;
+  /** Rotation autour de la verticale, inclinaison, et tour du trésor sur lui-même (radians). */
   readonly turn: number;
   readonly tilt: number;
   readonly spin: number;
@@ -29,9 +29,9 @@ export function modelPose(scrollY: number, vh: number, pageWidth: number, pageHe
     x: (pageWidth - side) * (0.5 + 0.54 * Math.cos(p * 3 * Math.PI)),
     y: (vh - side) * (0.5 + 0.2 * Math.sin(p * 2 * Math.PI)),
     appear: clamp01((scrollY - vh * 0.25) / (vh * 0.5)),
-    explode: smooth(0.3, 0.5, p) * (1 - smooth(0.72, 0.9, p)),
+    open: smooth(0.3, 0.5, p) * (1 - smooth(0.72, 0.9, p)),
     turn: 0.6 + p * 4 * Math.PI,
     tilt: 0.28 + 0.16 * Math.sin(p * 2 * Math.PI),
-    spin: p * 40,
+    spin: p * 12,
   };
 }

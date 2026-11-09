@@ -117,10 +117,10 @@ export class ScrollModel {
     const styles = this.doc.defaultView?.getComputedStyle(this.doc.documentElement);
     const read = (name: string, fallback: string) => styles?.getPropertyValue(name).trim() || fallback;
     return {
-      shell: read('--muted', '#4b5563'),
-      part: read('--accent', '#4f46e5'),
-      alt: read('--accent-2', '#9333ea'),
-      dark: read('--ink', '#111827'),
+      wood: read('--art-gold', '#f0b35a'),
+      iron: read('--art-night', '#2a3a52'),
+      lock: read('--muted', '#4b5563'),
+      inner: read('--art-plum-2', '#2a1420'),
       xrayLine: read('--xl', '#7fe9ff'),
       xrayNote: read('--xn', '#ffd84d'),
       xrayPink: read('--xp', '#ff5bd0'),

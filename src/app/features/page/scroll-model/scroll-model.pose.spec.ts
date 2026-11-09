@@ -12,9 +12,9 @@ describe('L’objet 3D qui suit le défilement', () => {
   });
 
   it('s’ouvre au milieu de la descente et se referme à la fin', () => {
-    expect(at(0.1).explode).toBe(0);
-    expect(at(0.6).explode).toBe(1);
-    expect(at(1).explode).toBe(0);
+    expect(at(0.1).open).toBe(0);
+    expect(at(0.6).open).toBe(1);
+    expect(at(1).open).toBe(0);
   });
 
   it('traverse la page d’un bord à l’autre', () => {
@@ -27,6 +27,6 @@ describe('L’objet 3D qui suit le défilement', () => {
   });
 
   it('borne le défilement au-delà de la page', () => {
-    expect(modelPose(H * 2, VH, W, H).explode).toBe(0);
+    expect(modelPose(H * 2, VH, W, H).open).toBe(0);
   });
 });
