@@ -1,3 +1,4 @@
+import { LANG } from '@core/i18n/lang';
 import { ChangeDetectionStrategy, Component, DOCUMENT, VERSION, afterNextRender, computed, inject } from '@angular/core';
 
 import { MotionPreference } from '@core/dom/motion-preference';
@@ -32,6 +33,7 @@ const SPY_LINE = 0.35;
             </li>
           }
         </ul>
+        <a class="lang" [href]="langLink.href" [attr.hreflang]="langLink.code">{{ langLink.label }}</a>
         <span class="chip version" appSecret="nav-version">v2.1 · reconstruit en Angular {{ angularMajor }} · zoneless</span>
       </div>
       <span class="progress" aria-hidden="true" [style.transform]="'scaleX(' + progress() + ')'"></span>
@@ -41,6 +43,8 @@ const SPY_LINE = 0.35;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SiteNav {
+  /** Le lien vers l'autre langue : un simple rechargement, que les autres fenêtres suivent. */
+  protected readonly langLink = LANG === 'en' ? { href: '?lang=fr', code: 'fr', label: 'Français' } : { href: '?lang=en', code: 'en', label: 'English' };
   private readonly stage = inject(ScrollStage);
   private readonly doc = inject(DOCUMENT);
   private readonly motion = inject(MotionPreference);

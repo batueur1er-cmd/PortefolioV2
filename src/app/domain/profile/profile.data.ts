@@ -1,3 +1,7 @@
+import { LANG } from '@core/i18n/lang';
+import { translateDeep } from '@core/i18n/translate';
+
+import { EN } from './en';
 import { Profile } from './profile.model';
 
 /*
@@ -9,7 +13,7 @@ import { Profile } from './profile.model';
  * Le mastère (depuis septembre 2026, même école, même entreprise) : dit par Baptiste en novembre 2026,
  * intitulé repris des fiches Onisep et Intercariforef de la formation EADL du DIIAGE.
  */
-export const PROFILE: Profile = {
+const PROFILE_FR: Profile = {
   firstName: 'Baptiste',
   lastName: 'Nodon',
   kicker: 'Apprenti développeur · Mastère EADL · DIIAGE',
@@ -391,3 +395,6 @@ export const PROFILE: Profile = {
 
   certifications: [{ id: 'pix', label: 'PIX', description: 'certification des compétences numériques' }],
 };
+
+/** Le contenu du portfolio, dans la langue de cette fenêtre. */
+export const PROFILE: Profile = LANG === 'en' ? translateDeep(PROFILE_FR, EN) : PROFILE_FR;

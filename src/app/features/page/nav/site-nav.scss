@@ -137,3 +137,16 @@
     display: none;
   }
 }
+
+.lang {
+  flex: none;
+  margin-inline-start: 12px;
+  font-size: 13px;
+  color: var(--muted);
+  text-underline-offset: 3px;
+}
+
+.lang:hover,
+.lang:focus-visible {
+  color: var(--accent);
+}

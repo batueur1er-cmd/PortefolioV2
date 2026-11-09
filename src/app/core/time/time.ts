@@ -1,5 +1,7 @@
 import { InjectionToken } from '@angular/core';
 
+import { LANG } from '../i18n/lang';
+
 /* Dates du parcours. Le profil les écrit « AAAA » ou « AAAA-MM ». */
 
 /** Date du jour, injectable pour que les calculs restent testables. */
@@ -14,7 +16,9 @@ export interface YearMonth {
   readonly month: number;
 }
 
-const MONTHS = [
+const EN_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const FR_MONTHS = [
   'janv.',
   'févr.',
   'mars',
@@ -28,6 +32,8 @@ const MONTHS = [
   'nov.',
   'déc.',
 ];
+
+const MONTHS = LANG === 'en' ? EN_MONTHS : FR_MONTHS;
 
 export function parseYearMonth(value: string): YearMonth {
   const match = /^(\d{4})(?:-(\d{2}))?$/.exec(value);
@@ -55,7 +61,16 @@ export function daysSince(start: string, today: Date): number {
   return Math.max(0, Math.floor((to - from) / 86_400_000));
 }
 
+function durationEn(months: number): string {
+  const unit = (n: number, word: string) => `${n} ${word}${n > 1 ? 's' : ''}`;
+  if (months < 12) return unit(months, 'month');
+  const rest = months % 12;
+  const years = unit(Math.floor(months / 12), 'year');
+  return rest ? `${years} and ${unit(rest, 'month')}` : years;
+}
+
 export function formatDuration(months: number): string {
+  if (LANG === 'en') return durationEn(months);
   if (months < 12) return `${months} mois`;
   const years = Math.floor(months / 12);
   const rest = months % 12;
@@ -70,5 +85,5 @@ export function formatYearMonth(value: string): string {
 }
 
 export function formatPeriod(start: string, end: string | null): string {
-  return `${formatYearMonth(start)} — ${end ? formatYearMonth(end) : "aujourd'hui"}`;
+  return `${formatYearMonth(start)} — ${end ? formatYearMonth(end) : LANG === 'en' ? 'present' : "aujourd'hui"}`;
 }
