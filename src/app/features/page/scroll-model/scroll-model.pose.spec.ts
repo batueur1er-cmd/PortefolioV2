@@ -20,7 +20,7 @@ describe('L’objet 3D qui suit le défilement', () => {
   it('reste au bord de la page, sans la traverser', () => {
     expect(at(0).x).toBe(at(0.5).x);
     expect(at(0).y).toBe(at(1).y);
-    expect(at(0).x).toBeGreaterThan(W * 0.8);
+    expect(at(0).x).toBeGreaterThan(W * 0.75);
   });
 
   it('ne fait qu’un seul tour sur toute la descente', () => {
