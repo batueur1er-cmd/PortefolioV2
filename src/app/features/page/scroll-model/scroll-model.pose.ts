@@ -4,8 +4,10 @@ export interface ModelPose {
   readonly side: number;
   readonly x: number;
   readonly y: number;
-  /** De 0 à 1 : la forme apparaît une fois le haut de la page passé. */
+  /** De 0 à 1 : la forme apparaît une fois le haut de la page passé, et disparaît tout en bas. */
   readonly appear: number;
+  /** De 0 à 1 : une fois formé, le monogramme se dissipe. */
+  readonly fade: number;
   /** Rotation autour de la verticale et inclinaison (radians). */
   readonly turn: number;
   readonly tilt: number;
@@ -18,6 +20,10 @@ export const BN_ALIGNED_AT = 0.93;
 /** De combien de part et d'autre de cet instant le monogramme commence à ressortir (fraction de la page). */
 const GLOW_RANGE = 0.04;
 
+/** La dissipation, juste après : terminée avant le tout dernier pixel de la page. */
+const FADE_FROM = 0.955;
+const FADE_TO = 0.99;
+
 const clamp01 = (v: number): number => Math.max(0, Math.min(1, v));
 
 export function modelPose(scrollY: number, vh: number, pageWidth: number, pageHeight: number): ModelPose {
@@ -26,11 +32,14 @@ export function modelPose(scrollY: number, vh: number, pageWidth: number, pageHe
   // Exactement de face à un seul instant : le monogramme doit tenir en entier dans la page.
   const gap = p - BN_ALIGNED_AT;
   const near = clamp01(1 - Math.abs(gap) / GLOW_RANGE);
+  const fading = clamp01((p - FADE_FROM) / (FADE_TO - FADE_FROM));
+  const fade = fading * fading * (3 - 2 * fading);
   return {
     side,
     x: pageWidth - side * 1.04,
     y: (vh - side) * 0.55,
-    appear: clamp01((scrollY - vh * 0.25) / (vh * 0.5)),
+    appear: clamp01((scrollY - vh * 0.25) / (vh * 0.5)) * (1 - fade),
+    fade,
     turn: gap * 2 * Math.PI * 1.6,
     tilt: gap * Math.PI * 0.8,
     glow: near * near * (3 - 2 * near),

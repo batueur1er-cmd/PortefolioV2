@@ -116,6 +116,8 @@ export class ScrollModelScene {
 
   draw(pose: ModelPose): void {
     this.root.rotation.set(pose.tilt, pose.turn, 0);
+    // En se dissipant, le nuage s'écarte de son centre.
+    this.root.scale.setScalar(1 + pose.fade * 0.4);
     if (this.xray) {
       this.dashesMat.color.copy(this.xrayLine);
       this.dashesMat.opacity = 1;

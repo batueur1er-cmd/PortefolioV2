@@ -20,6 +20,15 @@ describe('Le monogramme qui suit le défilement', () => {
     expect(at(0.5).tilt).not.toBeCloseTo(0);
   });
 
+  it('se dissipe après s’être formé, et a disparu tout en bas de la page', () => {
+    expect(at(BN_ALIGNED_AT).appear).toBe(1);
+    expect(at(BN_ALIGNED_AT).fade).toBe(0);
+    expect(at(0.97).appear).toBeGreaterThan(0);
+    expect(at(0.97).appear).toBeLessThan(1);
+    expect(at(0.995).appear).toBe(0);
+    expect(at(1).appear).toBe(0);
+  });
+
   it('tient en entier dans la page au moment où il se forme', () => {
     const pose = at(BN_ALIGNED_AT);
     expect(pose.x + pose.side).toBeLessThanOrEqual(W);
