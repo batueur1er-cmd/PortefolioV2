@@ -26,7 +26,7 @@ import {
   overlapArea,
   pageZoom,
 } from '@core/geometry/geometry';
-import { MainPresence, OverlayPresence, WindowBus, isMain } from '@core/sync/window-bus';
+import { MainPresence, OverlayPresence, WindowBus, isLens, isMain } from '@core/sync/window-bus';
 import { PortfolioPage } from '@features/page/portfolio-page';
 import { ProjectsMirror } from '@features/page/projects/projects-mirror/projects-mirror';
 import { ProjectPage } from '@features/project/project-page';
@@ -49,6 +49,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HISTORY, HISTORY_ZOOM } from '../data/history.data';
 import { WindowRoleStore } from '../data/window-role.store';
 import { GeigerAudio } from '../geiger-audio';
+import { LensCrossing } from '../lens-crossing/lens-crossing';
 import { LensHud, LensState } from '../lens-hud/lens-hud';
 
 /** Distance (px) en deçà de laquelle le détecteur commence à réagir. */
@@ -92,7 +93,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
  */
 @Component({
   selector: 'app-lens-view',
-  imports: [PortfolioPage, LensHud, ProjectsMirror, ProjectPage, ViewerPage, DoomPage, SingularityOverlay, ScanSparkles],
+  imports: [PortfolioPage, LensHud, LensCrossing, ProjectsMirror, ProjectPage, ViewerPage, DoomPage, SingularityOverlay, ScanSparkles],
   template: `
     <app-portfolio-page
       class="lens-page"
@@ -157,6 +158,10 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
         />
       }
     </div>
+    <!-- Une autre loupe recouvre celle-ci : là où elles se croisent, le plan du site. -->
+    @if (crossing(); as rect) {
+      <app-lens-crossing [rect]="rect" />
+    }
     <app-lens-hud
       [zoom]="zoom()"
       [found]="store.count()"
@@ -223,6 +228,11 @@ export class LensView {
     return onHome && name && this.zoom() >= HISTORY_ZOOM ? (HISTORY.get(name) ?? null) : null;
   });
   protected readonly mainSize = signal({ w: 0, h: 0 }, { equal: (a, b) => a.w === b.w && a.h === b.h });
+
+  /** Le croisement avec une autre loupe, en pixels CSS de cette fenêtre. */
+  protected readonly crossing = signal<Rect | null>(null, {
+    equal: (a, b) => a === b || (!!a && !!b && a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h),
+  });
 
   private readonly scanner = new ScanEngine();
   /** Un coffre se repère plus vite qu'un secret : il faut déjà le viser en marchant. */
@@ -315,6 +325,8 @@ export class LensView {
       scan: this.scanFocus ? { id: this.scanFocus, progress: this.scanProgress } : null,
     });
 
+    this.measureCrossing(now, origin, viewport, zoom);
+
     if (!shown) {
       this.overlay.set(null);
       this.strength.set(0);
@@ -394,6 +406,25 @@ export class LensView {
     if (++this.frame % 2) return;
     if (this.frame % 20 === 0) this.section.set(this.sectionAt((pivot.y - offset.y) / k));
     this.scan(zone, pivot, dt * 2);
+  }
+
+  /** Cherche la plus grande zone commune avec une autre loupe ouverte. */
+  private measureCrossing(now: number, origin: Point, viewport: Rect, zoom: number): void {
+    let widest: Rect | null = null;
+    for (const lens of this.bus.windows.snapshot(now).values()) {
+      if (!isLens(lens) || lens.id === this.bus.id) continue;
+      const shared = intersect(viewport, { x: lens.origin.x, y: lens.origin.y, w: lens.viewport.w * lens.pageZoom, h: lens.viewport.h * lens.pageZoom });
+      if (shared && shared.w > 8 && shared.h > 8 && (!widest || shared.w * shared.h > widest.w * widest.h)) widest = shared;
+    }
+    this.crossing.set(
+      widest && {
+        x: Math.round((widest.x - origin.x) / zoom),
+        y: Math.round((widest.y - origin.y) / zoom),
+        w: Math.round(widest.w / zoom),
+        h: Math.round(widest.h / zoom),
+      },
+    );
+    if (widest) this.achievements.unlock('double-loupe');
   }
 
   /** Les coffres cachés de la démo façon Doom, repérés quand ils restent un instant sous la loupe. */
