@@ -1,22 +1,10 @@
-import {
-  BufferGeometry,
-  Group,
-  LineBasicMaterial,
-  LineSegments,
-  PerspectiveCamera,
-  Points,
-  PointsMaterial,
-  Scene,
-  Vector3,
-  WebGLRenderer,
-} from 'three';
+import { BufferGeometry, Color, Group, LineBasicMaterial, LineSegments, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
 
-import type { StarMap } from './constellation';
-import type { ModelForm, ModelPose } from './scroll-model.pose';
+import type { ModelPose } from './scroll-model.pose';
 
 /*
- * Deux formes en traits fins, à l'essai : la constellation des compétences, et une anamorphose du
- * monogramme. Ce fichier n'est chargé qu'à la demande : Three.js reste hors du bundle initial.
+ * L'anamorphose du monogramme : un nuage de tirets qui ne forme « BN » que vu d'un seul point.
+ * Ce fichier n'est chargé qu'à la demande : Three.js reste hors du bundle initial.
  */
 
 export interface ScrollModelColors {
@@ -24,13 +12,16 @@ export interface ScrollModelColors {
   readonly lit: string;
   readonly xrayLine: string;
   readonly xrayNote: string;
-  readonly xrayPink: string;
 }
 
 const CAMERA_Z = 9;
-const STAR_RADIUS = 2;
 const DASH = 0.075;
 const GAP = 0.02;
+/** WebGL ne trace que des lignes d'un pixel : chaque tiret est doublé, décalé d'environ un pixel, pour l'épaissir. */
+const THICKNESS = 0.012;
+/** Opacité des traits à la surface : au repos, puis quand le monogramme se forme. */
+const REST_OPACITY = 0.42;
+const FORMED_OPACITY = 0.95;
 
 /** Le monogramme, en lignes brisées, dans le plan de l'écran. */
 const LETTERS: readonly (readonly (readonly [number, number])[])[] = [
@@ -43,67 +34,34 @@ const LETTERS: readonly (readonly (readonly [number, number])[])[] = [
 /** Un nombre entre 0 et 1, toujours le même pour un même rang : les deux fenêtres dessinent la même chose. */
 const noise = (i: number): number => (Math.imul(i + 11, 2654435761) >>> 0) / 4294967296;
 
-/** Les étoiles, réparties régulièrement sur une sphère. */
-function spherePoints(count: number): Vector3[] {
-  const golden = Math.PI * (3 - Math.sqrt(5));
-  return Array.from({ length: count }, (_, i) => {
-    const y = 1 - ((i + 0.5) / count) * 2;
-    const r = Math.sqrt(1 - y * y);
-    return new Vector3(Math.cos(i * golden) * r, y, Math.sin(i * golden) * r).multiplyScalar(STAR_RADIUS);
-  });
-}
-
 export class ScrollModelScene {
   private readonly renderer: WebGLRenderer;
   private readonly scene = new Scene();
   private readonly camera = new PerspectiveCamera(30, 1, 0.1, 50);
   private readonly root = new Group();
-  private readonly stars = new Group();
-  private readonly monogram = new Group();
-
-  private readonly stations: Vector3[];
-  private readonly baseLinksMat = new LineBasicMaterial({ transparent: true });
-  private readonly basePointsMat = new PointsMaterial({ size: 2.5, sizeAttenuation: false, transparent: true });
-  private readonly litLinksMat = new LineBasicMaterial({ transparent: true });
-  private readonly litPointsMat = new PointsMaterial({ size: 5, sizeAttenuation: false, transparent: true });
-  private readonly litLinks = new LineSegments(new BufferGeometry(), this.litLinksMat);
-  private readonly litPoints = new Points(new BufferGeometry(), this.litPointsMat);
-  private litKey = '';
-
   private readonly dashesMat = new LineBasicMaterial({ transparent: true });
   private readonly raysMat = new LineBasicMaterial({ transparent: true, opacity: 0.55 });
+  private readonly dashes: LineSegments;
   private readonly rays: LineSegments;
-
-  private colors: ScrollModelColors | null = null;
+  private readonly restColor = new Color();
+  private readonly formedColor = new Color();
   private xray = false;
 
-  constructor(
-    canvas: HTMLCanvasElement,
-    private readonly map: StarMap,
-  ) {
+  constructor(canvas: HTMLCanvasElement) {
     this.renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true });
     this.renderer.setClearColor(0x000000, 0);
     this.camera.position.set(0, 0, CAMERA_Z);
     this.scene.add(this.root);
-    this.root.add(this.stars, this.monogram);
-
-    this.stations = spherePoints(map.ids.length);
-    this.stars.add(
-      new LineSegments(new BufferGeometry().setFromPoints(map.links.flatMap(([a, b]) => [this.stations[a], this.stations[b]])), this.baseLinksMat),
-      new Points(new BufferGeometry().setFromPoints(this.stations), this.basePointsMat),
-      this.litLinks,
-      this.litPoints,
-    );
-
     const { dashes, rays } = this.buildMonogram();
-    this.monogram.add(new LineSegments(new BufferGeometry().setFromPoints(dashes), this.dashesMat));
+    this.dashes = new LineSegments(new BufferGeometry().setFromPoints(dashes), this.dashesMat);
     this.rays = new LineSegments(new BufferGeometry().setFromPoints(rays), this.raysMat);
-    this.monogram.add(this.rays);
+    this.rays.visible = false;
+    this.root.add(this.dashes, this.rays);
   }
 
   /**
-   * L'anamorphose : chaque tiret du dessin est repoussé le long du rayon qui le relie à l'œil. Vu
-   * de cet œil, rien ne change ; vu de n'importe où ailleurs, il ne reste qu'un nuage de traits.
+   * Chaque tiret du dessin est repoussé le long du rayon qui le relie à l'œil. Vu de cet œil, rien
+   * ne change ; vu de n'importe où ailleurs, il ne reste qu'un nuage de traits.
    */
   private buildMonogram(): { dashes: Vector3[]; rays: Vector3[] } {
     const eye = new Vector3(0, 0, CAMERA_Z);
@@ -120,11 +78,15 @@ export class ScrollModelScene {
           const from = d / length;
           const to = (d + DASH) / length;
           const depth = 0.75 + noise(rank++) * 0.5;
-          const start = place(ax + (bx - ax) * from, ay + (by - ay) * from, depth);
-          const end = place(ax + (bx - ax) * to, ay + (by - ay) * to, depth);
-          dashes.push(start, end);
+          for (const shift of [0, THICKNESS]) {
+            dashes.push(
+              place(ax + (bx - ax) * from + shift, ay + (by - ay) * from + shift, depth),
+              place(ax + (bx - ax) * to + shift, ay + (by - ay) * to + shift, depth),
+            );
+          }
           if (rank % 5 === 0) {
             // Aux rayons X : l'amorce de la ligne de visée qui part vers l'œil.
+            const start = place(ax + (bx - ax) * from, ay + (by - ay) * from, depth);
             rays.push(start, start.clone().add(eye.clone().sub(start).setLength(1.4)));
           }
         }
@@ -134,30 +96,17 @@ export class ScrollModelScene {
   }
 
   setColors(colors: ScrollModelColors): void {
-    this.colors = colors;
-    this.paint();
+    this.restColor.set(colors.dim);
+    this.formedColor.set(colors.lit);
+    this.xrayLine.set(colors.xrayLine);
+    this.raysMat.color.set(colors.xrayNote);
   }
+
+  private readonly xrayLine = new Color();
 
   setXray(xray: boolean): void {
     this.xray = xray;
-    this.paint();
-  }
-
-  private paint(): void {
-    const c = this.colors;
-    if (!c) return;
-    const x = this.xray;
-    this.baseLinksMat.color.set(x ? c.xrayLine : c.dim);
-    this.baseLinksMat.opacity = x ? 0.5 : 0.16;
-    this.basePointsMat.color.set(x ? c.xrayLine : c.dim);
-    this.basePointsMat.opacity = x ? 0.9 : 0.4;
-    this.litLinksMat.color.set(x ? c.xrayNote : c.lit);
-    this.litLinksMat.opacity = x ? 1 : 0.55;
-    this.litPointsMat.color.set(x ? c.xrayPink : c.lit);
-    this.litPointsMat.opacity = x ? 1 : 0.85;
-    this.dashesMat.color.set(x ? c.xrayLine : c.dim);
-    this.raysMat.color.set(c.xrayNote);
-    this.rays.visible = x;
+    this.rays.visible = xray;
   }
 
   resize(side: number, ratio: number): void {
@@ -165,30 +114,24 @@ export class ScrollModelScene {
     this.renderer.setSize(side, side, false);
   }
 
-  draw(form: ModelForm, pose: ModelPose, lit: ReadonlySet<string>): void {
-    this.stars.visible = form === 'constellation';
-    this.monogram.visible = form === 'bn';
+  draw(pose: ModelPose): void {
     this.root.rotation.set(pose.tilt, pose.turn, 0);
-    if (form === 'bn') this.dashesMat.opacity = this.xray ? 1 : 0.2 + pose.glow * 0.45;
-    else this.light(lit);
+    if (this.xray) {
+      this.dashesMat.color.copy(this.xrayLine);
+      this.dashesMat.opacity = 1;
+    } else {
+      // Le monogramme prend la couleur du site au moment où il se forme.
+      this.dashesMat.color.copy(this.restColor).lerp(this.formedColor, pose.glow);
+      this.dashesMat.opacity = REST_OPACITY + (FORMED_OPACITY - REST_OPACITY) * pose.glow;
+    }
     this.renderer.render(this.scene, this.camera);
   }
 
-  /** Les géométries des étoiles allumées ne changent que quand la liste change. */
-  private light(lit: ReadonlySet<string>): void {
-    const key = [...lit].sort().join('|');
-    if (key === this.litKey) return;
-    this.litKey = key;
-    const on = (i: number) => lit.has(this.map.ids[i]);
-    this.litPoints.geometry.setFromPoints(this.stations.filter((_, i) => on(i)));
-    this.litLinks.geometry.setFromPoints(this.map.links.filter(([a, b]) => on(a) && on(b)).flatMap(([a, b]) => [this.stations[a], this.stations[b]]));
-  }
-
   dispose(): void {
-    this.root.traverse((node) => {
-      if (node instanceof LineSegments || node instanceof Points) node.geometry.dispose();
-    });
-    for (const material of [this.baseLinksMat, this.basePointsMat, this.litLinksMat, this.litPointsMat, this.dashesMat, this.raysMat]) material.dispose();
+    this.dashes.geometry.dispose();
+    this.rays.geometry.dispose();
+    this.dashesMat.dispose();
+    this.raysMat.dispose();
     this.renderer.dispose();
     this.renderer.forceContextLoss();
   }
