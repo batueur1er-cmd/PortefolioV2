@@ -295,3 +295,13 @@
 .door {
   margin-top: 10px;
 }
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.method {
+  margin: 8px 0 12px;
+}

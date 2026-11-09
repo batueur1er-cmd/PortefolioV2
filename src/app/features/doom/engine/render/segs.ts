@@ -5,7 +5,7 @@ import { drawColumn } from './draw';
 import { Frame } from './frame';
 import { sectorLight } from './lighting';
 import { Planes, Visplane } from './planes';
-import { CENTER_Y, OWNER, OWNER_SHIFT, SCREEN_H, SCREEN_W } from './render.model';
+import { CENTER_X, CENTER_Y, NEAR, OWNER, OWNER_SHIFT, SCREEN_H, SCREEN_W } from './render.model';
 
 /*
  * Les murs (r_segs). Un mur reste vertical à l'écran : sur une colonne, il est partout à la même
@@ -26,6 +26,54 @@ export interface ProjectedSeg {
   /** Abscisse dans la texture, divisée par la distance (elle varie ainsi linéairement à l'écran). */
   readonly uzA: number;
   readonly uzB: number;
+}
+
+/** Projette un seg sur l'écran : null s'il est vu de dos, hors du champ, ou trop étroit (début de R_AddLine). */
+export function projectSeg(f: Frame, seg: Seg): { p: ProjectedSeg; x1: number; x2: number } | null {
+  const ax = seg.v1.x - f.x;
+  const ay = seg.v1.y - f.y;
+  const bx = seg.v2.x - f.x;
+  const by = seg.v2.y - f.y;
+  // Vu de dos (le joueur est à sa gauche) : rien à dessiner.
+  if (ay * (seg.v2.x - seg.v1.x) - ax * (seg.v2.y - seg.v1.y) <= 0) return null;
+  // Dans le repère du regard : z vers l'avant, l vers la gauche.
+  let za = ax * f.cos + ay * f.sin;
+  let la = ay * f.cos - ax * f.sin;
+  let zb = bx * f.cos + by * f.sin;
+  let lb = by * f.cos - bx * f.sin;
+  let ua = seg.offset;
+  let ub = seg.offset + seg.length;
+  // Rogne le seg aux bords du champ de vision (l ≤ z·t et -l ≤ z·t ; t = 1 à 90°), puis devant les yeux.
+  const t0 = f.tanHalf;
+  for (let edge = 0; edge < 3; edge++) {
+    const fa = edge === 0 ? za * t0 - la : edge === 1 ? za * t0 + la : za - NEAR;
+    const fb = edge === 0 ? zb * t0 - lb : edge === 1 ? zb * t0 + lb : zb - NEAR;
+    if (fa < 0 && fb < 0) return null;
+    if (fa < 0 || fb < 0) {
+      const t = fa / (fa - fb);
+      const z = za + (zb - za) * t;
+      const l = la + (lb - la) * t;
+      const u = ua + (ub - ua) * t;
+      if (fa < 0) {
+        za = z;
+        la = l;
+        ua = u;
+      } else {
+        zb = z;
+        lb = l;
+        ub = u;
+      }
+    }
+  }
+  const sxA = CENTER_X - (la / za) * f.focal;
+  const sxB = CENTER_X - (lb / zb) * f.focal;
+  if (sxB - sxA < 1e-6) return null;
+  // Les colonnes dont le centre tombe entre les deux bouts.
+  const x1 = Math.max(0, Math.ceil(sxA - 0.5));
+  const x2 = Math.min(SCREEN_W - 1, Math.ceil(sxB - 0.5) - 1);
+  if (x1 > x2) return null;
+  const p: ProjectedSeg = { seg, sxA, sxB, izA: 1 / za, izB: 1 / zb, uzA: ua / za, uzB: ub / zb };
+  return { p, x1, x2 };
 }
 
 /** Une plage de mur dessinée, gardée pour découper les sprites (un « drawseg »). */

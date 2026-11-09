@@ -25,6 +25,21 @@ export function paintSurface(frame: Frame, palette: Palette, out: Uint32Array): 
 }
 
 /**
+ * Carte de chaleur de l'algorithme du peintre : la couleur dit combien de fois chaque pixel a été
+ * écrit, du bleu (une fois) au rose vif (huit fois et plus).
+ */
+export function paintHeat(frame: Frame, colors: XrayColors, out: Uint32Array): void {
+  const { overdraw, owner } = frame;
+  const heat = Array.from({ length: 9 }, (_, n) =>
+    packRgb(n < 3 ? mixRgb(colors.bg, colors.line, 0.25 + n * 0.3) : n < 6 ? mixRgb(colors.line, colors.note, (n - 2) / 3) : mixRgb(colors.note, colors.pink, (n - 5) / 3)),
+  );
+  const hidden = packRgb(mixRgb(colors.pink, colors.text, 0.5));
+  for (let i = 0; i < overdraw.length; i++) {
+    out[i] = owner[i] >> OWNER_SHIFT === OWNER.HIDDEN ? hidden : heat[Math.min(8, overdraw[i])];
+  }
+}
+
+/**
  * La même image aux rayons X : chaque morceau de mur prend une couleur selon son rang de dessin
  * (jaune pour le premier, rose pour le dernier), chaque visplane un bleu, les objets du jaune. Le
  * relief des textures reste visible en transparence et les bords de chaque morceau sont tracés.

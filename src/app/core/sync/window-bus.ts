@@ -92,6 +92,8 @@ export interface DoomPresence {
   readonly bsp: boolean;
   /** Hauteur du plafond de chaque porte. */
   readonly doors: readonly number[];
+  /** Algorithme du peintre, à la place de la méthode de Doom. */
+  readonly painter: boolean;
 }
 
 /** Une fenêtre qui affiche le portfolio. */

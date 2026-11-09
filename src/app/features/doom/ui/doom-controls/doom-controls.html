@@ -73,8 +73,15 @@
   <section class="block" aria-labelledby="doom-counts">
     <div class="head">
       <h2 id="doom-counts" class="block-title">Cette image</h2>
-      <button type="button" class="ghost" [attr.aria-pressed]="bsp()" (click)="bspToggle.emit()">Découpage BSP</button>
+      <div class="tools">
+        <button type="button" class="ghost" [attr.aria-pressed]="painter()" (click)="painterToggle.emit()">Algorithme du peintre</button>
+        <button type="button" class="ghost" [attr.aria-pressed]="bsp()" (click)="bspToggle.emit()">Découpage BSP</button>
+      </div>
     </div>
+    <p class="say small method">
+      <span class="plain">{{ methodText().plain }}</span>
+      <span class="tech" aria-hidden="true">{{ methodText().tech }}</span>
+    </p>
     <dl class="counts">
       @for (row of rows(); track row.key) {
         <div class="count">

@@ -77,6 +77,25 @@ describe('Le rendu façon Doom', () => {
     expect(hidden()).toBe(0);
   });
 
+  it('écrit chaque pixel de décor une seule fois, là où le peintre repasse', () => {
+    // Face au mur sud du hall, sans objet dans le champ.
+    const view: View = { x: 320, y: 120, z: 41, angle: -Math.PI / 2, tic: 0 };
+    expect(renderer.render(view, palette).stats.pixels).toBe(320 * 200);
+    const hall = renderer.render(start, palette).stats.pixels;
+    const painted = renderer.render({ ...start, painter: true }, palette);
+    expect([...renderer.frame.owner].every((o) => o !== 0)).toBe(true);
+    expect(painted.stats.pixels).toBeGreaterThan(hall * 1.5);
+    expect(painted.stats.visplanes).toBe(0);
+  });
+
+  it('dessine la même image avec les deux méthodes, à quelques pixels près', () => {
+    renderer.render(start, palette);
+    const doom = renderer.frame.pixels.slice();
+    renderer.render({ ...start, painter: true }, palette);
+    const different = doom.filter((c, i) => c !== renderer.frame.pixels[i]).length;
+    expect(different / doom.length).toBeLessThan(0.1);
+  });
+
   it('cache un objet derrière un pilier', () => {
     const sprites = () => [...renderer.frame.owner].filter((o) => o >> OWNER_SHIFT === OWNER.SPRITE).length;
     // Le brasero, au centre de la salle des colonnes, vu entre deux piliers…

@@ -4,6 +4,7 @@ import { Graphics } from '../graphics/graphics.model';
 import { Level, Thing } from '../level/level.model';
 import { Bsp } from './bsp';
 import { Frame } from './frame';
+import { Painter } from './painter';
 import { Planes } from './planes';
 import { FrameStats, FrameTrace, View } from './render.model';
 import { Segs } from './segs';
@@ -24,6 +25,7 @@ export class Renderer {
   private readonly segs: Segs;
   private readonly things: Things;
   private readonly bsp: Bsp;
+  private readonly painter: Painter;
   /** Les objets cachés dans les murs, que seuls les rayons X montrent. */
   private readonly hidden: readonly Thing[];
 
@@ -37,6 +39,7 @@ export class Renderer {
     this.segs = new Segs(this.frame, this.planes, graphics, lights);
     this.things = new Things(this.frame, this.segs, graphics, lights, level.sectors.length);
     this.bsp = new Bsp(level, this.frame, this.planes, this.segs, this.things);
+    this.painter = new Painter(level, this.frame, graphics, lights, this.things);
   }
 
   /**
@@ -53,13 +56,21 @@ export class Renderer {
     this.things.reset();
     this.bsp.reset();
 
-    this.bsp.walk();
-    f.stats.wallOps = f.ops;
-    this.planes.draw();
-    f.stats.planeOps = f.ops - f.stats.wallOps;
-    this.things.draw();
-    f.stats.spriteOps = f.ops - f.stats.wallOps - f.stats.planeOps;
+    if (view.painter) {
+      this.painter.walk();
+      f.stats.wallOps = f.ops;
+    } else {
+      this.bsp.walk();
+      f.stats.wallOps = f.ops;
+      this.planes.draw();
+      f.stats.planeOps = f.ops - f.stats.wallOps;
+      this.things.draw();
+      f.stats.spriteOps = f.ops - f.stats.wallOps - f.stats.planeOps;
+    }
+    // Les objets cachés ne comptent pas : les deux fenêtres annoncent les mêmes chiffres.
+    const pixels = f.stats.pixels;
     if (xray && f.complete) this.things.drawHidden(this.hidden);
+    f.stats.pixels = pixels;
     f.stats.ops = f.ops;
     f.stats.visplanes = this.planes.count;
     return { stats: f.stats, trace: f.trace };

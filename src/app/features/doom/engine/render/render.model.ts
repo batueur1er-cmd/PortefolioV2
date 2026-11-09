@@ -38,6 +38,8 @@ export interface View {
   readonly fov?: number;
   /** Hauteur du plafond de chaque porte (telle quelle si absent). */
   readonly doors?: readonly number[];
+  /** Algorithme du peintre : tout est peint du fond vers l'avant, au lieu de la méthode de Doom. */
+  readonly painter?: boolean;
 }
 
 export interface FrameStats {
@@ -56,6 +58,8 @@ export interface FrameStats {
   wallOps: number;
   planeOps: number;
   spriteOps: number;
+  /** Pixels écrits, en comptant ceux écrits plusieurs fois. */
+  pixels: number;
 }
 
 export const emptyStats = (): FrameStats => ({
@@ -71,6 +75,7 @@ export const emptyStats = (): FrameStats => ({
   wallOps: 0,
   planeOps: 0,
   spriteOps: 0,
+  pixels: 0,
 });
 
 /** Le déroulé d'une image, pour la rejouer au ralenti sur la carte. */

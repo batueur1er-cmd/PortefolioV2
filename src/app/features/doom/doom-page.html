@@ -88,6 +88,7 @@
       [progress]="progress()"
       [phase]="phase()"
       [bsp]="bsp()"
+      [painter]="painter()"
       [fov]="fov()"
       [counts]="counts()"
       (hold)="hold($event.action, $event.down)"
@@ -97,6 +98,7 @@
       (replayStop)="stopReplay()"
       (scrub)="scrub($event)"
       (bspToggle)="toggleBsp()"
+      (painterToggle)="togglePainter()"
       (fovChange)="setFov($event)"
     />
   </section>

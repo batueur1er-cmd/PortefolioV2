@@ -10,6 +10,8 @@ export class Frame {
   readonly pixels = new Uint8Array(SCREEN_W * SCREEN_H);
   /** Qui a peint chaque pixel (0 : personne). */
   readonly owner = new Uint16Array(SCREEN_W * SCREEN_H);
+  /** Combien de fois chaque pixel a été écrit. */
+  readonly overdraw = new Uint8Array(SCREEN_W * SCREEN_H);
   /** Pour chaque colonne, la dernière ligne déjà prise en haut et la première prise en bas. */
   readonly ceilingClip = new Int16Array(SCREEN_W);
   readonly floorClip = new Int16Array(SCREEN_W);
@@ -53,6 +55,7 @@ export class Frame {
     this.trace = trace ? { visits: [], walls: [], planes: [], sprites: [] } : null;
     this.pixels.fill(VOID_COLOR);
     this.owner.fill(0);
+    this.overdraw.fill(0);
     this.ceilingClip.fill(-1);
     this.floorClip.fill(SCREEN_H);
   }
@@ -65,6 +68,12 @@ export class Frame {
     this.tanHalf = CENTER_X / focal;
     this.lightRatio = focalOf(DEFAULT_FOV) / focal;
     for (let x = 0; x < SCREEN_W; x++) this.columnAngle[x] = Math.atan((CENTER_X - x - 0.5) / focal);
+  }
+
+  /** Note un pixel écrit (un pinceau l'appelle à chaque écriture). */
+  count(i: number): void {
+    this.stats.pixels++;
+    if (this.overdraw[i] < 255) this.overdraw[i]++;
   }
 
   /**

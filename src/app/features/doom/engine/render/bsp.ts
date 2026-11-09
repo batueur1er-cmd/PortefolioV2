@@ -3,8 +3,8 @@ import { BspChild, Box, Level, Seg, Subsector } from '../level/level.model';
 import { Frame } from './frame';
 import { sectorLight } from './lighting';
 import { Planes } from './planes';
-import { CENTER_X, NEAR, SCREEN_W } from './render.model';
-import { ProjectedSeg, Segs } from './segs';
+import { CENTER_X, SCREEN_W } from './render.model';
+import { ProjectedSeg, Segs, projectSeg } from './segs';
 import { Things } from './things';
 
 /*
@@ -108,49 +108,9 @@ export class Bsp {
   private addLine(seg: Seg): void {
     const f = this.f;
     f.stats.segs++;
-    const ax = seg.v1.x - f.x;
-    const ay = seg.v1.y - f.y;
-    const bx = seg.v2.x - f.x;
-    const by = seg.v2.y - f.y;
-    // Vu de dos (le joueur est à sa gauche) : rien à dessiner.
-    if (ay * (seg.v2.x - seg.v1.x) - ax * (seg.v2.y - seg.v1.y) <= 0) return;
-    // Dans le repère du regard : z vers l'avant, l vers la gauche.
-    let za = ax * f.cos + ay * f.sin;
-    let la = ay * f.cos - ax * f.sin;
-    let zb = bx * f.cos + by * f.sin;
-    let lb = by * f.cos - bx * f.sin;
-    let ua = seg.offset;
-    let ub = seg.offset + seg.length;
-    // Rogne le seg aux bords du champ de vision (l ≤ z·t et -l ≤ z·t ; t = 1 à 90°), puis devant les yeux.
-    const t0 = f.tanHalf;
-    for (let edge = 0; edge < 3; edge++) {
-      const fa = edge === 0 ? za * t0 - la : edge === 1 ? za * t0 + la : za - NEAR;
-      const fb = edge === 0 ? zb * t0 - lb : edge === 1 ? zb * t0 + lb : zb - NEAR;
-      if (fa < 0 && fb < 0) return;
-      if (fa < 0 || fb < 0) {
-        const t = fa / (fa - fb);
-        const z = za + (zb - za) * t;
-        const l = la + (lb - la) * t;
-        const u = ua + (ub - ua) * t;
-        if (fa < 0) {
-          za = z;
-          la = l;
-          ua = u;
-        } else {
-          zb = z;
-          lb = l;
-          ub = u;
-        }
-      }
-    }
-    const sxA = CENTER_X - (la / za) * f.focal;
-    const sxB = CENTER_X - (lb / zb) * f.focal;
-    if (sxB - sxA < 1e-6) return;
-    // Les colonnes dont le centre tombe entre les deux bouts.
-    const x1 = Math.max(0, Math.ceil(sxA - 0.5));
-    const x2 = Math.min(SCREEN_W - 1, Math.ceil(sxB - 0.5) - 1);
-    if (x1 > x2) return;
-    const p: ProjectedSeg = { seg, sxA, sxB, izA: 1 / za, izB: 1 / zb, uzA: ua / za, uzB: ub / zb };
+    const projected = projectSeg(f, seg);
+    if (!projected) return;
+    const { p, x1, x2 } = projected;
 
     const front = seg.front;
     const back = seg.back;

@@ -7,7 +7,7 @@ import { Level } from './level/level.model';
 import { Obstacle } from './play/collision';
 import { Renderer } from './render/renderer';
 import { FrameStats, FrameTrace, View } from './render/render.model';
-import { XrayColors, paintSurface, paintXray } from './render/screen';
+import { XrayColors, paintHeat, paintSurface, paintXray } from './render/screen';
 
 /*
  * La façade du moteur : le reste de la démo (la page, ses composants, son état) ne passe que par
@@ -64,6 +64,7 @@ export class DoomEngine {
   private palette: Palette;
   private paletteKey = '';
   private last: FrameResult | null = null;
+  private painter = false;
 
   constructor() {
     const assets = doomAssets();
@@ -86,13 +87,15 @@ export class DoomEngine {
 
   /** Une image ; aux rayons X, avec les objets cachés dans les murs. */
   render(view: View, budget = Infinity, trace = false, xray = false): FrameResult {
+    this.painter = !!view.painter;
     this.last = this.renderer.render(view, this.palette, budget, trace, xray);
     return this.last;
   }
 
   /** Passe la dernière image en couleurs, telle quelle ou aux rayons X. */
   paint(out: Uint32Array, xray: XrayColors | null): void {
-    if (xray) paintXray(this.renderer.frame, this.palette, xray, this.last?.stats.walls ?? 0, out);
+    if (xray && this.painter) paintHeat(this.renderer.frame, xray, out);
+    else if (xray) paintXray(this.renderer.frame, this.palette, xray, this.last?.stats.walls ?? 0, out);
     else paintSurface(this.renderer.frame, this.palette, out);
   }
 }

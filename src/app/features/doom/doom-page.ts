@@ -137,6 +137,8 @@ export class DoomPage {
   protected readonly progress = signal(0);
   protected readonly phase = signal<ReplayPhase | null>(null);
   protected readonly bsp = signal(false);
+  /** Algorithme du peintre, pour comparer avec la méthode de Doom. */
+  protected readonly painter = signal(false);
   /** Champ de vision, en degrés : 90 dans Doom. */
   protected readonly fov = signal(DEFAULT_FOV);
   protected readonly notice = signal<string | null>(null);
@@ -206,11 +208,12 @@ export class DoomPage {
     this.remote = state;
     this.dirty = false;
     this.bsp.set(state.bsp);
+    this.painter.set(state.painter);
     this.fov.set(state.fov);
     this.replay.set(state.replay ? (state.replay.playing ? 'playing' : 'paused') : 'live');
     this.done = state.replay?.done ?? 0;
     this.total = state.replay?.total ?? 0;
-    this.draw({ x: state.x, y: state.y, z: state.z, angle: state.angle, tic: state.tic, fov: state.fov, doors: state.doors }, state.replay ? state.replay.done : Infinity);
+    this.draw({ x: state.x, y: state.y, z: state.z, angle: state.angle, tic: state.tic, fov: state.fov, doors: state.doors, painter: state.painter }, state.replay ? state.replay.done : Infinity);
   }
 
   // ---------------------------------------------------------------------------------------------
@@ -321,6 +324,13 @@ export class DoomPage {
     this.dirty = true;
   }
 
+  /** L'autre méthode de dessin donne une autre image à rejouer : on repart du direct. */
+  protected togglePainter(): void {
+    this.painter.update((on) => !on);
+    if (this.replay() !== 'live') this.stopReplay();
+    this.dirty = true;
+  }
+
   protected toggleBsp(): void {
     this.bsp.update((on) => !on);
     this.dirty = true;
@@ -410,7 +420,7 @@ export class DoomPage {
   }
 
   private liveView(): View {
-    return { x: this.player.x, y: this.player.y, z: this.player.eyeZ, angle: this.player.angle, tic: this.effectsTic(), fov: this.fov(), doors: this.doors.heights };
+    return { x: this.player.x, y: this.player.y, z: this.player.eyeZ, angle: this.player.angle, tic: this.effectsTic(), fov: this.fov(), doors: this.doors.heights, painter: this.painter() };
   }
 
   /** Mesure l'image entière avant de la rejouer depuis zéro. */
@@ -435,7 +445,7 @@ export class DoomPage {
     this.counts.set(countsOf(result.stats));
     const replaying = budget !== Infinity;
     this.progress.set(replaying && this.total ? Math.min(1, budget / this.total) : 0);
-    this.phase.set(replaying ? phaseOf(result.stats, budget) : null);
+    this.phase.set(!replaying ? null : view.painter && budget < result.stats.ops ? 'peintre' : phaseOf(result.stats, budget));
   }
 
   private paintMap(view: View, result: FrameResult, budget: number, xray: boolean): void {
@@ -487,6 +497,7 @@ export class DoomPage {
       replay: replay === 'live' ? null : { done: Math.floor(this.done), total: this.total, playing: replay === 'playing' },
       bsp: this.bsp(),
       doors: v.doors ?? this.doors.heights,
+      painter: !!v.painter,
     };
   }
 

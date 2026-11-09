@@ -90,6 +90,20 @@ export class Things {
     });
   }
 
+  /** Un objet peint en entier, sans découpe (pour l'algorithme du peintre) : les murs plus proches le recouvriront. */
+  paintWhole(thing: Thing): boolean {
+    const vis = this.projectThing(thing);
+    if (!vis) return false;
+    const owner = OWNER.SPRITE << OWNER_SHIFT;
+    const top = CENTER_Y - (vis.gzt - this.f.z) * vis.scale;
+    for (let x = vis.x1; x <= vis.x2; x++) {
+      if (!this.f.spend()) continue;
+      const col = Math.floor((x + 0.5 - vis.left) / vis.scale);
+      if (col >= 0 && col < vis.patch.width) drawPosts(this.f, x, vis.patch.columns[col], top, vis.scale, -1, SCREEN_H, vis.level, owner);
+    }
+    return true;
+  }
+
   private project(thing: Thing): void {
     const vis = this.projectThing(thing);
     if (vis) this.sprites.push(vis);

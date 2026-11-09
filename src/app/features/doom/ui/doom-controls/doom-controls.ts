@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
-import { FrameCounts, PHASES, PadAction, ReplayPhase, ReplayState } from '../../data/doom-state';
+import { FrameCounts, PHASES, PadAction, ReplayPhase, ReplayState, SCREEN_PIXELS } from '../../data/doom-state';
 
 interface PadKey {
   readonly action: PadAction;
@@ -38,6 +38,7 @@ export class DoomControls {
   readonly progress = input(0);
   readonly phase = input<ReplayPhase | null>(null);
   readonly bsp = input(false);
+  readonly painter = input(false);
   /** Champ de vision, en degrés. */
   readonly fov = input(90);
   readonly minFov = input(60);
@@ -52,6 +53,7 @@ export class DoomControls {
   readonly replayStop = output<void>();
   readonly scrub = output<number>();
   readonly bspToggle = output<void>();
+  readonly painterToggle = output<void>();
   readonly fovChange = output<number>();
 
   protected readonly pad = PAD;
@@ -88,8 +90,22 @@ export class DoomControls {
       { key: 'visplanes', plain: 'Sols et plafonds', tech: 'visplanes / 128', value: c.visplanes },
       { key: 'sprites', plain: 'Objets peints', tech: 'vissprites / 128', value: c.sprites },
       { key: 'ops', plain: 'Bandes et lignes', tech: 'colonnes + spans', value: c.ops },
+      { key: 'pixels', plain: 'Pixels peints', tech: `écrits / ${SCREEN_PIXELS}`, value: c.pixels },
+      { key: 'waste', plain: 'Peints pour rien', tech: 'overdraw', value: Math.max(0, c.pixels - SCREEN_PIXELS) },
     ];
   });
+
+  protected readonly methodText = computed(() =>
+    this.painter()
+      ? {
+          plain: 'Algorithme du peintre : tout est peint du fond vers l’avant, et chaque surface recouvre la précédente.',
+          tech: 'Toujours l’arbre pour l’ordre, mais à l’envers. Ni solidsegs, ni visplanes, ni découpe des sprites. La couleur donne le nombre d’écritures.',
+        }
+      : {
+          plain: 'Méthode de Doom : du plus proche au plus lointain, chaque pixel de décor n’est écrit qu’une fois.',
+          tech: 'Solidsegs + clips par colonne : seuls les sprites repassent sur le décor.',
+        },
+  );
 
   protected press(action: PadAction, event: PointerEvent): void {
     if (event.button !== 0) return;

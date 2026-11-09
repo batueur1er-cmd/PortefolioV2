@@ -22,6 +22,7 @@ export function drawColumn(f: Frame, x: number, y1: number, y2: number, tex: Wal
   for (let y = y1; y <= y2; y++, i += SCREEN_W) {
     f.pixels[i] = f.colormaps[cmap + tex.data[base + (Math.floor(v) & mask)]];
     f.owner[i] = owner;
+    f.count(i);
     v += inv;
   }
 }
@@ -33,6 +34,7 @@ export function drawSpan(f: Frame, y: number, x1: number, x2: number, flat: Uint
   for (let x = x1; x <= x2; x++, i++) {
     f.pixels[i] = f.colormaps[cmap + flat[((63 - (Math.floor(wy) & 63)) << 6) | (Math.floor(wx) & 63)]];
     f.owner[i] = owner;
+    f.count(i);
     wx += stepX;
     wy += stepY;
   }
@@ -45,6 +47,7 @@ export function drawSkyColumn(f: Frame, sky: WallTex, x: number, y1: number, y2:
   for (let y = y1; y <= y2; y++, i += SCREEN_W) {
     f.pixels[i] = sky.data[base + Math.min(sky.height - 1, y)];
     f.owner[i] = owner;
+    f.count(i);
   }
 }
 
@@ -65,6 +68,7 @@ export function drawPosts(f: Frame, x: number, posts: readonly Post[], top: numb
       const row = Math.min(post.pixels.length - 1, Math.max(0, Math.floor((y + 0.5 - yA) * inv)));
       f.pixels[i] = f.colormaps[cmap + post.pixels[row]];
       f.owner[i] = owner;
+      f.count(i);
     }
   }
 }
