@@ -1,0 +1,20 @@
+<main id="contenu" tabindex="-1" class="wrap">
+  <a class="back" routerLink="/"><span aria-hidden="true">←</span> {{ fullName }}</a>
+  <h1 class="title">Colophon</h1>
+  <p class="notice">Ce texte n’est pas fait pour être lu d’ici.</p>
+
+  @for (chapter of chapters; track chapter.title; let i = $index) {
+    <section class="chapter" aria-hidden="true">
+      <span class="num">0{{ i + 1 }}</span>
+      <h2 class="chapter-title"><span class="ink">{{ chapter.title }}</span></h2>
+      @for (paragraph of chapter.paragraphs; track $index) {
+        <p class="text"><span class="ink">{{ paragraph }}</span></p>
+      }
+    </section>
+  }
+</main>
+
+<footer class="wrap foot">
+  <span>{{ fullName }}</span>
+  <span>© {{ year }}</span>
+</footer>

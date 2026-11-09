@@ -204,7 +204,7 @@ export const EN: Dictionary = new Map([
   ["Survolez une compétence : celles que j'ai utilisées avec elle, dans un même projet, s'allument.", 'Hover over a skill: those I used with it, in the same project, light up.'],
   ['Voir les', 'See the'],
   ['autres projets', 'other projects'],
-  ['Colophon', 'Colophon'],
+  ['Ce texte n’est pas fait pour être lu d’ici.', 'This text is not meant to be read from here.'],
   ['Voir le projet', 'View project'],
   ['(GitHub, nouvel onglet)', '(GitHub, new tab)'],
   ['(nouvel onglet)', '(new tab)'],
@@ -243,6 +243,5 @@ export const EN: Dictionary = new Map([
 export const EN_RULES: readonly Rule[] = [
   [/^(.*) · depuis (.+) \((.+)\) · (.+)$/, '$1 · since $2 ($3) · $4'],
   [/^à (.+)\.$/, 'in $1.'],
-  [/^Voir les (\d+) projets?$/, 'See all $1 projects'],
   [/^Capture (de la gestion de magasin|du drive Laravel), .*$/, 'Screenshot'],
 ];

@@ -30,6 +30,7 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   { id: 'coffres-caches', label: 'Pilleur de murs', hint: 'Trouver à la loupe tous les coffres cachés de la démo façon Doom.' },
   { id: 'archeologue', label: 'Archéologue', hint: 'Pousser la loupe assez fort pour lire un ancien texte du site.' },
   { id: 'double-loupe', label: 'Double exposition', hint: 'Croiser deux loupes.' },
+  { id: 'colophon', label: 'Lecteur de colophon', hint: 'Lire à la loupe la page caviardée du site.' },
   { id: 'cartographe', label: 'Cartographe', hint: 'Passer par toutes les pièces du niveau façon Doom.' },
 ];
 

@@ -2,9 +2,9 @@ import { PAGES, metaFor } from './seo';
 import { PROFILE } from './profile.data';
 
 describe('métadonnées des pages', () => {
-  it('a une page par projet et par démo, plus l’accueil', () => {
+  it('a une page par projet et par démo, plus l’accueil et le colophon', () => {
     const demos = PROFILE.projects.filter((p) => p.demo).length;
-    expect(PAGES.length).toBe(PROFILE.projects.length + demos + 1);
+    expect(PAGES.length).toBe(PROFILE.projects.length + demos + 1 + 1);
     expect(new Set(PAGES.map((p) => p.path)).size).toBe(PAGES.length);
   });
 

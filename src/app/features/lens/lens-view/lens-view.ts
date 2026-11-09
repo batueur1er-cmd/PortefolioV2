@@ -35,6 +35,8 @@ import { ViewerPage } from '@features/viewer/viewer-page';
 import { DOOM_PATH } from '@features/doom/data/doom-state';
 import { DoomChestsStore } from '@features/doom/data/doom-chests.store';
 import { DoomPage } from '@features/doom/doom-page';
+import { MAKING_OF_PATH } from '@features/making-of/chapters';
+import { MakingOfPage } from '@features/making-of/making-of-page';
 import { SCAN_COVERAGE, ScanEngine } from '@features/secrets/data/scan-engine';
 import { PROFILE } from '@domain/profile/profile.data';
 import { SECRET_BY_ID } from '@features/secrets/data/secrets.catalog';
@@ -93,7 +95,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
  */
 @Component({
   selector: 'app-lens-view',
-  imports: [PortfolioPage, LensHud, LensCrossing, ProjectsMirror, ProjectPage, ViewerPage, DoomPage, SingularityOverlay, ScanSparkles],
+  imports: [PortfolioPage, LensHud, LensCrossing, ProjectsMirror, ProjectPage, ViewerPage, DoomPage, MakingOfPage, SingularityOverlay, ScanSparkles],
   template: `
     <app-portfolio-page
       class="lens-page"
@@ -104,7 +106,7 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
       [vh]="vh()"
       [scrollY]="scrollY()"
       [style.width.px]="pageWidth()"
-      [class.hidden]="state() === 'searching' || projectId() !== null || viewerShown() || doomShown()"
+      [class.hidden]="state() === 'searching' || projectId() !== null || viewerShown() || doomShown() || makingOfShown()"
     />
     <!-- Le portfolio visé est sur une page projet : la loupe affiche la copie de cette page. -->
     @if (projectId(); as id) {
@@ -133,6 +135,16 @@ const sameOverlay = (a: OverlayPresence | null, b: OverlayPresence | null): bool
     <!-- Le portfolio visé montre la démo façon Doom : la copie redessine la même image, aux rayons X. -->
     @if (doomShown()) {
       <app-doom-page
+        class="lens-page"
+        [mode]="lensMode()"
+        [decorative]="true"
+        [style.width.px]="pageWidth()"
+        [class.hidden]="state() === 'searching'"
+      />
+    }
+    <!-- Le portfolio visé montre le colophon : la copie rend lisible ce qui est caviardé. -->
+    @if (makingOfShown()) {
+      <app-making-of-page
         class="lens-page"
         [mode]="lensMode()"
         [decorative]="true"
@@ -208,6 +220,9 @@ export class LensView {
   private readonly doomCopyRef = viewChild(DoomPage, { read: ElementRef<HTMLElement> });
   /** Le portfolio visé montre la démo façon Doom. */
   protected readonly doomShown = signal(false);
+  private readonly makingOfCopy = viewChild(MakingOfPage, { read: ElementRef<HTMLElement> });
+  /** Le portfolio visé montre le colophon. */
+  protected readonly makingOfShown = signal(false);
 
   protected readonly zoom = signal(1);
   protected readonly vh = signal(800);
@@ -223,7 +238,7 @@ export class LensView {
   protected readonly overlay = signal<OverlayPresence | null>(null, { equal: sameOverlay });
   /** Grossie assez fort sur l'accueil du portfolio, la loupe montre un ancien texte de la section visée. */
   protected readonly stratum = computed(() => {
-    const onHome = !this.projectId() && !this.viewerShown() && !this.doomShown();
+    const onHome = !this.projectId() && !this.viewerShown() && !this.doomShown() && !this.makingOfShown();
     const name = this.section();
     return onHome && name && this.zoom() >= HISTORY_ZOOM ? (HISTORY.get(name) ?? null) : null;
   });
@@ -338,10 +353,12 @@ export class LensView {
     const route = shown.route ?? '/';
     const viewer = route === VIEWER_PATH;
     const doom = route === DOOM_PATH;
+    const makingOf = route === MAKING_OF_PATH;
     const project = viewer || doom ? null : (/^\/projets\/([^/?#]+)/.exec(route)?.[1] ?? null);
     this.projectId.set(project);
     this.viewerShown.set(viewer);
     this.doomShown.set(doom);
+    this.makingOfShown.set(makingOf);
     this.pageWidth.set(shown.layoutWidth);
     this.vh.set(shown.viewport.h);
     this.scrollY.set(Math.round(shown.scroll.y));
@@ -362,6 +379,8 @@ export class LensView {
       // La caméra du portfolio, dans la même image que la position de la copie.
       this.viewerCopy()?.sync(shown.viewer ?? null, this.zoom() * k);
     }
+    const makingOfCopy = this.makingOfCopy()?.nativeElement;
+    if (makingOfCopy) makingOfCopy.style.transform = transform;
     const doomCopy = this.doomCopyRef()?.nativeElement;
     if (doomCopy) {
       doomCopy.style.transform = transform;
@@ -377,6 +396,7 @@ export class LensView {
     // Le visualiseur 3D regardé à travers la loupe : un succès.
     if (viewer && best) this.achievements.unlock('vision-3d');
     if (doom && best) this.achievements.unlock('rayons-x-retro');
+    if (makingOf && best) this.achievements.unlock('colophon');
     const zone = best
       ? intersect(
           { x: 0, y: 0, w: win.innerWidth, h: win.innerHeight },
@@ -394,7 +414,8 @@ export class LensView {
       return;
     }
     // Pas de secrets sur les pages projet : la loupe ne fait que montrer leur plan.
-    if (!best || project || viewer || doom) {
+    if (!best || project || viewer || doom || makingOf) {
+      if (makingOf && this.frame++ % 20 === 0) this.section.set('Colophon');
       if (project && this.frame++ % 20 === 0) this.section.set(PROJECT_TITLES.get(project) ?? null);
       if (viewer && this.frame++ % 20 === 0) this.section.set('Visualiseur 3D');
       this.strength.set(0);

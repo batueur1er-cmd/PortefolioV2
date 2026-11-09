@@ -21,11 +21,12 @@ const FEATURE_DEPS = {
   cv: ['achievements'],
   achievements: [],
   terminal: ['achievements', 'secrets', 'cv'],
-  lens: ['page', 'secrets', 'project', 'achievements', 'singularity', 'viewer', 'doom'],
+  lens: ['page', 'secrets', 'project', 'achievements', 'singularity', 'viewer', 'doom', 'making-of'],
   singularity: ['secrets'],
   project: ['achievements', 'page'],
   viewer: ['achievements'],
   doom: ['achievements'],
+  'making-of': [],
 };
 
 /**

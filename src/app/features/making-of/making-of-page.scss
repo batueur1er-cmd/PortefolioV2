@@ -1,0 +1,104 @@
+/*
+ * Le même texte à la surface et aux rayons X : seule sa couleur change, la mise en page ne bouge pas.
+ * À la surface, chaque ligne est une barre pleine, comme un document caviardé.
+ */
+:host {
+  display: block;
+  container: page / inline-size;
+  min-height: var(--vh, 100%);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+.wrap {
+  width: min(760px, 100%);
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4cqi, 32px);
+}
+
+main {
+  padding-block: clamp(40px, 7cqi, 88px);
+}
+
+.back {
+  color: var(--muted);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--accent);
+}
+
+.title {
+  margin: 20px 0 8px;
+  font-size: clamp(36px, 6cqi, 64px);
+  line-height: 1.05;
+}
+
+.notice {
+  margin: 0 0 clamp(32px, 5cqi, 56px);
+  color: var(--muted);
+}
+
+.chapter {
+  margin-bottom: clamp(32px, 5cqi, 52px);
+}
+
+.num {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.chapter-title {
+  margin: 6px 0 14px;
+  font-size: clamp(20px, 2.6cqi, 28px);
+  line-height: 1.3;
+}
+
+.text {
+  margin: 0 0 14px;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.ink {
+  color: transparent;
+  background: var(--ink);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  user-select: none;
+}
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  padding-block: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+:host(.xray) {
+  background: var(--xbg);
+  color: var(--xtext);
+}
+
+:host(.xray) .back,
+:host(.xray) .notice,
+:host(.xray) .num,
+:host(.xray) .foot {
+  color: color-mix(in srgb, var(--xtext) 65%, transparent);
+}
+
+:host(.xray) .ink {
+  color: var(--xtext);
+  background: none;
+}
+
+:host(.xray) .chapter-title .ink {
+  color: var(--xn);
+}

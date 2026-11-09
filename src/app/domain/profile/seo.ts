@@ -57,6 +57,13 @@ export const PAGES: readonly PageMeta[] = [
         ]
       : [],
   ),
+  {
+    path: '/colophon',
+    title: `Colophon — ${FULL_NAME}`,
+    description: `Comment est fait le portfolio de ${FULL_NAME}.`,
+    image: '/og/portfolio.png',
+    type: 'article',
+  },
 ];
 
 export function metaFor(path: string): PageMeta {

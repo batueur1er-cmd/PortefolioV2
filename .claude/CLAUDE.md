@@ -49,7 +49,8 @@ src/app/
 ├── domain/    profile/ (contenu), career/, geo/, skills/ : TypeScript pur, testé
 ├── shared/    motion/ (apparitions, compteurs, effets) et ui/ (en-tête de section, bandeau…)
 ├── features/  page/ (la page et ses sections), secrets/, lens/ (loupe), viewer/ (visualiseur 3D),
-│              doom/ (démo façon Doom), project/, terminal/, achievements/, cv/, singularity/
+│              doom/ (démo façon Doom), making-of/ (colophon), project/, terminal/, achievements/,
+│              cv/, singularity/
 └── shell/     racine de chaque fenêtre : bascule portfolio ↔ loupe, bouton mode nuit
 ```
 
@@ -103,6 +104,8 @@ l'export LinkedIn, les dépôts publics github.com/BaptisteNodon, ou ce que dit 
 ni chiffre, ni technologie, ni promesse. Les détails d'infrastructure internes de ses notes
 (serveurs, adresses IP, domaines) ne vont jamais sur le site. Les accroches et les titres de
 section ont été rédigés par Claude : ce sont des propositions à faire valider.
+
+La version anglaise est dans `src/app/domain/profile/en.ts` : un texte français ajouté ou modifié y prend sa traduction, sans quoi il reste en français. Démos, terminal, succès, rayons X et CV en PDF restent en français.
 
 ## Style
 

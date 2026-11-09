@@ -20,6 +20,11 @@ export const routes: Routes = [
     path: 'projets/doom/demo',
     loadComponent: () => import('./shell/doom-shell').then((m) => m.DoomShell),
   },
+  // Le colophon (MAKING_OF_PATH) : caviardé à la surface, lisible à la loupe.
+  {
+    path: 'colophon',
+    loadComponent: () => import('./shell/making-of-shell').then((m) => m.MakingOfShell),
+  },
   {
     path: 'projets/:id',
     loadComponent: () => import('./shell/project-shell').then((m) => m.ProjectShell),

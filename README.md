@@ -49,6 +49,7 @@ src/app/
 │   ├── lens/         rôle de la fenêtre, vue loupe, HUD, halos
 │   ├── viewer/       le visualiseur 3D (Three.js), et sa copie aux rayons X
 │   ├── doom/         la démo façon Doom : moteur logiciel en modules, page, copie aux rayons X
+│   ├── making-of/    le colophon : caviardé à la surface, lisible à la loupe
 │   └── singularity/  l'écran final
 └── shell/      assemble le tout : bascule portfolio ↔ loupe, bouton mode nuit
 ```

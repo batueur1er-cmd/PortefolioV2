@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, VERSION, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { Clock, formatClock } from '@core/time/clock';
 import { TODAY } from '@core/time/time';
@@ -13,7 +14,7 @@ import { PageContext } from '../page-context';
 
 @Component({
   selector: 'app-contact-section',
-  imports: [SectionHeader, SplitText, MagneticDirective, RevealDirective],
+  imports: [RouterLink, SectionHeader, SplitText, MagneticDirective, RevealDirective],
   templateUrl: './contact-section.html',
   styleUrl: './contact-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
