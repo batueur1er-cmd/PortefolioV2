@@ -212,7 +212,19 @@ export const SECTORS: readonly SectorDef[] = [
     wall: 'pierre',
     outline: rect(832, 832, 1024, 1024),
   },
-  // La porte du damier, dans le mur ouest de la cour.
+  // La porte du damier, dans le mur ouest de la cour. Comme une porte s'arrête au plafond voisin,
+  // un petit renfoncement au plafond bas lui donne sa hauteur : au-dessus, le mur de la cour continue.
+  {
+    id: 'linteau-damier',
+    room: 'La cour',
+    floor: -32,
+    ceiling: 96,
+    floorFlat: 'paves',
+    ceilingFlat: 'beton',
+    light: 200,
+    wall: 'cadre',
+    outline: rect(464, 1072, 480, 1120),
+  },
   {
     id: 'porte-damier',
     room: 'La cour',
@@ -223,7 +235,7 @@ export const SECTORS: readonly SectorDef[] = [
     light: 200,
     wall: 'cadre',
     door: 'porte',
-    outline: rect(448, 1072, 480, 1120),
+    outline: rect(448, 1072, 464, 1120),
   },
   ...checker(),
   {
@@ -248,7 +260,29 @@ export const SECTORS: readonly SectorDef[] = [
     light: 160,
     wall: 'briques',
     lower: 'marche',
-    outline: rect(1216, 576, 1344, 608),
+    outline: rect(1216, 576, 1344, 592),
+  },
+  {
+    id: 'linteau-passage-1',
+    room: 'Le passage',
+    floor: -32,
+    ceiling: 96,
+    floorFlat: 'paves',
+    ceilingFlat: 'voute',
+    light: 160,
+    wall: 'cadre',
+    outline: rect(1216, 592, 1344, 608),
+  },
+  {
+    id: 'linteau-passage-2',
+    room: 'Le passage',
+    floor: -32,
+    ceiling: 96,
+    floorFlat: 'paves',
+    ceilingFlat: 'voute',
+    light: 160,
+    wall: 'cadre',
+    outline: rect(1216, 624, 1344, 640),
   },
   {
     id: 'porte-passage',
@@ -260,7 +294,7 @@ export const SECTORS: readonly SectorDef[] = [
     light: 160,
     wall: 'cadre',
     door: 'porte',
-    outline: rect(1216, 608, 1344, 640),
+    outline: rect(1216, 608, 1344, 624),
   },
 ];
 

@@ -56,7 +56,8 @@ yeux à 41, marche de 24 au plus).
 ## Les portes
 
 Un secteur avec `door: <texture>` est une porte : `ceiling` égal à `floor` au départ, et tout le reste
-du niveau inchangé. `play/doors.ts` fait monter le plafond (seule hauteur mutable du niveau) ; les
+du niveau inchangé. Le battant monte jusqu'au plafond voisin : dans une grande pièce, encadre la porte
+d'un petit secteur au plafond bas (`linteau-*`), sinon elle fait toute la hauteur du mur. `play/doors.ts` fait monter le plafond (seule hauteur mutable du niveau) ; les
 hauteurs partent dans `View.doors` et `DoomPresence.doors`. Elles ne bougent pas pendant le ralenti.
 
 ## Textures et sprites
